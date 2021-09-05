@@ -1,0 +1,594 @@
+\documentclass[usepdftitle=false]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usetheme{Singapore}
+
+\usepackage{xcolor}
+% \setbeamercovered{transparent}
+%\usecolortheme{crane}
+\title[Notions fondamentales]{Programmation Linéaire\\Notions fondamentales}
+\author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal}
+\date{}
+
+\usepackage{enumerate}
+\usepackage[francais]{babel}
+
+\usepackage{easybmat}
+\usepackage{graphicx}
+\usepackage{ulem}
+\usepackage{tikz}
+
+\def\ba{\boldsymbol{a}}
+\def\bb{\boldsymbol{b}}
+\def\bc{\boldsymbol{c}}
+\def\bd{\boldsymbol{d}}
+\def\bx{\boldsymbol{x}}
+\def\by{\boldsymbol{y}}
+\def\bz{\boldsymbol{z}}
+\def\bA{\boldsymbol{A}}
+\def\bB{\boldsymbol{B}}
+\def\bD{\boldsymbol{D}}
+\def\bzero{\boldsymbol{0}}
+
+\setbeamertemplate{footline}[frame number]
+
+\begin{document}
+\frame{\titlepage}
+
+% ------------------------------------------------------------------------------------------------------------------------------------------------------\begin{frame}
+\begin{frame}
+\frametitle{Solutions de base}
+
+\begin{align*}
+\min_{\bx}\ & \bc^T \bx \\
+\mbox{s.c. } & \bA \bx = \bb, \\
+ & \bx \geq 0.
+\end{align*}
+
+\mbox{}
+
+Supposons $m \leq n$ et rang($\bA$) = $m$.
+Sans perte de généralité, supposons les $m$ premières colonnes de $\bA$ indépendantes, et formons
+\[
+\bA =
+\begin{pmatrix}
+ \bB & \bD
+\end{pmatrix}
+\]
+
+\mbox{}
+
+{\it Solution de base}: $\bx = (\bx_b \ 0)$, avec $\bB\bx_b = \bb$.\\
+{\it Solution de base dégénérée}: si $\bx_b$ contient des composantes nulles. \\
+{\it Solution de base réalisable}: solution de base telle que $\bA\bx = \bb$ et $\bx \geq 0$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Rappel: base d'un espace vectoriel}
+
+Considérons un ensemble $B = \lbrace u_1, u_2,\ldots, u_m \rbrace$ d'un sous-espace vectoriel $V$.
+
+\begin{itemize}
+\item 
+Les éléments de $B$ sont linéairement indépendants si
+$$
+\sum_{i=1}^m \alpha_i u_i = 0
+$$
+admet pour seule solution $\alpha_i = 0$, $i = 1,\ldots,m$.
+\item
+$B$ est un ensemble générateur de $V$ si $\forall\, y \in V$, $\exists\, \alpha_i$, $i = 1,\ldots,m$ such that
+$$
+\sum_{i=1}^m \alpha_i u_i = y.
+$$
+\item
+$B$ est une base, si $B$ est un ensemble
+linéairement indépendant et générateur
+de $V$
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Rappel: base d'un espace vectoriel}
+	
+	\begin{itemize}
+		\item
+		$B$ est une base, si $B$ est un ensemble
+		linéairement indépendant et générateur
+		de $V$
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème fondamental de la programmation linéaire}
+
+Soit un PL sous forme standard, avec $\bA$ de dimension $m \times n$ et de rang plein (i.e. rang($\bA$) = m).
+\begin{itemize}
+\item
+S'il y a une solution réalisable, alors il y a une solution de base réalisable.
+\item
+S'il y a une solution réalisable optimale, alors il y a une solution de base réalisable optimale.
+\end{itemize}
+
+\mbox{}
+
+{\it Preuve.}
+
+\mbox{}
+
+Écrivons
+\[
+\bA =
+\begin{pmatrix}
+\vdots & \vdots & & \vdots \\
+\ba_1 & \ba_2 & \cdots & \ba_n \\
+\vdots & \vdots & & \vdots
+\end{pmatrix}
+\]
+et
+\[
+\bx = ( \bx_1, \bx_2, \cdots, \bx_n )
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème fondamental de la PL: réalisabilité}
+
+Si $\bx$ est réalisable, alors
+\[
+x_1 \ba_1 + x_2 \ba_2 + \ldots + x_n \ba_n = \bb.
+\]
+Supposons qu'il y a exactement $p$ composantes $> 0$. S.p.d.g., supposons qu'il s'agit des $p$ premières composantes: $\bx_1$, \ldots, $\bx_p$. Alors, nous avons
+\[
+x_1 \ba_1 + x_2 \ba_2 + \ldots + x_p \ba_p = \bb.
+\]
+
+\mbox{}
+
+\underline{Cas 1:} $\ba_1$,\ldots,$\ba_p$ linéairement indépendants.
+
+Dès lors, $p \leq m$. Si $p = m$, la preuve est complète. Supposons donc $p < m$. Comme $\bA$ est de rang plein, on peut choisir $m-p$ vecteurs (colonnes de $\bA$) à partir des $n-p$ vecteurs restants pour former un ensemble de $m$ vecteurs linéairement indépendants. En affectant la valeur 0 aux $m-p$ variables correspondantes, on obtient une solution de base réalisable (dégénérée). 
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème fondamental de la PL: réalisabilité}
+
+\underline{Cas 2:} $\ba_1,\ldots,\ba_p$ linéairement dépendants.
+
+Dès lors, pour un certain $\by = (y_1, y_2,\ldots, y_p,0,\ldots,0)$ $(\in \mathcal{R}^n)$, avec au moins un $y_i > 0$,
+\[
+y_1 \ba_1 + y_2 \ba_2 + \ldots y_p \ba_p = \bzero.
+\]
+Dès lors, pour un $\epsilon$ quelconque,
+\[
+(x_1 - \epsilon y_1) \ba_1 + (x_2 - \epsilon y_2) \ba_2 + \ldots (x_p - \epsilon y_p) \ba_p = \bb.
+\]
+Autrement dit,
+\[
+\bA(\bx-\epsilon \by) = \bb.
+\]
+Pour $\epsilon > 0$, et croissant, les composantes de $\bx - \epsilon \by$ augmentent, diminuent, ou restent constantes, suivant que $y_i$ est négatif, positif ou nul.
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème fondamental de la PL: réalisabilité}
+
+Prenons
+\[
+\epsilon = \min \left\lbrace \frac{x_i}{y_i} \,\bigg|\, y_i > 0 \right\rbrace.
+\]
+Soit $j$ l'indice permettant d'atteindre ce minimum. Alors
+\[
+x_j - \epsilon y_j = 0,
+\]
+et donc $\bx - \epsilon\by$ a au plus $p-1$ variables positives.
+En répétant ce processus si nécessaire, on peut éliminer des variables positives jusqu'à obtenir une solution réalisable avec des colonnes correspondantes qui sont linéairement indépendantes. Le cas 1 s'applique alors.
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème fondamental de la PL: optimalité}
+
+Soit $\bx = (x_1, x_2, \ldots, x_n)$ une solution optimale réalisable, et comme précédemment, supposons qu'il y a exactement $p$ variables positives $x_1, x_2, \ldots, x_p$.
+
+\mbox{}
+
+On peut distinguer à nouveau deux cas.
+
+\mbox{}
+
+Le cas 1, correspondant à l'indépendance linéaire, se traite comme pour la question de réalisabilité.
+
+\mbox{}
+
+Le cas 2 procède également de manière similaire à la réalisabilité, à ceci près que nous devons montrer que pour n'importe quel $\epsilon$, la solution $x-\epsilon y$ est optimale.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème fondamental de la PL: optimalité}
+
+La fonction objectif prend alors comme valeur
+\[
+\bc^T \bx - \epsilon \bc^T\by.
+\]
+Pour $\epsilon$ suffisamment proche de 0, qu'il soit positif ou négatif, $\bx - \epsilon \by$ est réalisable (on ne change pas le signe des composantes).
+
+\mbox{}
+
+Dès lors, $\bc^T\by = 0$. En effet, si $\bc^T\by \ne 0$, un $\epsilon$ suffisamment petit et de signe adéquat conduirait à réduire la valeur de la fonction objectif, tout en maintenant la réalisabilité. Par conséquent, $\bx$ ne serait pas optimal.
+
+\mbox{}
+
+On peut alors appliquer le procédé du cas 2 sur la réalisabilité, pour diminuer le nombre de composantes non-nulles de la solution, tout en maintenant l'optimalité, puis en se ramenant au cas 1.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Conséquences du théorème}
+
+On peut résoudre un PL en énumérant les solutions de base réalisables.
+
+Problème: il peut y en avoir beaucoup.
+
+Pour $n$ variables et $m$ contraintes, nous avons
+\[
+\begin{pmatrix}
+n \\ m
+\end{pmatrix}
+= \frac{n!}{m!(n-m)!}
+\]
+matrices à considérer pour déterminer des solutions de base.
+
+\mbox{}
+
+Exemple: 100 variables, 40 contraintes
+\[
+\begin{pmatrix}
+100 \\ 40
+\end{pmatrix}
+= 13746234145802811501267369720 \approx 1,375.10^{28}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Considérons le programme
+\begin{align*}
+\max\ & 2x + 3y \\
+\mbox{t.q. } & x \geq 1 \\
+& 2x + 3y \leq 5\\
+& x \geq 0,\ y \geq 0.
+\end{align*}
+
+On voit immédiatement que la valeur optimale est 5 (pourquoi?).
+
+\mbox{}
+
+Sous forme standard, nous obtenons
+\begin{align*}
+- \min\ & -2x - 3y \\
+\mbox{t.q. } & x - u = 1 \\
+& 2x + 3y + s = 5\\
+& x \geq 0,\ y \geq 0, s \geq 0, u \geq 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: graphiquement}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.4]
+\draw[->] (0,0) -- (4,0) node[below,right] {$x$};
+\draw[->] (0,0) -- (0,2) node[above,left] {$y$};
+
+\foreach \x in {0,1,2,3}
+  \draw (\x,1pt) -- (\x,-1pt) node[anchor=north] {$\x$};
+\foreach \y in {0,1}
+  \draw (1pt,\y) -- (-1pt,\y) node[anchor=east] {$\y$};
+
+\filldraw[fill=yellow]
+  (1,0) -- (1,1) -- (2.5,0) -- (1,0);
+
+\draw (-0.5,2) -- (3.5,-0.6667) node[above,right] {$5=2x+3y$};
+%\draw (25.0/3,-1) -- (-1,23.0/5) node[above,left] {$20=3x_1+5x_2$};
+%\draw (41.0/3,-1) -- (-1,39.0/5) node[above,left] {$36=3x_1+5x_2$};
+
+%\draw (,6) node[above] {$(2,6)$};
+\fill (1,1) circle (2 pt);
+\fill (2.5,0) circle (2 pt);
+
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Solutions de base}
+
+Sous forme matricielle, le problème se définit à partir de
+$$
+c = \begin{pmatrix}
+-2 \\ -3 \\ 0 \\ 0
+\end{pmatrix}, \quad
+x = \begin{pmatrix}
+x_1 \\ x_2 \\ x_3 \\ x_4
+\end{pmatrix},\quad
+A = \begin{pmatrix}
+1 & 0 & -1 & 0 \\
+2 & 3 & 0 & 1 \\
+\end{pmatrix},\quad
+b = \begin{pmatrix}
+1 \\ 5
+\end{pmatrix}
+$$
+Nombre de sous-matrices carrées 2 par 2:
+$$
+\frac{4!}{2!2!} = 6
+$$
+Le nombre de base est toutefois strictement plus petit puisqu'il y a forcément des colonnes linéairement dépendantes.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Solutions de base}
+
+Bases potentielles:
+\begin{align*}
+& B_1 = \begin{pmatrix} 1 & 0 \\ 2 & 3 \end{pmatrix}, \quad
+B_2 = \begin{pmatrix} 1 & -1  \\ 2 & 0 \end{pmatrix}, \quad
+B_3 = \begin{pmatrix} 1 & 0 \\ 2 & 1 \end{pmatrix}, \\
+& B_4 = \begin{pmatrix} 0 & -1 \\ 3 & 0 \end{pmatrix}, \quad
+B_5 = \begin{pmatrix} 0 & 0 \\ 3 & 1 \end{pmatrix}, \quad
+B_6 = \begin{pmatrix} -1 & 0 \\ 0 & 1 \end{pmatrix}.
+\end{align*}
+
+Seules $B_1$, $B_2$, $B_3$, $B_4$, $B_6$ sont des bases. Les solutions de base respectives sont
+$$
+\begin{pmatrix}
+1 \\ 1 \\ 0 \\ 0
+\end{pmatrix}
+\quad
+\begin{pmatrix}
+\frac{5}{2} \\ 0 \\ \frac{3}{2} \\ 0
+\end{pmatrix}
+\quad
+\begin{pmatrix}
+1 \\ 0 \\ 0 \\ 3
+\end{pmatrix}
+\quad
+\begin{pmatrix}
+0 \\ \frac{5}{3} \\ -1 \\ 0
+\end{pmatrix}
+\quad
+\begin{pmatrix}
+-1 \\ 0 \\ 0 \\ 5
+\end{pmatrix}
+$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Solutions de base réalisables}
+
+De ces solutions, seules les trois premières sont réalisables.
+
+\mbox{}
+
+Elles correspondent aux sommets du polytope réalisable.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Relations à la convexité}
+
+\textcolor{blue}{But:} faire le lien entre solutions de base réalisables et points extrêmes d'un polytope.
+
+\begin{itemize}
+	\item
+	Un ensemble $C$ dans $E^n$ est dit convexe si pour tout $\bx_1$, $\bx_2 \in C$, et pour n'importe quel réel $\alpha$ tel que $0 \leq \alpha \leq 1$, le point $\alpha x_1 + (1-\alpha) x_2 \in C$.
+	\item
+Le point $z = \alpha x_1 + (1-\alpha) x_2$, $\alpha \in [0, 1]$, est dit être une combinaison convexe de $x_1$ et $x_2$.
+	\item
+La combinaison convexe est dite stricte si $\alpha \in (0, 1)$.
+	\item
+L'ensemble des combinaisons convexes de $x_1$ et $x_2$ est le segment de droite qui relie $x_1$ et $x_2$.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Convexité: propriétés}
+
+\begin{enumerate}
+	\item
+	Si $C$ est en ensemble convexe et $\beta$ un nombre réel, l'ensemble
+	\[
+	\beta C = \lbrace \bx \,|\, \bx = \beta \bc,\ \bc \in C \rbrace,
+	\]
+	est convexe.
+	\item
+	Si $C$ et $D$ sont deux ensembles convexes, l'ensemble
+	\[
+	C + D = \lbrace \bx \,|\, \bx = \bc + \bd,\ \bc \in C,\ \bd \in D \rbrace,
+	\]
+	est convexe.
+	\item
+	L'intersection de n'importe quelle collection d'ensembles convexes est convexe.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Points extrêmes}
+
+\mbox{}
+
+\begin{itemize}
+\item
+{\color{red}Polytope} $P = \lbrace x \,|\, Ax \leq b \rbrace$.
+
+Note: $K = \lbrace x \,|\,\ Ax = b,\ x \geq 0 \rbrace$ est aussi un polytope. En effet, $K$ peut se réécrire comme
+$$
+K = \lbrace x \,|\,\ Ax \leq b,\ -Ax \leq -b,\ -x \leq 0 \rbrace.
+$$
+\item
+{\color{red}Polyèdre}: polytope borné non vide.
+\end{itemize}
+\mbox{}
+
+(Voir Annexe B de Luenberger et Ye pour plus de détails).
+
+%\mbox{}
+
+%Il se peut aussi que pour $y \in C$, $\nexists\ x_1,\ x_2 \in C,\ \alpha \in (0,1)$ tel quel $y = \alpha x_1 + (1-\alpha) x_2$.
+%$y$ est alors qualifié de {\color{red}point extrême}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Points extrêmes}
+
+Un point $\bx$ d'un ensemble convexe $C$ est un {\color{red}point extrême} de $C$ s'il n'existe pas deux points distincts $\bx_1$ et $\bx_2$ dans $C$ tels que $\bx = \alpha \bx_1 + (1-\alpha) \bx_2$ pour un certain $\alpha$, $0 < \alpha < 1$.
+En d'autres termes, il ne peut pas s'écrire comme une combinaison convexe stricte de deux points de $C$.
+Intuitivement, un point extrême est un ``sommet'' de $C$.
+
+%\mbox{}
+
+%Géométriquement, cela revient à dire que chaque point du segment joignant deux points quelconques d'un ensemble convexe est aussi dans cet ensemble.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{\'Equivalence des points extrêmes et des solutions de base}
+
+\begin{itemize}
+\item
+Soit $\bA$ une matrice $m \times n$ de rang $m$ et $b$ un vecteur de dimension $m$.
+\item
+Soit $K$ le polytope convexe constitué de l'ensemble des vecteurs $x$ de dimension $n$ satisfaisant
+\begin{align*}
+\bA \bx &= \bb \\
+\bx & \geq 0.
+\end{align*}
+\end{itemize}
+Un vecteur $\bx$ est un point extrême de $K$ si et seulement si $\bx$ est une solution de base réalisable pour le système précédent.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Preuve}
+
+$\Leftarrow$ Supposons tout d'abord que $\bx = (x_1, x_2, \ldots, x_n)$ est une solution de base réalisable.
+Dès lors, $\bx$ a $k$ composantes non nulles, et $n-k$ composantes nulles, avec $k \leq m$. $k < m$ si la solution de base est dégénérée.
+
+\mbox{}
+
+S.p.d.g., les $k$ premières composantes sont non-nulles et
+\[
+  x_1 \ba_1 + x_2 \ba_2 + \ldots + x_k \ba_k = \bb,
+\]
+où $\ba_1, \ba_2, \ldots, \ba_k$ sont les $k$ premières colonnes de $A$, linéairement indépendantes. Comme $A$ est de rang $m$, la matrice comprends $m$ colonnes indépendantes. S.p.d.g., nous pouvons supposer que les $m$ premières colonnes sont indépendantes, et on peut encore écrire
+\[
+x_1 \ba_1 + x_2 \ba_2 + \ldots + x_m \ba_m = \bb.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Preuve}
+
+Supposons par l'absurde que $\bx$ n'est pas un point extrême. Il est alors combinaison convexe stricte de deux autres points distincts de $K$:
+\[
+\exists \ \by,\ \bz \in K,\ \by \ne \bz, \ \alpha \in (0,1) \ \mbox{tels que}\ \bx = \alpha \by + (1-\alpha) \bz.
+\]
+Comme $\bx \geq 0$, $\by \geq 0$, $\bz \geq 0$, les $n-k$ dernières composantes de $\by$ et $\bz$ sont nulles.
+
+\mbox{}
+
+Par définition de $K$, on a aussi
+\begin{align*}
+y_1 \ba_1 + y_2 \ba_2 + \ldots + y_m \ba_m = \bb, \\
+z_1 \ba_1 + z_2 \ba_2 + \ldots + z_m \ba_m = \bb
+\end{align*}
+Comme $\ba_1, \ba_2, \ldots, \ba_m$ linéairement indépendantes,
+\[
+\bx = \by = \bz.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Preuve}
+
+$\Rightarrow$ Supposons à présent que $\bx$ est un point extrême de $K$, et s.p.d.g. que les composantes non-nulles de $\bx$ sont les $k$ premières composantes. Dès lors:
+\[
+x_1 \ba_1 + x_2 \ba_2 + \ldots + x_k \ba_k = \bb,
+\]
+avec $x_i > 0$, $i = 1,\ldots,k$.
+
+\mbox{}
+
+Pour montrer que $\bx$ est une solution de base, nous devons montrer que $\ba_1, \ba_2,\ldots, \ba_k$ sont linéairement indépendants. Supposons par l'absurde que ce n'est pas le cas. Alors, il existe $\by = ( y_1, y_2,\ldots,y_k,0\ldots,0)$ tel que
+\[
+y_1 \ba_1 + y_2 \ba_2 + \ldots + y_k \ba_k = 0,
+\]
+avec au moins une des composantes de $y$ non nulle.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Preuve}
+
+On peut prendre $\epsilon \ne 0$ suffisamment petit pour avoir
+\begin{align*}
+\bx + \epsilon \by &\geq 0, \quad
+\bx - \epsilon \by \geq 0,
+\end{align*}
+et
+\[
+  x = \frac{1}{2}(\bx + \epsilon \by) + \frac{1}{2}(\bx - \epsilon \by).
+\]
+
+\mbox{}
+
+Clairement,
+\[
+A(\bx + \epsilon \by) = A(\bx - \epsilon \by) = \bb,
+\]
+aussi $\bx + \epsilon \by$, $\bx - \epsilon \by \in K$.
+
+\mbox{}
+
+Dès lors, $\bx$ peut être exprimé comme combinaison convexe de deux points distincts de $K$, et donc n'est pas un point extrême.
+
+\mbox{}
+
+Ceci implique qu'on doit avoir $\ba_1,\ldots,\ba_k$ linéairement indépendants, et de là, $k \leq m$. $\bx$ est dès lors solution de base.
+\end{frame}
+
+\begin{frame}
+\frametitle{Corollaires}
+
+{\bf Corollaire 1} Si l'ensemble convexe $K$ est non vide, il y a au moins un point extrême.
+
+\mbox{}
+
+{\bf Corollaire 2} S'il existe une solution optimale finie à un problème de programmation linéaire, il existe une solution optimale finie qui est un point extrême de l'ensemble de contraintes.
+
+\mbox{}
+
+{\bf Corollaire 3} L'ensemble de contraintes $K$ possède un nombre fini de points extrêmes.
+
+{\it Preuve.} L'ensemble des points extrêmes de $K$ est un sous-ensemble des solutions de base, qui sont en nombre fini (il y a un nombre fini de sélections possible de $m$ colonnes de $\bA$ parmi $n$ colonnes).
+
+\mbox{}
+
+{\bf Corollaire 4} 
+Si le polytope convexe $K$ est borné, alors $K$ est un polyèdre convexe, i.e. $K$ consiste de points qui sont combinaisons convexes d'un nombre fini de points.
+\end{frame}
+
+\end{document}

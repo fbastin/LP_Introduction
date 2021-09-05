@@ -1,0 +1,65 @@
+\documentclass[t,usepdftitle=false]{beamer}
+\usepackage[utf8]{inputenc}
+\usetheme{Warsaw}
+\usepackage{xcolor}
+% \setbeamercovered{transparent}
+%\usecolortheme{crane}
+\title[IFT2505]{IFT 2505\\Programmation Linéaire}
+\author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal\\\mbox{}\\\url{http://www.iro.umontreal.ca/~bastin/ift2505.php}}
+\date{Automne 2012}
+
+\usepackage{ulem}
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\def\ba{\boldsymbol{a}}
+\def\bb{\boldsymbol{b}}
+\def\bc{\boldsymbol{c}}
+\def\be{\boldsymbol{e}}
+\def\br{\boldsymbol{r}}
+\def\bu{\boldsymbol{u}}
+\def\bx{\boldsymbol{x}}
+\def\by{\boldsymbol{y}}
+\def\bz{\boldsymbol{z}}
+\def\bA{\boldsymbol{A}}
+\def\bB{\boldsymbol{B}}
+\def\bD{\boldsymbol{D}}
+\def\bH{\boldsymbol{H}}
+\def\bI{\boldsymbol{I}}
+\def\bL{\boldsymbol{L}}
+\def\bM{\boldsymbol{M}}
+\def\bU{\boldsymbol{U}}
+\def\bzero{\boldsymbol{0}}
+\def\bone{\boldsymbol{1}}
+\def\blambda{\boldsymbol{\lambda}}
+
+\def\cR{\mathcal{R}}
+
+\usepackage[frenchb]{babel}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Simplexe primal-dual}
+
+Motivations:
+\begin{itemize}
+\item
+Exploiter d'avantage la complémentarité entre le primal et le dual.
+\item
+Comme pour le simplexe duale, on part d'une solution dual-réalisable.
+\item
+Primal restreint: on va forcer la condition de complémentarité
+\[
+x_i > 0 \Rightarrow \lambda^T a_i = c_i,
+\]
+en faisant entrer dans la base primale les $x_i$ correspondant aux contraintes duales actives.
+\item
+Dual restreint: on optimise le dual. Si celui-ci est réalisable, augmenter (strictement) la valeur de l'objectif dual va conduire à transformer au moins une contrainte duale inactive en contrainte duale active.
+\end{itemize}
+
+\end{frame}
+
+\end{document}

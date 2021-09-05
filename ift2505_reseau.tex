@@ -1,0 +1,1131 @@
+\documentclass[usepdftitle=false]{beamer}
+
+\usepackage[utf8]{inputenc}
+
+\usetheme{Singapore}
+\usepackage{xcolor}
+
+\setbeamertemplate{footline}[frame number]
+
+\usepackage[frenchb]{babel}
+
+\usepackage{xcolor}
+% \setbeamercovered{transparent}
+%\usecolortheme{crane}
+\title[IFT2505]{IFT 2505\\Programmation Linéaire\\Problèmes de réseau}
+\author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal}
+\date{}
+
+\usepackage{ulem}
+\usepackage{cancel}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\def\ba{\boldsymbol{a}}
+\def\bb{\boldsymbol{b}}
+\def\bc{\boldsymbol{c}}
+\def\bd{\boldsymbol{d}}
+\def\be{\boldsymbol{e}}
+\def\br{\boldsymbol{r}}
+\def\bs{\boldsymbol{s}}
+\def\bu{\boldsymbol{u}}
+\def\bx{\boldsymbol{x}}
+\def\by{\boldsymbol{y}}
+\def\bz{\boldsymbol{z}}
+\def\bA{\boldsymbol{A}}
+\def\bB{\boldsymbol{B}}
+\def\bC{\boldsymbol{C}}
+\def\bD{\boldsymbol{D}}
+\def\bH{\boldsymbol{H}}
+\def\bI{\boldsymbol{I}}
+\def\bL{\boldsymbol{L}}
+\def\bM{\boldsymbol{M}}
+\def\bX{\boldsymbol{X}}
+\def\bU{\boldsymbol{U}}
+\def\bzero{\boldsymbol{0}}
+\def\bone{\boldsymbol{1}}
+\def\blambda{\boldsymbol{\lambda}}
+
+\def\cR{\mathcal{R}}
+\def\cT{\mathcal{T}}
+\def\RR{\cR}
+\def\NN{\mathcal{N}}
+
+\makeatletter
+\renewcommand*\env@matrix[1][c]{\hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{*\c@MaxMatrixCols #1}}
+\makeatother
+
+\usepackage[frenchb]{mathlist}
+
+\begin{document}
+\frame{\titlepage}
+
+% ------------------------------------------------------------------------------------------------------------------------------------------------------\begin{frame}
+
+\begin{frame}
+\frametitle{Graphes}
+
+Un graphe $G$ prend la forme $G = (N,A)$ où $N$ est
+un ensemble de {\sl sommets} et $A \subseteq N \times N$ un ensemble d'{\sl arcs}.
+
+\mbox{}
+
+Le terme réseau est un terme générique désignant un graphe dont les sommets ou les arcs possèdent des attributs: coûts, capacités, longueurs, etc.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Graphe orienté}
+
+Réseau de distribution: reprenons l'exemple du chapitre introductif
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.6,->]
+	\node[circle,draw] (A) at (1,6) {$A$};
+	\node[circle,draw] (B) at (1,0) {$B$};
+	\node[circle,draw] (D) at (9,6) {$D$};
+	\node[circle,draw] (E) at (9,0) {$E$};
+	\node[circle,draw] (C) at (5,3) {$C$};
+	\path
+	(A) edge (D)
+	(A) edge (B)
+	(A) edge (C)
+	(B) edge (C)
+	(C) edge (E)
+	;
+	\draw [->] (D) to [bend right=25] (E);
+	\draw [->] (E) to [bend right=25] (D);
+	\end{tikzpicture}
+\end{center}
+
+
+Les liens entre les noeuds du graphe ne peuvent être parcourus que dans un sens précis; nous parlerons de graphe {\sl orienté}.
+Les {\sl sommets} du graphe sont $A$, $B$, $C$, $D$, $E$, et le graphe posséde les {\sl arcs} $(A,B)$, $(A,C)$, $(A,D)$, $(B,C)$, $(C,E)$, $(D,E)$, $(E,D)$.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Graphe non orienté}
+
+Considérons le graphe suivant (Hillier et Lieberman, Section~9.1).
+Nous avons les sommets $O$, $A$, $B$, $C$, $D$, $E$, $T$, et les {\sl arêtes}: $\lbrace O,A \rbrace$, $\lbrace O,B \rbrace$, $\lbrace O,C \rbrace$, $\lbrace A,B \rbrace$, $\lbrace A,D \rbrace$, $\lbrace B,C \rbrace$,
+$\lbrace B,D \rbrace$, $\lbrace B,E \rbrace$, $\lbrace D,E \rbrace$, $\lbrace D,T \rbrace$, $\lbrace E,T \rbrace$.
+Le nombre sur chaque arête représente la distance entre les deux sommets reliés par cette arête
+
+\begin{center}
+	\begin{tikzpicture}
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\path
+	(O) edge node [above,midway] {2} (A)
+	(O) edge node [above,midway] {5} (B)
+	(O) edge node [above,midway] {4} (C)
+	(A) edge node [below,midway] {2} (B)
+	(A) edge node [above,midway] {7} (D)
+	(B) edge node [below,midway] {4} (D)
+	(B) edge node [below,midway] {3} (E)
+	(E) edge node [right,midway] {1} (D)
+	(D) edge node [above,midway] {5} (T)
+	(C) edge node [right,midway] {1} (B)
+	(E) edge node [right,midway] {7} (T)
+	(C) edge node [above,midway] {4} (E)
+	;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Transformations}
+
+Un graphe orienté dérivé d'un graphe non orienté en introduisant deux arcs pour chaque arête, un dans chaque direction.
+\`A l'inverse, nous qualifierons de graphe sous-jacent à un graphe orienté le graphe obtenu en enlevant l'orientation des arcs.
+Si $G$ est un graphe orienté, le graphe dérivé du graphe sous-jacent à $G$ n'est pas $G$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemins et circuits}
+
+Un {\sl chemin} [chaîne] est suite d'arcs [d'arêtes] distinct[e]s reliant deux sommets.
+Il est non orienté s'il est constitué d'une suite d'arcs distincts qui relient deux sommets, sans considération de l'orientation des arcs.
+En d'autres mots, un chemin non orienté est une chaîne dans le graphe sous-jacent.
+Un {\sl circuit} [cycle] est un chemin [chaîne] qui commence et finit au même sommet.
+Le circuit est non orienté s'il s'agit d'un cycle dans le graphe sous-jacent.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: Réseau de distribution}
+
+Reprenons l'exemple du réseau de distribution.
+$A \rightarrow C \rightarrow E \rightarrow D$ décrit un chemin, et en ignorant l'orientation des arcs, nous décrivons également un chemin non orienté.
+$A \rightarrow D \rightarrow E \rightarrow C \rightarrow B$ est chemin non orienté, mais pas un chemin.
+$D \rightarrow E \rightarrow D$ est circuit, et en omettant l'orientation des arcs, un circuit non orienté.
+$A \rightarrow B \rightarrow C \rightarrow A$ est un circuit non orienté (mais pas un circuit).
+\begin{center}
+	\begin{tikzpicture}[scale=0.6,->]
+	\node[circle,draw] (A) at (1,6) {$A$};
+	\node[circle,draw] (B) at (1,0) {$B$};
+	\node[circle,draw] (D) at (9,6) {$D$};
+	\node[circle,draw] (E) at (9,0) {$E$};
+	\node[circle,draw] (C) at (5,3) {$C$};
+	\path
+	(A) edge (D)
+	(A) edge (B)
+	(A) edge (C)
+	(B) edge (C)
+	(C) edge (E)
+	;
+	\draw [->] (D) to [bend right=25] (E);
+	\draw [->] (E) to [bend right=25] (D);
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Connexité}
+
+Deux sommets sont connexes s'il existe au moins un chemin non orienté les reliant.
+Un graphe est connexe si toute paire de sommets est connexe.
+
+\mbox{}
+
+Le plus petit graphe connexe à $n$ sommets possède $n-1$ arêtes; il est appelé un {\sl arbre}.
+
+\mbox{}
+
+Une définition alternative consiste à dire qu'un arbre est un graphe connexe sans cycle.
+Un arbre partiel est un arbre obtenu à partir d'un graphe connexe en incluant tous les sommets.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Connexité: exemple}
+
+Le graphe ci-dessous n'est pas un arbre partiel, comme il n'est pas connexe.
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.6]
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\path
+	(O) edge (A)
+	(O) edge (C)
+	(A) edge (B)
+	(D) edge (T)
+	(E) edge (T)
+	;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Connexité: exemple}
+
+Le graphe ci-dessous est connexe, mais présente des cycles.
+Par conséquent, il ne s'agit pas d'un arbre.
+\begin{center}
+	\begin{tikzpicture}[scale=0.6]
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\path
+	(O) edge (A)
+	(O) edge (C)
+	(A) edge (B)
+	(B) edge (D)
+	(E) edge (D)
+	(D) edge (T)
+	(C) edge (B)
+	(E) edge (T)
+	;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Connexité: exemple}
+
+Le graphe ci-dessous est un arbre partiel.
+\begin{center}
+	\begin{tikzpicture}[scale=0.6]
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\path
+	(O) edge (A)
+	(O) edge (C)
+	(A) edge (B)
+	(B) edge (D)
+	(D) edge (T)
+	(E) edge (T)
+	;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Flot dans un réseau}
+
+Un {\sl réseau} est un graphe orienté ayant
+\begin{itemize}
+	\item 
+	des capacités sur les arcs;
+	\item
+	des sommets d'offre (ou sources);
+	\item
+	des sommets de demande (ou puits);
+	\item
+	des sommets de transfert.
+\end{itemize}
+
+\mbox{}
+
+Le {\sl flot} dans un réseau est le nombre d'unités circulant sur les arcs du réseau de façon à respecter les capacités et les contraintes de conservation de flot.
+
+\mbox{}
+
+En chaque sommet, le flot sortant moins le flot entrant vaut
+\begin{itemize}
+	\item 
+	l'offre (si le sommet est une source);
+	\item
+	la demande (si le sommet est un puits);
+	\item
+	0 (en un sommet de transfert).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Flot dans un réseau}
+
+Soit $A$ est l'ensemble des arcs du réseau.
+En dénotant par $x_{ij}$ la quantité de flot qui passe sur l'arc $(i,j) \in A$, nous avons
+\[
+\sum_{(i,j) \in A^+(i)} x_{ij} - \sum_{(j,i) \in A^-(i) }x_{ji} = b_i,\quad i, j \in N
+\]
+où
+\begin{itemize}
+	\item 
+	$b_i = 0$ (transfert), offre (source), -demande (puits);
+	\item
+	$N$ désigne l'ensemble des sommets;
+	\item
+	$A^+(i)$ est l'ensemble des arcs sortants du sommet $i$;
+	\item
+	$A^-(i)$ désigne l'ensemble des arcs entrants au sommet $i$;
+\end{itemize}
+avec $0 \leq x_{ij} \leq u_{ij}$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Modèle de flot}
+
+Le chemin le plus court peut être vu comme le flot dans un réseau, lequel est le graphe orienté dérivé.
+On enlève les arcs entrant à $O$ et les arcs émanant de $T$.
+$O$ est la seule source, avec une offre égale à 1.
+$T$ est le seul puits, avec une demande valant 1.
+Le flot sur chaque arc $(i,j)$ est soit 1, si l'arc appartient au chemin le plus court, soit 0, sinon.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Problème du flot maximum}
+
+Considérons un graphe orienté et connexe.
+\`A chaque arc $(i,j)$, nous associons une capacité $u_{ij} > 0$.
+Il y a deux sommets spéciaux:
+\begin{itemize}
+	\item 
+	source (ou origine) $O$;
+	\item
+	puits (ou destination) $T$.
+\end{itemize}
+Tous les autres sont des sommets de transfert.
+L'offre en $O$ et la demande en $T$ sont variables.
+L'offre en $O$ doit cependant correspondre à la demande en $T$, et indique la valeur du flot entre $O$ et $T$.
+Nous cherche à maximiser la valeur du flot entre $O$ et $T$.
+
+Supposons que nous avons déjà affecté un flot sur les arcs.
+La {\sl capacité résiduelle} d'un arc $(i,j)$ est comme
+\[
+u_{ij} - x_{ij}
+\]
+Nous définission le {\sl graphe résiduel} comme le graphe non orienté sous-jacent, où, sur chaque arête, nous associons deux valeurs: la capacité résiduelle et le flot déjà affecté.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Continuons avec l'exemple précédent, mais en considérant à présent un graphe orienté.
+
+\begin{center}
+	\begin{tikzpicture}[->]
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\path
+	(O) edge node [above,midway] {2} (A)
+	(O) edge node [above,midway] {5} (B)
+	(O) edge node [above,midway] {4} (C)
+	(A) edge node [below,midway] {2} (B)
+	(A) edge node [above,midway] {7} (D)
+	(B) edge node [below,midway] {4} (D)
+	(B) edge node [below,midway] {3} (E)
+	(E) edge node [right,midway] {1} (D)
+	(D) edge node [above,midway] {5} (T)
+	(B) edge node [right,midway] {1} (C)
+	(E) edge node [right,midway] {7} (T)
+	(C) edge node [above,midway] {4} (E)
+	;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Supposons qu'en période de grande affluence, nous disposions d'une flotte d'autobus pour faire visiter les différents postes d'observation du parc, mais la réglementation limite le nombre d'autobus pouvant circuler sur chaque tronçon.
+Comment faire circuler les autobus dans le parc de façon à maximiser le nombre total d'autobus allant de $O$ à $T$?
+
+\mbox{}
+
+Exemple: l'arc $(0,B)$ a une capacité de 7, nous lui affectons 5 unités de flot.
+\begin{center}
+	\begin{tikzpicture}[->]
+	\node[circle,draw] (O) at (0,0) {$O$};
+	\node[circle,draw] (B) at (3,0) {$B$};
+	\path (O) edge node [above,midway] {7} (B);
+	\end{tikzpicture}
+	
+	\begin{tikzpicture}
+	\node[circle,draw] (O) at (0,0) {$O$};
+	\node[circle,draw] (B) at (3,0) {$B$};
+	\node at (0.5,0.15) {$7$};
+	\node at (2.5,0.15) {$0$};
+	\path
+	(O) edge (B);
+	\end{tikzpicture}
+	
+	\begin{tikzpicture}
+	\node[circle,draw] (O) at (0,0) {$O$};
+	\node[circle,draw] (B) at (3,0) {$B$};
+	\node at (0.5,0.15) {$2$};
+	\node at (2.5,0.15) {$5$};
+	\path
+	(O) edge (B);
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Interprétation du graphe résiduel: nous avons affecté 5 unités de flot sur l'arc $(O,B)$.
+Si nous traversons $O \rightarrow B$, 2 est la capacité résiduelle et le flot sur $(O, B)$ vaut 5.
+Si nous traverse $B \rightarrow O$, la capacité résiduelle est 5 et le flot sur $(B, O)$ vaut 2.
+
+\mbox{}
+
+Un chemin d'augmentation est un chemin allant de la source au puits dans le graphe
+orienté dérivé du graphe résiduel.
+Pour chaque arête $\lbrace i,j \rbrace$, l'arc $(i,j)$ possède une capacité résiduelle $u_{ij} - x_{ij}$, et l'arc $(j,i)$ possède une capacité résiduelle $x_{ij}$.
+Chaque arc du chemin possède une capacité résiduelle strictement positive.
+La capacité résiduelle d'un chemin d'augmentation est le minimum des capacités résiduelles de tous les arcs du chemin.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme de Ford-Fulkerson}
+
+\begin{enumerate}
+	\item 
+	Initialiser le flot: 0 unité sur chaque arc.
+	\item
+	Si aucun chemin d'augmentation ne peut être identifié, arrêter: le flot est maximum.
+	\item
+	Identifier un chemin d'augmentation $P$; soit $c$ sa capacité résiduelle.
+	\item
+	Sur chaque arc de $P$
+	\begin{enumerate}[(a)]
+		\item
+		augmenter le flot de $c$;
+		\item
+		diminuer la capacité résiduelle de $c$.
+	\end{enumerate}
+	\item
+	Retourner à l'étape 2.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Identifier un chemin d'augmentation}
+
+\begin{enumerate}
+	\item
+	Marquer la source $O$ (aucun autre sommet n'est marqué); tous les sommets sont non visités.
+	\item
+	S'il n'y a aucun sommet marqué non visité, arrêter: il n'existe aucun chemin d'augmentation.
+	\item
+	Choisir un sommet marqué non visité $i$.
+	\item
+	Visiter $i$: pour chaque $(i,j)$ de capacité résiduelle strictement positive dans le graphe orienté dérivé du graphe résiduel, marquer $j$.
+	\item
+	Si $T$ est marqué, arrêter: un chemin d'augmentation a été identifié.
+	\item
+	Retour à l'étape 2.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: graphe résiduel initial}
+
+\begin{center}
+	\begin{tikzpicture}
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node at (0.6,2.2) {$7$};
+	\node at (0.2,2.6) {$5$};
+	\node at (0.2,1.4) {$4$};
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node at (2.6,4.1) {$3$};
+	\node at (1.4,3.7) {$0$};
+	\node at (2.4,3.5) {$1$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node at (3.4,0) {$0$};
+	\node at (4.1,0.6) {$0$};
+	\node at (4.5,-0.3) {$4$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node at (4.3,2.2) {$0$};
+	\node at (5.6,2.2) {$4$};
+	\node at (4.7,2.5) {$0$};
+	\node at (4.55,1.5) {$2$};
+	\node at (5.3,1.4) {$5$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node at (7.5,1.7) {$0$};
+	\node at (7.55,2.4) {$0$};
+	\node at (8.05,1.4) {$0$};
+	\node at (8.5,2.4) {$9$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node at (7.1,-0.3) {$0$};
+	\node at (7.2,0.5) {$0$};
+	\node at (8.1,0.2) {$6$};
+	\node at (7.55,0.6) {$1$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\node at (9.4,2.6) {$0$};
+	\node at (9.8,1.9) {$0$};
+	\path
+	(O) edge (A)
+	(O) edge (B)
+	(O) edge (C)
+	(A) edge (B)
+	(A) edge (D)
+	(B) edge (D)
+	(B) edge (E)
+	(E) edge (D)
+	(D) edge (T)
+	(B) edge (C)
+	(E) edge (T)
+	(C) edge (E)
+	;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: itération 1}
+
+Nous pouvons identifier le chemin d'augmentation $O \rightarrow B \rightarrow E \rightarrow T$.
+La capacité résiduelle vaut alors $\min \lbrace 7,5,6 \rbrace = 5$.
+En suivant l'algorithme, nous augmentons le flot et diminuons la capacité résiduelle de 5 unités sur tous les arcs de $O \rightarrow B \rightarrow E \rightarrow T$.
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.8]
+	\node (O1) at (-1.5,2) {$5$};
+	\node (T1) at (11.5,2.5) {$5$};
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node at (0.2,2.6) {$5$};
+	\node at (0.6,2.2) {$2$};
+	\node at (0.2,1.4) {$4$};
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node at (1.4,3.7) {$0$};
+	\node at (2.6,4.1) {$3$};
+	\node at (2.4,3.5) {$1$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node at (4.3,2.2) {$5$};
+	\node at (4.7,2.5) {$0$};
+	\node at (5.6,2.2) {$4$};
+	\node at (5.3,1.4) {$0$};
+	\node at (4.55,1.5) {$2$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node at (3.4,0) {$0$};
+	\node at (4.1,0.6) {$0$};
+	\node at (4.5,-0.3) {$4$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node at (7.5,1.7) {$0$};
+	\node at (7.55,2.4) {$0$};
+	\node at (8.5,2.4) {$9$};
+	\node at (8.05,1.4) {$0$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node at (7.1,-0.3) {$0$};
+	\node at (7.2,0.5) {$5$};
+	\node at (7.55,0.6) {$1$};
+	\node at (8.1,0.2) {$1$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\node at (9.4,2.6) {$0$};
+	\node at (9.8,1.9) {$5$};
+	\path
+	(O) edge (A)
+	(O) edge (B)
+	(O) edge (C)
+	(A) edge (B)
+	(A) edge (D)
+	(B) edge (D)
+	(B) edge (E)
+	(E) edge (D)
+	(D) edge (T)
+	(B) edge (C)
+	(E) edge (T)
+	(C) edge (E)
+	(O1) edge [->, thick] (O)
+	(T) edge [->, thick] (T1)
+	;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: itération 2}
+
+Nous pouvons à présent identifier le chemin d'augmentation $O \rightarrow A \rightarrow D \rightarrow T$, qui donne une capacité résiduelle de $\min \lbrace 5,3,9 \rbrace = 3$.
+Nous augmentons le flot et diminuons la capacité résiduelle de 3 unités sur tous les arcs de $O \rightarrow A \rightarrow D \rightarrow T$.
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.8]
+	\node (O1) at (-1.5,2) {$8$};
+	\node (T1) at (11.5,2.5) {$8$};
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node at (0.2,2.6) {$2$};
+	\node at (0.6,2.2) {$2$};
+	\node at (0.2,1.4) {$4$};
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node at (1.4,3.7) {$3$};
+	\node at (2.6,4.1) {$0$};
+	\node at (2.4,3.5) {$1$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node at (4.3,2.2) {$5$};
+	\node at (4.7,2.5) {$0$};
+	\node at (5.6,2.2) {$4$};
+	\node at (5.3,1.4) {$0$};
+	\node at (4.55,1.5) {$2$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node at (3.4,0) {$0$};
+	\node at (4.1,0.6) {$0$};
+	\node at (4.5,-0.3) {$4$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node at (7.5,1.7) {$0$};
+	\node at (7.55,2.4) {$3$};
+	\node at (8.5,2.4) {$6$};
+	\node at (8.05,1.4) {$0$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node at (7.1,-0.3) {$0$};
+	\node at (7.2,0.5) {$5$};
+	\node at (7.55,0.6) {$1$};
+	\node at (8.1,0.2) {$1$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\node at (9.4,2.6) {$3$};
+	\node at (9.8,1.9) {$5$};
+	\path
+	(O) edge (A)
+	(O) edge (B)
+	(O) edge (C)
+	(A) edge (B)
+	(A) edge (D)
+	(B) edge (D)
+	(B) edge (E)
+	(E) edge (D)
+	(D) edge (T)
+	(B) edge (C)
+	(E) edge (T)
+	(C) edge (E)
+	(O1) edge [->, thick] (O)
+	(T) edge [->, thick] (T1)
+	;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: itération 3}
+
+Nous avons le chemin d'augmentation $O \rightarrow A \rightarrow B \rightarrow D \rightarrow T$, et la capacité résiduelle $\min \lbrace 2,1,4,6 \rbrace = 1$.
+Augmentons le flot et diminuons la capacité résiduelle de 1 unité sur tous les arcs de $O \rightarrow A \rightarrow B \rightarrow D \rightarrow T$.
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.8]
+	\node (O1) at (-1.5,2) {$9$};
+	\node (T1) at (11.5,2.5) {$9$};
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node at (0.2,2.6) {$1$};
+	\node at (0.6,2.2) {$2$};
+	\node at (0.2,1.4) {$4$};
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node at (1.4,3.7) {$4$};
+	\node at (2.6,4.1) {$0$};
+	\node at (2.4,3.5) {$0$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node at (4.3,2.2) {$5$};
+	\node at (4.7,2.5) {$1$};
+	\node at (5.6,2.2) {$3$};
+	\node at (5.3,1.4) {$0$};
+	\node at (4.55,1.5) {$2$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node at (3.4,0) {$0$};
+	\node at (4.1,0.6) {$0$};
+	\node at (4.5,-0.3) {$4$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node at (7.5,1.7) {$1$};
+	\node at (7.55,2.4) {$3$};
+	\node at (8.5,2.4) {$5$};
+	\node at (8.05,1.4) {$0$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node at (7.1,-0.3) {$0$};
+	\node at (7.2,0.5) {$5$};
+	\node at (7.55,0.6) {$1$};
+	\node at (8.1,0.2) {$1$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\node at (9.4,2.6) {$4$};
+	\node at (9.8,1.9) {$5$};
+	\path
+	(O) edge (A)
+	(O) edge (B)
+	(O) edge (C)
+	(A) edge (B)
+	(A) edge (D)
+	(B) edge (D)
+	(B) edge (E)
+	(E) edge (D)
+	(D) edge (T)
+	(B) edge (C)
+	(E) edge (T)
+	(C) edge (E)
+	(O1) edge [->, thick] (O)
+	(T) edge [->, thick] (T1)
+	;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: itération 4}
+
+Identifions le chemin d'augmentation $O \rightarrow B \rightarrow D \rightarrow T$, ce qui donne comme apacité résiduelle $\min \lbrace 2,3,5 \rbrace = 2$.
+Nous augmentons le flot et diminuer la capacité résiduelle de 2 unités sur tous les arcs de $O \rightarrow B \rightarrow D \rightarrow T$.
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.8]
+	\node (O1) at (-1.5,2) {$11$};
+	\node (T1) at (11.5,2.5) {$11$};
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node at (0.2,2.6) {$1$};
+	\node at (0.6,2.2) {$0$};
+	\node at (0.2,1.4) {$4$};
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node at (1.4,3.7) {$4$};
+	\node at (2.6,4.1) {$0$};
+	\node at (2.4,3.5) {$0$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node at (4.3,2.2) {$7$};
+	\node at (4.7,2.5) {$1$};
+	\node at (5.6,2.2) {$1$};
+	\node at (5.3,1.4) {$0$};
+	\node at (4.55,1.5) {$2$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node at (3.4,0) {$0$};
+	\node at (4.1,0.6) {$0$};
+	\node at (4.5,-0.3) {$4$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node at (7.5,1.7) {$3$};
+	\node at (7.55,2.4) {$3$};
+	\node at (8.5,2.4) {$3$};
+	\node at (8.05,1.4) {$0$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node at (7.1,-0.3) {$0$};
+	\node at (7.2,0.5) {$5$};
+	\node at (7.55,0.6) {$1$};
+	\node at (8.1,0.2) {$1$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\node at (9.4,2.6) {$6$};
+	\node at (9.8,1.9) {$5$};
+	\path
+	(O) edge (A)
+	(O) edge (B)
+	(O) edge (C)
+	(A) edge (B)
+	(A) edge (D)
+	(B) edge (D)
+	(B) edge (E)
+	(E) edge (D)
+	(D) edge (T)
+	(B) edge (C)
+	(E) edge (T)
+	(C) edge (E)
+	(O1) edge [->, thick] (O)
+	(T) edge [->, thick] (T1)
+	;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: itération 5}
+
+Prenons le chemin d'augmentation $O \rightarrow C \rightarrow E \rightarrow D \rightarrow T$, avec comme capacité résiduelle $\min \lbrace 4,4,1,3 \rbrace = 1$.
+Ceci nous conduit à augmenter le flot et diminuer la capacité résiduelle de 1 unité sur tous les arcs de $O \rightarrow C \rightarrow E \rightarrow D \rightarrow T$.
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.8]
+	\node (O1) at (-1.5,2) {$12$};
+	\node (T1) at (11.5,2.5) {$12$};
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node at (0.2,2.6) {$1$};
+	\node at (0.6,2.2) {$0$};
+	\node at (0.2,1.4) {$3$};
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node at (1.4,3.7) {$4$};
+	\node at (2.6,4.1) {$0$};
+	\node at (2.4,3.5) {$0$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node at (4.3,2.2) {$7$};
+	\node at (4.7,2.5) {$1$};
+	\node at (5.6,2.2) {$1$};
+	\node at (5.3,1.4) {$0$};
+	\node at (4.55,1.5) {$2$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node at (3.4,0) {$1$};
+	\node at (4.1,0.6) {$0$};
+	\node at (4.5,-0.3) {$3$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node at (7.5,1.7) {$3$};
+	\node at (7.55,2.4) {$3$};
+	\node at (8.5,2.4) {$2$};
+	\node at (8.05,1.4) {$1$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node at (7.1,-0.3) {$1$};
+	\node at (7.2,0.5) {$5$};
+	\node at (7.55,0.6) {$0$};
+	\node at (8.1,0.2) {$1$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\node at (9.4,2.6) {$7$};
+	\node at (9.8,1.9) {$5$};
+	\path
+	(O) edge (A)
+	(O) edge (B)
+	(O) edge (C)
+	(A) edge (B)
+	(A) edge (D)
+	(B) edge (D)
+	(B) edge (E)
+	(E) edge (D)
+	(D) edge (T)
+	(B) edge (C)
+	(E) edge (T)
+	(C) edge (E)
+	(O1) edge [->, thick] (O)
+	(T) edge [->, thick] (T1)
+	;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: itération 6}
+
+Nous pouvons choisir le chemin d'augmentation $O \rightarrow C \rightarrow E \rightarrow T$.
+La capacité résiduelle est $\min \lbrace 3,3,1 \rbrace = 1$.
+En augmentant le flot et en diminuant la capacité résiduelle de 1 unité sur tous les arcs de $O \rightarrow C \rightarrow E \rightarrow T$.
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.8]
+	\node (O1) at (-1.5,2) {$13$};
+	\node (T1) at (11.5,2.5) {$13$};
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node at (0.2,2.6) {$1$};
+	\node at (0.6,2.2) {$0$};
+	\node at (0.2,1.4) {$2$};
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node at (1.4,3.7) {$4$};
+	\node at (2.6,4.1) {$0$};
+	\node at (2.4,3.5) {$0$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node at (4.3,2.2) {$7$};
+	\node at (4.7,2.5) {$1$};
+	\node at (5.6,2.2) {$1$};
+	\node at (5.3,1.4) {$0$};
+	\node at (4.55,1.5) {$2$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node at (3.4,0) {$2$};
+	\node at (4.1,0.6) {$0$};
+	\node at (4.5,-0.3) {$2$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node at (7.5,1.7) {$3$};
+	\node at (7.55,2.4) {$3$};
+	\node at (8.5,2.4) {$2$};
+	\node at (8.05,1.4) {$1$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node at (7.1,-0.3) {$2$};
+	\node at (7.2,0.5) {$5$};
+	\node at (7.55,0.6) {$0$};
+	\node at (8.1,0.2) {$0$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\node at (9.4,2.6) {$7$};
+	\node at (9.8,1.9) {$6$};
+	\path
+	(O) edge (A)
+	(O) edge (B)
+	(O) edge (C)
+	(A) edge (B)
+	(A) edge (D)
+	(B) edge (D)
+	(B) edge (E)
+	(E) edge (D)
+	(D) edge (T)
+	(B) edge (C)
+	(E) edge (T)
+	(C) edge (E)
+	(O1) edge [->, thick] (O)
+	(T) edge [->, thick] (T1)
+	;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: itération 7}
+
+Considérons le chemin d'augmentation: $O \rightarrow C \rightarrow E \rightarrow B \rightarrow D \rightarrow T$, de capacité résiduelle $\min \lbrace 2,2,5,1,2 \rbrace = 1$.
+Par conséquent, nous augmenter le flot et diminuons la capacité résiduelle de 1 unité sur tous les arcs de $O \rightarrow C \rightarrow E \rightarrow B \rightarrow D \rightarrow T$.
+
+\begin{center}
+	\begin{tikzpicture}[scale=0.8]
+	\node (O1) at (-1.5,2) {$14$};
+	\node (T1) at (11.5,2.5) {$14$};
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node at (0.2,2.6) {$1$};
+	\node at (0.6,2.2) {$0$};
+	\node at (0.2,1.4) {$1$};
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node at (1.4,3.7) {$4$};
+	\node at (2.6,4.1) {$0$};
+	\node at (2.4,3.5) {$0$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node at (4.3,2.2) {$7$};
+	\node at (4.7,2.5) {$1$};
+	\node at (5.6,2.2) {$0$};
+	\node at (5.3,1.4) {$1$};
+	\node at (4.55,1.5) {$2$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node at (3.4,0) {$3$};
+	\node at (4.1,0.6) {$0$};
+	\node at (4.5,-0.3) {$1$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node at (7.5,1.7) {$4$};
+	\node at (7.55,2.4) {$3$};
+	\node at (8.5,2.4) {$1$};
+	\node at (8.05,1.4) {$1$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node at (7.1,-0.3) {$3$};
+	\node at (7.2,0.5) {$4$};
+	\node at (7.55,0.6) {$0$};
+	\node at (8.1,0.2) {$0$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\node at (9.4,2.6) {$8$};
+	\node at (9.8,1.9) {$6$};
+	\path
+	(O) edge (A)
+	(O) edge (B)
+	(O) edge (C)
+	(A) edge (B)
+	(A) edge (D)
+	(B) edge (D)
+	(B) edge (E)
+	(E) edge (D)
+	(D) edge (T)
+	(B) edge (C)
+	(E) edge (T)
+	(C) edge (E)
+	(O1) edge [->, thick] (O)
+	(T) edge [->, thick] (T1)
+	;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: fin}
+
+Il n'y a plus aucun chemin d'augmentation possible; nous avons atteint le flot maximum.
+
+\begin{center}
+	\begin{tikzpicture}[->,scale=0.8]
+	\node (O1) at (-1.5,2) {$14$};
+	\node (T1) at (11.5,2.5) {$14$};
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\path
+	(O) edge node [above,midway] {4} (A)
+	(O) edge node [above,midway] {7} (B)
+	(O) edge node [above,midway] {3} (C)
+	(A) edge node [below,midway] {1} (B)
+	(A) edge node [above,midway] {3} (D)
+	(B) edge node [below,midway] {4} (D)
+	(B) edge node [below,midway] {4} (E)
+	(C) edge node [above,midway] {3} (E)
+	(D) edge node [above,midway] {8} (T)
+	(E) edge node [right,midway] {1} (D)
+	(E) edge node [right,midway] {6} (T)
+	(O1) edge [->, thick] (O)
+	(T) edge [->, thick] (T1)
+	;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Flot maximum - Coupe minimum}
+
+Supposons que nous partitionnions l'ensemble des sommets en deux sous-ensembles $X$, $Y$.
+Une {\sl coupe} est un sous-ensemble d'arcs allant d'un sommet de $X$ vers un sommet de $Y$.
+La capacité d'une coupe est la somme des capacités des arcs de la coupe.
+Une coupe minimum est une coupe dont la capacité est minimum parmi toutes les coupes possibles.
+Le théorème flot max--coupe min dit que la valeur du flot maximum est égale à la capacité d'une coupe minimum.
+Les sommets marqués lors de la dernière itération de
+l'algorithme de Ford-Fulkerson définissent la coupe minimum.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Flot maximum - Coupe minimum: exemple}
+
+\begin{center}
+	\begin{tikzpicture}
+	\node[circle,draw] (O) at (0,2) {$O$};
+	\node at (0.6,2.2) {$7$};
+	\node at (0.2,2.6) {$5$};
+	\node at (0.2,1.4) {$4$};
+	\node[circle,draw] (A) at (2,4) {$A$};
+	\node at (2.6,4.1) {$3$};
+	\node at (1.4,3.7) {$0$};
+	\node at (2.4,3.5) {$1$};
+	\node[circle,draw] (C) at (4,0) {$C$};
+	\node at (3.4,0) {$0$};
+	\node at (4.1,0.6) {$0$};
+	\node at (4.5,-0.3) {$4$};
+	\node[circle,draw] (B) at (5,2) {$B$};
+	\node at (4.3,2.2) {$0$};
+	\node at (5.6,2.2) {$4$};
+	\node at (4.7,2.5) {$0$};
+	\node at (4.55,1.5) {$2$};
+	\node at (5.3,1.4) {$5$};
+	\node[circle,draw] (D) at (8,2) {$D$};
+	\node at (7.5,1.7) {$0$};
+	\node at (7.55,2.4) {$0$};
+	\node at (8.05,1.4) {$0$};
+	\node at (8.5,2.4) {$9$};
+	\node[circle,draw] (E) at (7.6,0) {$E$};
+	\node at (7.1,-0.3) {$0$};
+	\node at (7.2,0.5) {$0$};
+	\node at (8.1,0.2) {$6$};
+	\node at (7.55,0.6) {$1$};
+	\node[circle,draw] (T) at (10,2.5) {$T$};
+	\node at (9.4,2.6) {$0$};
+	\node at (9.8,1.9) {$0$};
+	\path
+	(O) edge (A)
+	(O) edge (B)
+	(O) edge (C)
+	(A) edge (B)
+	(A) edge (D)
+	(B) edge (D)
+	(B) edge (E)
+	(E) edge (D)
+	(D) edge (T)
+	(B) edge (C)
+	(E) edge (T)
+	(C) edge (E)
+	;
+	\draw[color=red] (3,5) -- (10,-1); 
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Problème de flot minimum}
+
+Plutôt que de maximiser le flot sur le réseau, nous pourrions chercher à trouver la façon la plus économique d'envoyer un certain flot à travers un réseau.
+Considérons un réseau de flot $G(N,A)$, avec une source $s \in N$ et un puits $t \in N$. On veut envoyer le flux $d$ de $s$ à $t$.
+Soient $\ell(i,j)$ le coût unitaire sur l'arête $\lbrace i, i \rbrace$, et $f(i,j)$ le flot $\lbrace i, j \rbrace$.
+Nous avons le problème linéaire
+\begin{align*}
+\min\ &\sum_{i,j \in N} \ell(i,j)f(i,j), \\
+\sc{}\ & f(i,j) \leq c_{ij}, \\
+& f(i,j) = -f(j,i), \\
+& \sum_{k \in N} f(i,k) = 0,\ \forall k \ne s,t,\\
+& \sum_{k \in N} f(s,k) = \sum_{k \in N} f(k,t) = d.\\
+\end{align*}
+
+\end{frame}
+
+\end{document}

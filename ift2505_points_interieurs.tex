@@ -1,0 +1,409 @@
+\documentclass[t,usepdftitle=false]{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usetheme{Singapore}
+\usepackage{xcolor}
+
+% \setbeamercovered{transparent}
+%\usecolortheme{crane}
+\title[IFT2505]{IFT 2505\\Programmation Linéaire}
+\author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal}
+\date{}
+
+\usepackage{ulem}
+\usepackage{cancel}
+
+\usepackage{amsmath}
+\newtheorem{thm}{Théorème}
+
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\def\ba{\boldsymbol{a}}
+\def\bb{\boldsymbol{b}}
+\def\bc{\boldsymbol{c}}
+\def\be{\boldsymbol{e}}
+\def\br{\boldsymbol{r}}
+\def\bs{\boldsymbol{s}}
+\def\bu{\boldsymbol{u}}
+\def\bx{\boldsymbol{x}}
+\def\by{\boldsymbol{y}}
+\def\bz{\boldsymbol{z}}
+\def\bA{\boldsymbol{A}}
+\def\bB{\boldsymbol{B}}
+\def\bD{\boldsymbol{D}}
+\def\bH{\boldsymbol{H}}
+\def\bI{\boldsymbol{I}}
+\def\bL{\boldsymbol{L}}
+\def\bM{\boldsymbol{M}}
+\def\bU{\boldsymbol{U}}
+\def\bzero{\boldsymbol{0}}
+\def\bone{\boldsymbol{1}}
+\def\blambda{\boldsymbol{\lambda}}
+
+\def\cR{\mathcal{R}}
+
+\begin{document}
+\frame{\titlepage}
+
+% ------------------------------------------------------------------------------------------------------------------------------------------------------\begin{frame}
+
+\begin{frame}
+\frametitle{Vitesse de convergence du simplexe}
+
+On sait que la procédure du simplexe converge vers une solution optimale (en supposant qu'au moins une telle solution existe) en un nombre fini d'étapes. Il n'est reste pas moins que ce nombre d'étapes peut être grand.
+
+%\mbox{}
+
+%Soit $n$ le nombre de variables et $m$ le nombre de contraintes linéaires, avec $m \leq n$. Il peut y avoir jusqu'à $n!/(m!(n-m)!$) bases à considérer, bien que certaines ne soient pas réalisables et pourront donc être écartées.
+
+\mbox{}
+
+Peut-il arriver que le simplexe examine toutes les bases réalisables possibles? La réponse est malheureusement oui.
+
+\mbox{}
+
+En général, le simplexe est une méthode rapide. Mais pour une instance donnée, nous n'avons aucune garantie.
+\end{frame}
+
+\begin{frame}
+\frametitle{Eléments de la théorie de complexité}
+
+Complexité: quantité de ressources requises par un calcul.
+
+\mbox{}
+
+But: associer à un algorithme des mesures intrinsèques de ses exigences en temps de calcul. Grosso-modo, pour ce faire, nous avons besoin de définir
+\begin{itemize}
+\item
+une notion de la taille des entrées;
+\item
+un ensemble d'opérations de base;
+\item
+un coût pour chaque opération de base.
+\end{itemize}
+
+\mbox{}
+
+Si $x$ est une entrée donnée, le coût de calcul $C(x)$ avec l'entrée $x$ est la somme des coûts de toutes les opérations de base utilisées au cours de ce calcul.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Eléments de la théorie de complexité}
+
+Soit $\mathcal{A}$ un algorithme et $\mathcal{J}_n$ l'ensemble de toutes les entrées de taille $n$. La fonction de coût de pire cas de $\mathcal{A}$ est définie par
+\[
+T^w_{\mathcal{A}}(n) = \sup_{x \in \mathcal{J}_n} C(x).
+\]
+
+\mbox{}
+
+S'il existe une structure de probabilités définie sur $\mathcal{J}_n$, il est possible de définir le coût moyen comme
+\[
+T^a_{\mathcal{A}}(n) = E_{x \in \mathcal{J}_n} [C(x)].
+\]
+où $E_{x \in \mathcal{J}_n}$ est l'espérance sur $\mathcal{J}_n$.
+
+\mbox{}
+
+Ce coût moyen est souvent plus difficile à obtenir.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Eléments de la théorie de complexité}
+
+Comment sélectionner les trois types d'objet définis plus haut pour l'analyse?
+
+\mbox{}
+
+Pour les algorithmes que nous considérons ici, le choix évident est l'ensemble des quatre opérations algorithmiques de base:\\
+$+$, $-$, $\times$, $/$.
+
+\mbox{}
+
+Sélectionner une notion de taille d'entrée et de coût pour les opérations de base dépend du type de données traitées par l'algorithme. Certains types peuvent être représentés à l'intérieur d'une quantité fixée de mémoire informatique, tandis que d'autres nécessitent une mémoire variable.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Eléments de la théorie de complexité}
+
+Un concept de base est celui de temps polynomial.
+
+\mbox{}
+
+Un algorithme $\mathcal{A}$ est dit algorithme en temps polynomial si $T_{\mathcal{A}}^w(n)$ est bornée supérieurement par un polynôme.
+
+\mbox{}
+
+Un problème peut être résolu en temps polynomial s'il existe un algorithme en temps polynomial résolvant le problème.
+
+\mbox{}
+
+La notion de temps moyen polynomial est définie similairement, en remplaçant $T_{\mathcal{A}}^w(n)$ par $T_{\mathcal{A}}^a(n)$.
+
+\mbox{}
+
+La notion de temps polynomial est généralement prise comme la formalisation de l'efficacité en théorie de la complexité.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{La méthode du simplexe n'est pas en temps polynomial}
+
+Soit $A \in \cR^{m \times n}$, $b \in \cR^m$, $c \in \cR^n$.
+
+\mbox{}
+
+Le nombre d'étapes de pivots est typiquement un petit multiple de $n$. Toutefois, le nombre d'itérations requises peut être exponentiel.
+
+\mbox{}
+
+Une forme de l'exemple de Klee-Minty est
+\begin{align*}
+\max_x \ & \sum_{j =1}^n 10^{n-j} x_j \\
+\mbox{t.q. } & 2\sum_{j = 1}^{i-1} 10^{i-j} x_j + x_i \leq 100^{i-1},\ i = 1,\ldots, n\\
+& x_j \geq 0,\ j = 1,\ldots, n.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple de Klee-Minty}
+
+Considérons le cas $n = 3$.
+\begin{align*}
+\max_x \ & 100x_1 + 10x_2 + x_3\\
+& x_1 \leq 1 \\
+& 20 x_1 + x_2 \leq 100 \\
+& 200 x_1 + 20 x_2 + x_3 \leq 10000 \\
+& x_1 \geq 0,\ x_2 \geq 0,\ x_3 \geq 0.
+\end{align*}
+
+\mbox{}
+
+Sous forme standard, cela donne $m = 3$, $n = 6$, comme nous devons ajouter 3 variables d'écart. On peut montrer que 7 pivots sont nécessaires.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple de Klee-Minty}
+
+Sous la forme générale, cela donne $2^n - 1$ pivots.
+
+\mbox{}
+
+Pour $n = 50$, cela donne $2^{50} - 1 \approx 10^{15}$. Si on était capable de réaliser un millions de pivots par seconde, il faudrait aux environs de 33 ans pour résoudre le problème.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthodes de points intérieurs: complémentarité}
+
+(Vanderbei) Pourquoi les problèmes linéaires sont-ils difficiles? En raison de la complémentarité!
+
+\mbox{}
+
+Reprenons la paire primale-duale
+\begin{align*}
+\min_x\ & c^T x \\
+\mbox{s.c. } & Ax = b \\
+& x \geq 0,
+\end{align*}
+\begin{align*}
+\max_{\lambda} \  & b^T \lambda \\
+\mbox{s.c. } & A^T \lambda  +t = c. \\
+& t \geq 0
+\end{align*}
+Nous avions obtenu
+\[
+t_i x_i = 0, \ i = 1,\ldots, n.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthodes de points intérieurs: complémentarité}
+
+On peut aussi le voir sur la forme symétrique:
+\begin{align*}
+\min_x\ & c^T x \\
+\mbox{s.c. } & Ax - u = b \\
+& x \geq 0,\ u \geq 0.
+\end{align*}
+\begin{align*}
+\max_{\lambda} \  & b^T \lambda \\
+\mbox{s.c. } & A^T \lambda  +t = c. \\
+& \lambda \geq 0, t \geq 0.
+\end{align*}
+Dans ce cas, nous avons
+\[
+t_i x_i = 0,\ i = 1,\ldots,n \quad
+\lambda_j u_j = 0,\ j = 1,\ldots, m.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Notation matricielle}
+
+On ne peut écrire $tx = 0$, comme le produit $tx$ est indéfini.
+
+\mbox{}
+
+Réécriture:
+\[
+x = \begin{pmatrix}
+x_1 \\ x_2 \\ x_3 \\ \vdots \\ x_n
+\end{pmatrix}
+\Rightarrow
+\begin{pmatrix}
+x_1 \\ & x_2 \\ & & x_3 \\ & & & \ddots \\ & & & & x_n
+\end{pmatrix}
+\]
+
+\mbox{}
+
+Les conditions de complémentarité peuvent alors être réécrites comme
+\[
+XTe = 0,\quad U\Lambda e = 0.
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Conditions d'optimalité}
+
+\begin{align*}
+Ax - u &= b \\
+A^T \lambda + t &= c \\
+XTe &= 0\\
+U\Lambda e &= 0\\
+x,\ \lambda,\ t,\ u &\geq 0.
+\end{align*}
+
+\mbox{}
+
+Ignorons (temporairement) les contraintes de non-négativité.
+Nous avons $2n + 2m$ équations, à $2n + 2m$ inconnues.
+
+\mbox{}
+
+Soucis: le système n'est pas linéaire. La non-linéarité des conditions de complémentarité rend le problème de programmation linéaire fondamentalement plus difficile que la résolution d'un système d'équations linéaires.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Conditions d'optimalité: $\mu$-complémentarité}
+
+En plus d'ignorer les contraintes de non-négativité, on va relâcher les contraintes de complémentarité en utilisant un paramètre $\mu > 0$:
+\begin{align*}
+Ax - u &= b \\
+A^T \lambda + t &= c \\
+XTe &= \mu e\\
+U\Lambda e &= \mu e.
+\end{align*}
+Les paires de variables primales duales contiennent deux variables de même nature et fixer la valeur d'une variable fixe la seconde (alors qu'une valeur nulle laisse l'autre variable indéterminée).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Direction de recherche}
+
+Débuter avec une solution initiale positive $(x, \lambda, u, t)$.
+
+\mbox{}
+
+On va introduire des directions de recherche
+\[
+\Delta x,\ \Delta \lambda,\ \Delta u,\ \Delta t,
+\]
+et on réécrit les équations précédentes avec
+\[
+x + \Delta x,\ \lambda + \Delta \lambda,\ u + \Delta u,\ t + \Delta t,
+\]
+Cela donne
+\begin{align*}
+A(x + \Delta x) - (u + \Delta u) &= b \\
+A^T (\lambda + \Delta \lambda) + (t + \Delta t) &= c \\
+(X + \Delta X)(T + \Delta T)e &= \mu e\\
+(U + \Delta U)(\Lambda + \Delta \Lambda)e &= \mu e.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Direction de recherche}
+
+On réarrange avec les variables ``$\Delta$'' à gauche, les autres termes à droite, et on ``jette'' les termes non-linéaires:
+\begin{align*}
+A\Delta x - \Delta u &= b - Ax + u\\
+A^T\Delta \lambda + \Delta t &= c - A^T\lambda - t \\
+T\Delta X + X \Delta T &= \mu e - TXe \\
+U\Delta \Lambda + \Lambda \Delta U  &= \mu e - U\Lambda e.
+\end{align*}
+
+\mbox{}
+
+C'est un système linéaire de $2m + 2n$ équations à $2m + 2n$ inconnues, que nous pouvons résoudre, pour définir
+\begin{align*}
+x &\leftarrow x + \alpha \Delta x \\
+\lambda &\leftarrow \lambda + \alpha \Delta \lambda \\
+u &\leftarrow u + \alpha \Delta u \\
+t &\leftarrow t + \alpha \Delta u \\
+\end{align*}
+$\alpha$ est un paramètre qui sert à maintenir $x$, $\lambda$, $t$, $u$, $t$ positifs.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Forcer la convergence}
+
+Prendre une plus petite value de $\mu$ pour la prochaine itération.
+
+\mbox{}
+
+Répéter à partir du début, jusqu'à ce que la solution courante satisfasse, avec une certaine tolérance, les conditions d'optimalité suivantes;
+\begin{itemize}
+\item
+Réalisabilité primale: $b - Ax + u = 0$;
+\item
+Réalisabilité duale: $c - A^T\lambda - t = 0$;
+\item
+Ecart de dualité: $b^T \lambda - c^Tx = 0$.
+\end{itemize}
+
+\mbox{}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Forcer la convergence}
+
+\begin{thm}
+\begin{itemize}
+\item
+La non-réalisabilité primale devient plus petite d'un facteur $1 - \alpha$ à chaque itération.
+\item
+La non-réalisabilité duale devient plus petite d'un facteur $1 - \alpha$ à chaque itération.
+\item
+Si le primal et le dual sont réalisable, l'écart de dualité diminue d'un facteur $1-\alpha$ à chaque itération (si $\mu = 0$, et une convergence légèrement plus lente si $\mu > 0$).
+\end{itemize}
+\end{thm}
+
+
+Pas si simple!
+
+\mbox{}
+
+L'algorithme travaille itérativement, en calcul un pas à chaque itération, mais comment est-mis à jour le paramètre $\alpha$? Comment choisir et mettre à jour $\mu$?
+
+\end{frame}
+
+\end{document}

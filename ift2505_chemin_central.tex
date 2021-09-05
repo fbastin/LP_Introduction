@@ -1,0 +1,531 @@
+\documentclass[t,usepdftitle=false]{beamer}
+\usepackage[utf8]{inputenc}
+\usetheme{Warsaw}
+\usepackage{xcolor}
+% \setbeamercovered{transparent}
+%\usecolortheme{crane}
+\title[IFT2505]{IFT 2505\\Programmation Linéaire}
+\author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal\\\mbox{}\\\url{http://www.iro.umontreal.ca/~bastin/ift2505.php}}
+\date{Automne 2013}
+
+\usepackage{ulem}
+\usepackage{cancel}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\def\ba{\boldsymbol{a}}
+\def\bb{\boldsymbol{b}}
+\def\bc{\boldsymbol{c}}
+\def\be{\boldsymbol{e}}
+\def\br{\boldsymbol{r}}
+\def\bs{\boldsymbol{s}}
+\def\bu{\boldsymbol{u}}
+\def\bx{\boldsymbol{x}}
+\def\by{\boldsymbol{y}}
+\def\bz{\boldsymbol{z}}
+\def\bA{\boldsymbol{A}}
+\def\bB{\boldsymbol{B}}
+\def\bD{\boldsymbol{D}}
+\def\bH{\boldsymbol{H}}
+\def\bI{\boldsymbol{I}}
+\def\bL{\boldsymbol{L}}
+\def\bM{\boldsymbol{M}}
+\def\bU{\boldsymbol{U}}
+\def\bzero{\boldsymbol{0}}
+\def\bone{\boldsymbol{1}}
+\def\blambda{\boldsymbol{\lambda}}
+
+\def\cR{\mathcal{R}}
+
+\usepackage[frenchb]{babel}
+
+\begin{document}
+\frame{\titlepage}
+
+% ------------------------------------------------------------------------------------------------------------------------------------------------------\begin{frame}
+
+
+\begin{frame}
+\frametitle{Chemin central}
+
+Aspects similaires à la programmation linéaire:
+\begin{itemize}
+\item
+algorithmes itératifs
+\item
+pour un itéré donné, calcul d'une direction de recherche, puis d'une longueur de pas le long de cette direction.
+\end{itemize}
+
+\mbox{}
+
+Considérons le programme
+\begin{align*}
+\min_x \ & c^Tx \\
+\mbox{s.à. } & Ax = b\\
+& x \geq 0.
+\end{align*}
+
+\mbox{}
+
+Définissons les ensembles
+\begin{align*}
+\mathcal{F}_P \overset{\mbox{def}}{=} \lbrace x \,|\, Ax = b, x \geq 0 \rbrace\\
+\mathring{\mathcal{F}}_P \overset{\mbox{def}}{=} \lbrace x \,|\, Ax = b, x > 0 \rbrace\\
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Prbolème barrière}
+
+On suppose que $\mathring{\mathcal{F}}_P$ est non vide et que l'ensemble de solutions optimales pour ce problème est borné.
+
+\mbox{}
+
+Soit $\mu \geq 0$. Problème barrière (PB):
+\begin{align*}
+\min_x \ & c^Tx - \mu \sum_{j = 1}^n \log x_j \\
+\mbox{s.à. } & Ax = b \\
+& x > 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Prbolème barrière vs Problème linéaire}
+
+Si $\mu = 0$, on retrouve le problème original en permettant à $x$ d'avoir des composantes nulles:
+\begin{align*}
+\min_x \ & c^Tx \cancel{- \mu \sum_{j = 1}^n \log x_j} \\
+\mbox{s.à. } & Ax = b \\
+& x \boldsymbol{\geq} 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin central}
+
+Soit $x(\mu)$, la solution au PB étant donné $\mu$.
+En faisant varier $\mu$ continûment vers 0, nous obtenons le chemin central primal.
+
+\mbox{}
+
+Si $\mu \rightarrow \infty$, la solution s'approche du centre analytique de la région réalisable, lorsque celle-ci est bornée: le terme barrière prédomine alors dans l'objectif.
+
+\mbox{}
+
+Comme $\mu \rightarrow 0$, ce chemin converge vers le centre analytique de la face optimale $\lbrace x \,|\, c^Tx = z^*,\ Ax = b,\ x \geq 0 \rbrace$, où $z^*$ est la valeur optimale du programme linéaire.
+
+\mbox{}
+
+L'idée de base est de résoudre une succession de problèmes barrières pour des valeurs décroissantes de $\mu$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Fonction lagrangienne}
+
+Réécrivons la contrainte $Ax = b$ sous la forme $Ax - b = 0$, et introduisons un vecteur $y$, en associant une composante $y_i$ à une contrainte $\sum_{j = 1}^n a_{ij} x_j = b_j$.
+
+\mbox{}
+
+$y_i$ joue à peu près le même rôle que les variables duales précédentes, mais est appelé à présent multiplicateur de Lagrange.
+
+\mbox
+
+Lagrangien:
+\[
+L(x) = c^Tx - \mu \sum_{j = 1}^n \log x_j - y^T(Ax - b).
+\]
+On cherche à minimiser cette fonction en annulant son gradient.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Minimisation du lagrangien}
+
+\begin{align*}
+& \nabla_x L(x) = 0 \\
+\Leftrightarrow\ &
+ c_j - \frac{\mu}{x_j} - y^Ta_j = 0,\ j = 1,\ldots,n\\
+\Leftrightarrow\ &
+ \mu X^{-1}\bone + A^Ty = c.
+\end{align*}
+
+En notant $s_j = \mu/x_j$, l'ensemble des conditions d'optimalité (primales, duales, minimisation du lagrangien) s'écrit:
+\begin{align*}
+\bx \circ \bs &= \mu \bone \\
+\bA\bx &= \bb \\
+\bA^T\by + \bs & = \bc.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Lien avec le dual}
+
+$y$ est une solution duale réalisable et $c - A^T y > 0$.
+
+\mbox{}
+
+En effet, le dual est
+\begin{align*}
+\max_y\ \ & y^T b \\
+\mbox{s.à. } & A^T y \leq c
+\end{align*}
+Comme
+\begin{align*}
+A^Ty + s &= c\\
+s_j &= \frac{\mu}{x_j}
+\end{align*}
+nous avons
+\[
+A^T y < c.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Considérons le programme
+\begin{align*}
+\max\ & x_1 \\
+\mbox{s.à. } & 0 \leq x_1 \leq 1 \\
+& 0 \leq x_2 \leq 1.
+\end{align*}
+
+\mbox{}
+
+On réécrit ce système sous forme standard
+\begin{align*}
+\min\ & -x_1 \\
+\mbox{s.à. } & x_1 + x_3 = 1\\
+& x_2 + x_4 = 1 \\
+& x_1 \geq 0, x_2 \geq 0, x_3 \geq 0, x_4 \geq 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Conditions d'optimalité}
+
+\begin{align*}
+x_1 s_1 &= \mu \\
+x_2 s_2 &= \mu \\
+x_3 s_3 &= \mu \\
+x_4 s_4 &= \mu \\
+x_1 + x_3 &= 1 \\
+x_2 + x_4 &= 1 \\
+y_1 + s_1 &= -1 \\
+y_2 + s_2 &= 0 \\
+y_1 + s_3 &= 0 \\
+y_2 + s_4 &= 0
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Conditions d'optimalité}
+
+De
+\begin{align*}
+y_2 + s_2 = 0 \\
+y_2 + s_4 = 0 \\
+\end{align*}
+on a $s_2 = s_4$.
+
+\mbox{}
+
+On en déduit aussi
+\[
+x_2 = x_4,
+\]
+et de là
+\[
+x_2 = x_4 = \frac{1}{2}.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Conditions d'optimalité}
+
+On a aussi
+\begin{align*}
+& -1 = s_1 - s_3 = \frac{\mu}{x_1} - \frac{\mu}{x_3} \\
+\Leftrightarrow\ & -1 = \frac{\mu}{x_1} - \frac{\mu}{1-x_1} \\
+\Leftrightarrow\ & -x_1(1-x_1) = \mu(1-x_1) - \mu x_1 \\
+\Leftrightarrow\ & x_1^2 - x_1 = \mu - 2\mu x_1 \\
+\Leftrightarrow\ & x_1^2 - (1-2\mu) x_1 -\mu = 0.
+\end{align*}
+Le discriminant de cette équation quadratique est
+\[
+\rho = (1-2\mu)^2 + 4\mu = 1+ 4\mu^2,
+\]
+et de là
+\[
+x_1 = \frac{1-2\mu \pm \sqrt{1+4\mu^2}}{2}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin central}
+
+Pour $\mu$ grand, on doit choisir la racine correspondant à '+'.
+
+D'autre part,
+\[
+x \rightarrow \left( 1, \frac{1}{2} \right), \mbox{ comme } \mu \rightarrow 0.
+\]
+
+\mbox{}
+
+On converge vers le centre analytique de la face optimale
+\[
+\lbrace x \,|\, x_1 = 1,\ 0 \leq x_2 \leq 1\rbrace
+\]
+plutôt qu'un coin du carré.
+
+\mbox{}
+
+De plus, quand $\mu \rightarrow +\infty$,
+\[
+x(\mu) \rightarrow \left( \frac{1}{2}, \frac{1}{2} \right)
+\]
+comme
+\[
+-2\mu + \sqrt{1+4\mu^2} = -2\mu + 2\mu\sqrt{\frac{1}{4\mu^2}+1}.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin central}
+
+Dès lors, le chemin central est une ligne droite progressant du centre analytique du carré (comme $\mu \rightarrow \infty$) vers le centre analytique de la face optimale (comme $\mu \rightarrow 0$).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin dual central}
+
+Partons à présent du problème dual
+\begin{align*}
+\max\ & y^Tb \\
+\mbox{s.à. } & y^TA + s^T = c^T \\
+& s \geq 0.
+\end{align*}
+
+\mbox{}
+
+Le problème barrière associé est
+\begin{align*}
+\max\ & y^Tb + \mu \sum^n_{j = 1} \log s_j \\
+\mbox{s.à. } & y^TA + s^T = c^T \\
+& s \geq 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin dual central}
+
+On suppose que $\mathring{\mathcal{F}}_P = \lbrace (y,s): y^TA + s^T = c^T,\ s > 0 \rbrace$ est non vide, et l'ensemble des solutions optimales du dual est borné.
+
+\mbox{}
+
+On obtient le chemin central dual en faisant tendre $\mu$ vers 0.
+
+\mbox{}
+
+Lagrangien:
+\[
+L(y) = y^Tb + \mu \sum_{j=1}^n \log s_j - (y^TA + s^T - c^T)x.
+\]
+
+\mbox{}
+
+Dès lors,
+\begin{align*}
+\nabla_y L &= 0 \Leftrightarrow b_i - a^i x = 0,\ \forall i ,\\ 
+\nabla_s L &= 0 \Leftrightarrow \frac{\mu}{s_j} - x_j = 0,\ \forall j.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin dual central: conditions d'optimlaité}
+
+On obtient les conditions d'optimalité
+\begin{align*}
+\bx \circ \bs &= \mu \bone \\
+\bA\bx &= \bb \\
+\bA^T\by + \bs & = \bc.
+\end{align*}
+
+\mbox{}
+
+On retrouve les mêmes conditions que pour le chemin central.
+
+\mbox{}
+
+Par conséquent, $x$ est une solution réalisable primale et $x > 0$.
+
+\mbox{}
+
+Considérons l'ensemble de niveau dual
+\[
+\Omega(z) = \lbrace y \,|\, c^T - y^T A \geq 0, y^T b = z\rbrace,
+\]
+avec $z < z^*$, la valeur optimale du dual.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin dual central: conditions d'optimlaité}
+
+Le centre analytique $(y(z), s(z))$ de $\Omega$ coïncide avec le chemin central dual comme $z$ tend vers $z^*$.
+
+%voir p.52 des notes manuscrites
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin dual central: exemple}
+
+Reprenons le problème
+\begin{align*}
+\min\ & -x_1 \\
+\mbox{s.à. } & x_1 + x_3 = 1 \\
+& x_2 + x_4 = 1 \\
+& x_1 \geq 0, x_2 \geq 0, x_3 \geq 0, x_4 \geq 0.
+\end{align*}
+
+Le dual s'écrit
+\begin{align*}
+\max\ & y_1 + y_2 \\
+\mbox{s.à. } & y_1 \leq -1 \\
+& y_2 \leq 0 \\
+& y_1 \leq 0 \\
+& y_2 \leq 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin dual central: exemple}
+
+On peut réécrire le dual comme
+\begin{align*}
+\max\ & y_1 + y_2 \\
+\mbox{s.à. } & y_1 + s_1 -1 \\
+& y_2 + s_2 = 0.
+\end{align*}
+
+\mbox{}
+
+Les conditions d'optimalité sont les mêmes que pour le primal, aussi
+\[
+x_2 = x_4 = \frac{1}{2},
+\]
+d'où
+\begin{align*}
+s_2 = s_4 = 2\mu,
+y_2 = -2\mu.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin dual central: exemple}
+
+Nous avons également, en se rappelant de la résolution du primal,
+\begin{align*}
+y_1 & = -1 - s_1 \\
+& = -1 - \frac{\mu}{x_1(\mu)} \\
+& = -1 - \frac{2\mu}{1-2\mu\pm\sqrt{1+4\mu^2}}
+\end{align*}
+
+\mbox{}
+
+Comme $\mu \rightarrow 0$, $y_1 \rightarrow -1$, $y_2 \rightarrow 0$.
+
+\mbox{}
+
+Il s'agit de l'unique solution du problème linéaire (les deux contraintes sont actives)
+
+\mbox{}
+
+Si $\mu \rightarrow \infty$, $y$ est non borné, car l'ensemble dual réalisable est non borné.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin central primal-dual}
+
+Hypothèse: la région réalisable du problème de programmation linéaire a un intérieur non vide et un ensemble borné de solutions optimales.
+
+\mbox{}
+
+Le dual a un intérieur réalisable non vide, en vertu des conditions (d'optimalité) sur le lagrangien.
+
+\mbox{}
+
+Le chemin primal-dual est l'ensemble des vecteurs $(x(\mu), y(\mu), s(\mu))$ satisfaisant les conditions
+\begin{align*}
+\bx \circ \bs &= \mu \bone \\
+\bA\bx &= \bb \\
+\bA^T\by + \bs & = \bc \\
+x \geq 0,\ & s \geq 0 \\
+0 \leq \mu & < \infty.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Proposition}
+
+Si les ensembles réalisables primal et dual ont des intérieurs non vides, alors le chemin central $(x(\mu), y(\mu), s(\mu))$ existe pour tout $\mu$, $0 \leq \mu < \infty$.
+
+\mbox{}
+
+De plus, $x(\mu)$ est le chemin central primal, $(y(\mu), s(\mu))$ est le chemin central dual.
+
+\mbox{}
+
+$x(\mu)$ et $(y(\mu), s(\mu))$ convergent vers les centres analytiques des faces des solutions optimales primales et duales, respectivement, quand $\mu \rightarrow 0$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Saut de dualité}
+
+Soit $(x(\mu), y(\mu), s(\mu))$ sur le chemin central primal-dual.
+Nous avons
+\begin{align*}
+c^Tx - y^Tb &= (A^T y)^T x + s^Tx - y^T b \\
+& = y^T Ax + s^Tx - y^T b \\
+& = y^T b + s^Tx - y^T b \\
+& = s^Tx \\
+& = n\mu.
+\end{align*}
+
+\mbox{}
+
+Comme pour la dualité faible, $c^T x \geq y^T b$, et $n\mu$ est appelé le saut de dualité.
+
+\mbox{}
+
+Soit $g = c^Tx - y^Tb$.
+
+\mbox{}
+
+Comme $y^T b \leq z^*$, $z^* \geq c^Tx - g$, et donc, étant donné $(x, y, s)$, on peut mesurer la qualité de $x$ comme $c^T x - z^* \leq g$.
+\end{frame}
+
+\end{document}

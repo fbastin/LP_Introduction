@@ -1,0 +1,989 @@
+\documentclass[usepdftitle=false]{beamer}
+\usepackage[utf8]{inputenc}
+\usetheme{Singapore}
+\usepackage{xcolor}
+% \setbeamercovered{transparent}
+%\usecolortheme{crane}
+\title[IFT2505]{IFT 2505\\Programmation Linéaire\\Simplexe: forme matricielle -- dictionnaires}
+\author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal}
+\date{}
+
+\usepackage{ulem}
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\def\ba{\boldsymbol{a}}
+\def\bb{\boldsymbol{b}}
+\def\bc{\boldsymbol{c}}
+\def\be{\boldsymbol{e}}
+\def\br{\boldsymbol{r}}
+\def\bu{\boldsymbol{u}}
+\def\bx{\boldsymbol{x}}
+\def\by{\boldsymbol{y}}
+\def\bz{\boldsymbol{z}}
+\def\bA{\boldsymbol{A}}
+\def\bB{\boldsymbol{B}}
+\def\bD{\boldsymbol{D}}
+\def\bH{\boldsymbol{H}}
+\def\bI{\boldsymbol{I}}
+\def\bL{\boldsymbol{L}}
+\def\bM{\boldsymbol{M}}
+\def\bU{\boldsymbol{U}}
+\def\bzero{\boldsymbol{0}}
+\def\blambda{\boldsymbol{\lambda}}
+
+\setbeamertemplate{footline}[frame number]
+
+\begin{document}
+\frame{\titlepage}
+
+% ------------------------------------------------------------------------------------------------------------------------------------------------------\begin{frame}
+
+\begin{frame}
+\frametitle{Forme matricielle de la méthode du simplexe}
+
+Utile pour mieux comprendre, et construire des variantes.
+
+\mbox{}
+
+Soit
+\[
+\bA = [ \bB\ \bD ]
+\]
+où nous supposons que $\bB$ est une base, et décomposons $\bx$ et $\bc$ de manière similaire:
+\[
+\bx = (\bx_{\bB}, \bx_{\bD}), \quad \bc = (\bc_{\bB}, \bc_{\bD}).
+\]
+
+\mbox{}
+
+Le programme linéaire standard devient
+\begin{align*}
+\min_{\bx} \ & 
+z = \bc_{\bB}^T\bx_{\bB} + \bc_{\bD}^T \bx_{\bD} \\
+\mbox{t.q. } & \bB\bx_{\bB} + \bD\bx_{\bD} = b \\
+& \bx_{\bB} \geq 0,\ \bx_{\bD} \geq 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Forme matricielle de la méthode du simplexe}
+
+La solution de base associée, que nous supposons également réalisable, devient
+\[
+ \bx = (\bx_{\bB}, \bzero), \ \bx_{\bB} = \bB^{-1} b.
+\]
+Dès lors,
+\[
+ \bx_{\bD} = \bzero.
+\]
+
+\mbox{}
+
+Plus généralement,
+\[
+  \bx_{\bB} = \bB^{-1} \bb - \bB^{-1}\bD\bx_{\bD}.
+\]
+et
+\begin{align*}
+z &= \bc_{\bB}^T\left(\bB^{-1} \bb - \bB^{-1}\bD\bx_{\bD}\right)
+ + \bc_{\bD}^T \bx_{\bD} \\
+ & = \bc_{\bB}^T \bB^{-1} \bb + \left( \bc_{\bD}^T - \bc_{\bB}^T \bB^{-1} \bD \right) \bx_{\bD}. 
+ \end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Dictionnaire}
+
+L'écriture
+$$
+\begin{matrix}
+  \bx_{\bB} & = & \bB^{-1} \bb & - \bB^{-1}\bD\bx_{\bD} \\
+\hline
+z & = & \bc_{\bB}^T \bB^{-1} \bb & + \left( \bc_{\bD}^T - \bc_{\bB}^T \bB^{-1} \bD \right) \bx_{\bD}. 
+\end{matrix}
+$$
+est aussi appelée {\color{red} dictionnnnaire}.
+
+\mbox{}
+
+Avantages du dictionnaire par rapport aux tableaux:
+\begin{itemize}
+	\item forme plus compacte;
+	\item implémentation numérique plus directe
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Forme matricielle de la méthode du simplexe}
+
+Ceci permet s'exprimer n'importe quelle solution en termes de $\bx_{\bD}$. Dès lors,
+\[
+\br_{\bD}^T = \bc_{\bD}^T - \bc_{\bB}^T \bB^{-1} \bD
+\]
+est le vecteur des coûts réduits.
+
+\mbox{}
+
+En d'autres termes,
+\[
+\begin{pmatrix}
+\bA & \bb \\
+\bc^T & \bzero
+\end{pmatrix}
+=
+\begin{pmatrix}
+\bB & \bD & \bb \\
+\bc_{\bB}^T & \bc_{\bD}^T & \bzero
+\end{pmatrix}
+\]
+
+\mbox{}
+
+Forme canonique: on multiplie la partie supérieure par $\bB^{-1}$ et on récupère l'expression de l'objectif en termes de coûts réduits pour la partie inférieure:
+\[
+\begin{pmatrix}
+\bI & \bB^{-1}\bD & \bB^{-1}\bb \\
+\bzero & \bc_{\bD}^T - \bc_{\bB}^T \bB^{-1} \bD
+& -\bc_{\bB}^T \bB^{-1} \bb
+\end{pmatrix}
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Considérons le problème
+\begin{align*}
+\min\ & - x_1 - 2x_2 + x_3 \\
+\mbox{s.à. } & 2x_1 + x_2 + x_3 \leq 14 \\
+& 4x_1 + 2x_2 + 3x_3 \leq 28 \\
+& 2x_1 + 5x_2 + 5x_3 \leq 30 \\
+& x_1 \geq 0, x_2 \geq 0, x_3 \geq 0
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Variables d'écart}
+
+Mettons le système sous forme standard en ajoutant une variable d'écart à chacune des inégalités:
+\begin{align*}
+\min\ & - x_1 - 2x_2 + x_3 \\
+\mbox{s.à. } & 2x_1 + x_2 + x_3 + s_1 = 14 \\
+& 4x_1 + 2x_2 + 3x_3 + s_2 = 28 \\
+& 2x_1 + 5x_2 + 5x_3 + s_3 = 30 \\
+& x_1 \geq 0, x_2 \geq 0, x_3 \geq 0 \\
+& s_1 \geq 0, s_2 \geq 0, s_3 \geq 0
+\end{align*}
+Le système est à présent sous forme canonique.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Dictionnaire initial}
+
+Nous réorganisons le système linéaire pour identifier les variables de bases ainsi que l'objectif.
+\begin{align*}
+\begin{array}{cccccc}
+s_1 & = & 14 & - 2x_1 & - x_2 & - x_3 \\
+s_2 & =	& 28 & - 4x_1 & - 2x_2 & - 3x_3 \\
+s_3 & =	& 30 & - 2x_1 & - 5x_2 & - 5x_3 \\
+z & = & 0 & - x_1 & - 2 x_2 & + x_3
+\end{array}
+\end{align*}
+Un tel système est appelé {\bf dictionnaire}.
+
+\mbox{}
+
+Les règles de pivotage sont similaires.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Variable entrante}
+
+On se concentre sur la ligne de l'objectif
+$$
+z = 0 - x_1 - 2 x_2 + x_3
+$$
+Les variables $x_1$ et $x_2$ sont toutes deux associées à un coefficient négatif, et sont donc candidates pour entrer dans la base.
+
+\mbox{}
+
+En suivant la règle du coût réduit le plus négatif, nous sélectionnons $x_2$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Choix de la variable sortante}
+
+Nous partons du dictionnaire en annulant $x_1$ et $x_3$ qui restent hors base.
+\begin{align*}
+\begin{array}{cccc}
+s_1 & = & 14 & - x_2 \\
+s_2 & =	& 28 & - 2x_2 \\
+s_3 & =	& 30 & - 5x_2 \\
+z & = & 0 & - 2 x_2
+\end{array}
+\end{align*}
+Comme nous devons garder $s_1$, $s_2$, $s_3$ non-négatifs, nous avons
+\begin{align*}
+\begin{array}{cccc}
+0 & \leq & 14 & - x_2 \\
+0 & \leq & 28 & - 2x_2 \\
+0 & \leq	& 30 & - 5x_2
+\end{array}
+\end{align*}
+Dès lors, $x_2 \leq \min \{ 14, 28/2, 30/5 \} = 6$. Ainsi, $s_3$ sort de la base.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Nouveau dictionnaire}
+
+Le pivot s'effectue en échangeant $s_3$ et $x_2$ dans l'équation du dictionnaire correspondant à $s_3:$
+\begin{align*}
+s_3 & = 30 - 2x_1 - 5x_2 - 5x_3 \\
+\Leftrightarrow x_2 & = 6 - \frac{2}{5}x_1 - x_3 - \frac{1}{5}s_3.
+\end{align*}
+
+Nous remplaçons ensuite $x_2$ par son expression en termes des variables hors base dans les autres équations du dictionnaire, ce qui donne
+\begin{align*}
+\begin{array}{cccccc}
+x_2 & = & 6 & - \frac{2}{5}x_1 & - x_3 &- \frac{1}{5}s_3 \\
+s_1 & = & 8 & - \frac{8}{5}x_1 &  & + \frac{1}{5}s_3 \\
+s_2 & =	& 16 & - \frac{16}{5}x_1 & - x_3 & + \frac{2}{5}s_3 \\
+z & = & -12 & - \frac{1}{5}x_1 & + 3 x_3 & + \frac{2}{5}s_3
+\end{array}
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Nouveau dictionnaire}
+
+Seul $x_1$ a un coût réduit négatif et donc est choisi pour entrer dans la base.
+En prenant les rapports entre la colonne de $x_1$ et celle du terme indépendant, nous voyons que tant $s_1$ que $s_2$ peuvent sortir de la base. Choisissons $s_1$. Le nouveau dictionnaire est
+\begin{align*}
+\begin{array}{cccccc}
+x_1 & = & 5 & & - \frac{5}{8}s_1 & + \frac{1}{8}s_3 \\
+x_2 & = & 4 & - x_3 & + \frac{1}{4}s_1 & - \frac{1}{4}s_3 \\
+s_2 & =	& 0 & - x_3 & + 2s_1 &  \\
+z & = & -13 & + 3 x_3 & + \frac{1}{8}s_1 & + \frac{3}{8}s_3
+\end{array}
+\end{align*}
+
+Comme il n'y a plus de coût réduit négatif, nous avons convergé. La solution optimale est $x_1 = 5$, $x_2 = 4$, $x_3 = 0$.
+
+\mbox{}
+
+Nous allons automatiser l'approche.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode du simplexe révisée}
+
+Converge souvent en $O(m)$.
+
+\mbox{}
+
+La méthode revisée ordonne les calculs afin d'éviter les opérations inutiles, en particulier pour les variables non concernées par les pivotages.
+
+\mbox{}
+
+Soit $\bB^{-1}$ l'inverse de la base actuelle, et la solution actuelle
+\[
+\bx_{\bB} = \by_0 = \bB^{-1}b.
+\]
+
+\mbox{}
+
+{\bf Etape 1} Calculer les coefficients de coûts réduits actuels
+\[
+\br_{\bD}^T = \bc_{\bD}^T - \bc_{\bB}^T \bB^{-1} \bD
+\]
+On calcule d'abord
+\[
+\blambda^T = \bc^T_{\bB}\bB^{-1}
+\]
+puis
+\[
+\br_{\bD}^T = \bc_{\bD}^T - \blambda^T \bD.
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode du simplexe révisée}
+
+{\bf Etape 2} Déterminer le vecteur $\ba_q$ qui va entrer dans la base en sélectionnant le coût réduit le plus négatif, et calculer
+\[
+ \by_q = \bB^{-1}\ba_q,
+\]
+donnant l'expression de $\ba_q$ en termes de la base actuelle.
+
+\mbox{}
+
+{\bf Etape 3} 
+Si aucun $y_{iq}$ n'est $> 0$, arrêt: le problème n'est pas borné. Sinon, calculer les rapports $y_{i0}/y_{iq}$ pour $y_{iq} > 0$ pour déterminer le vecteur qui va quitter la base.
+
+\mbox{}
+
+{\bf Etape 4}
+Mettre à jour $\bB^{-1}$ et la solution actuelle $\bB^{-1}b$. Retour à l'étape 1.
+
+La mise à jour de $\bB^{-1}$ se fait en effectuant l'opération classique de pivotage, constituée de $\bB^{-1}$ et $\by_q$, où le pivot est l'élément approprié dans $y_q$. On en profite pour mettre à jour $\bB^{-1}\bb$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+\begin{align*}
+\max_x\ & 3x_1 + x_2 + 3x_3 \\
+\mbox{t.q. } & 2x_1 + x_2 + x_3 \leq 2 \\
+& x_1 + 2x_2 + 3x_3 \leq 5 \\
+& 2x_1 +2x_2 + x_3 \leq 6 \\
+& x_1 \geq 0,\ x_2 \geq 0,\ x_3 \geq 0 
+\end{align*}
+
+\mbox{}
+
+Après ajout des variables d'écarts:
+\begin{align*}
+\max_x\ & 3x_1 + x_2 + 3x_3 \\
+\mbox{t.q. } & 2x_1 + x_2 + x_3 + x_4 = 2 \\
+& x_1 + 2x_2 + 3x_3 + x_5 = 5 \\
+& 2x_1 +2x_2 + x_3 + x_6 = 6 \\
+& x_1 \geq 0,\ x_2 \geq 0, x_3 \geq 0
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Tableau:
+\[
+\begin{matrix}
+& \ba_1 & \ba_2 & \ba_3 & \ba_4 & \ba_5 & \ba_6 & \bb \\
+& 2 & 1 & 1 & 1 & 0 & 0 & 2 \\
+& 1 & 2 & 3 & 0 & 1 & 0 & 5 \\
+& 2 & 2 & 1 & 0 & 0 & 1 & 6 \\
+\bc^T & -3 & -1 & -3 & 0 & 0 & 0 & 0
+\end{matrix}
+\]
+
+\mbox{}
+
+On se limite à
+\[
+\begin{matrix}
+\mbox{Var} & & & & \bx_{\bB} \\
+x_4 & 1 & 0 & 0 & 2 \\
+x_5 & 0 & 1 & 0 & 5 \\
+x_6 & 0 & 0 & 1 & 6
+\end{matrix}
+\]
+
+\mbox{}
+
+Nous avons
+\[
+\blambda^T = \bc_ {\bB}^T \bB^{-1} = \begin{pmatrix} 0 & 0 & 0 \end{pmatrix}\bB^{-1} =
+ \begin{pmatrix} 0 & 0 & 0 \end{pmatrix}
+\]
+et
+\[
+\br_D^T = \bc_D^T - \blambda^T\bD =  \begin{pmatrix} -3 & -1 & -3 \end{pmatrix}.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Dictionnaire}
+
+\[
+\begin{matrix}
+x_4 = & 2 & - 2 x_1 - x_2 - x_3 \\
+x_5 = & 5 & - x_1 - 2 x_2 - 3 x_3 \\
+x_6 = & 6 & - 2 x_1 - 2 x_2 - x_3 \\
+\hline
+z = & 0 & - 3x_1 - x_2 - 3 x_3
+\end{matrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+On fait entrer $\ba_2$ (violant la règle du coût le plus négatif)
+
+\[
+\begin{matrix}
+\mbox{Var} & & & & x_{\bB} & y_2 \\
+x_4 & 1 & 0 & 0 & 2 & \circled{1} \\
+x_5 & 0 & 1 & 0 & 5 & 2 \\
+x_6 & 0 & 0 & 1 & 6 & 2
+\end{matrix}
+\]
+
+\mbox{}
+
+\[
+\begin{matrix}
+\mbox{Var} & & & & x_{\bB} \\
+x_2 & 1 & 0 & 0 & 2 \\
+x_5 & -2 & 1 & 0 & 1 \\
+x_6 & -2 & 0 & 1 & 2
+\end{matrix}
+\]
+
+\mbox{}
+
+Nous avons
+\[
+\bB^{-1} =
+\begin{pmatrix}
+1 & 0 & 0 \\
+-2 & 1 & 0 \\
+-2 & 0 & 1
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Nous avons également
+\[
+\bc_{\bB}^T =
+\begin{pmatrix}
+ -1 & 0 & 0
+\end{pmatrix},
+\]
+et dès lors
+\begin{align*}
+\blambda^T &= \bc_{\bB}^T \bB^{-1} \\
+&=
+\begin{pmatrix}
+ -1 & 0 & 0
+\end{pmatrix}
+\begin{pmatrix}
+1 & 0 & 0 \\
+-2 & 1 & 0 \\
+-2 & 0 & 1
+\end{pmatrix}
+=
+\begin{pmatrix}
+-1 & 0 & 0
+\end{pmatrix}
+\end{align*}
+
+\mbox{}
+
+Les coûts reduits se calculent de manière similaire
+\[
+\begin{pmatrix}
+-3 & -3 & 0
+\end{pmatrix}
+- \begin{pmatrix}
+-1 & 0 & 0
+\end{pmatrix}
+\begin{pmatrix}
+2 & 1 & 1 \\
+1 & 3 & 0 \\
+2 & 1 & 0
+\end{pmatrix}
+=
+\begin{pmatrix}
+-1 & -2 & 1
+\end{pmatrix}
+\]
+En d'autres termes,
+\[
+r_1 = -1,\ r_3 = -2,\ r_4 = 1.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+\[
+y_3 =
+\begin{pmatrix}
+1 & 0 & 0 \\
+-2 & 1 & 0 \\
+-2 & 0 & 1
+\end{pmatrix}
+\begin{pmatrix}
+1 \\
+3 \\
+1
+\end{pmatrix}
+=
+\begin{pmatrix}
+1 \\
+1 \\
+-1
+\end{pmatrix}
+\]
+Le variable entrante retenue est $x_3$, et on construit le tableau
+\[
+\begin{matrix}
+\mbox{Var} & & & & x_{\bB} & y_3 \\
+x_2 & 1 & 0 & 0 & 2 & 1 \\
+x_5 & -2 & 1 & 0 & 1 & \circled{1} \\
+x_6 & -2 & 0 & 1 & 2 & -1
+\end{matrix}
+\]
+
+\mbox{}
+
+Après le pivot:
+\[
+\begin{matrix}
+\mbox{Var} & & & & x_{\bB} \\
+x_2 & 3 & -1 & 0 & 1 \\
+x_3 & -2 & 1 & 0 & 1 \\
+x_6 & -4 & 1 & 1 & 3
+\end{matrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+\[
+\blambda^T =
+\begin{pmatrix}
+-1 & -3 & 0
+\end{pmatrix}
+\begin{pmatrix}
+3 & -1 & 0 \\
+-2 & 1 & 0 \\
+-4 & 1 & 1
+\end{pmatrix}
+=
+\begin{pmatrix}
+3 & -2 & 0
+\end{pmatrix}
+\]
+
+\mbox{}
+
+\begin{align*}
+\br_{\bD}^T &=
+\begin{pmatrix}
+-3 & 0 & 0
+\end{pmatrix}
+- \begin{pmatrix}
+3 & -2 & 0
+\end{pmatrix}
+\begin{pmatrix}
+2 & 1 & 0 \\
+1 & 0 & 1 \\
+2 & 0 & 0
+\end{pmatrix} \\
+&=
+\begin{pmatrix}
+-3 & 0 & 0
+\end{pmatrix}
+- \begin{pmatrix}
+4 & 3 & -2
+\end{pmatrix}
+=
+\begin{pmatrix}
+-7 & -3 & 2
+\end{pmatrix}
+\end{align*}
+
+\mbox{}
+
+On fait entrer $\ba_1$.
+\[
+\by_1 = 
+\begin{pmatrix}
+  3 & -1 & 0 \\
+ -2 & 1 & 0 \\
+ -4 & 1 & 1
+\end{pmatrix}
+\begin{pmatrix}
+ 2 \\
+ 1 \\
+ 2 
+\end{pmatrix}
+=
+\begin{pmatrix}
+  5 \\
+ -3 \\
+ -5 
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+\[
+\begin{matrix}
+\mbox{Var} & & & & x_{\bB} & y_1 \\
+x_2 & 3 & -1 & 0 & 1 & \circled{5} \\
+x_3 & -2 & 1 & 0 & 1 & -3 \\
+x_6 & -4 & 1 & 1 & 3 & -5
+\end{matrix}
+\]
+
+\mbox{}
+
+\[
+\begin{matrix}
+x_1 & \frac{3}{5} & -\frac{1}{5} & 0 & \frac{1}{5} \\
+x_3 & -\frac{1}{5} & \frac{2}{5} & 0 & \frac{8}{5} \\
+x_6 & -1 & 0 & 1 & 4 
+\end{matrix}
+\]
+
+\mbox{}
+
+\[
+\blambda^T =
+\begin{pmatrix}
+-3 & -3 & 0
+\end{pmatrix}
+\bB^{-1}
+=
+\begin{pmatrix}
+-\frac{6}{5} & -\frac{3}{5} & 0
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+\begin{align*}
+\br_{\bD}^T & =
+\begin{pmatrix}
+-1 & 0 & 0
+\end{pmatrix}
+-
+\begin{pmatrix}
+-\frac{6}{5} & -\frac{3}{5} & 0
+\end{pmatrix}
+\begin{pmatrix}
+ 1 & 1 & 0 \\
+ 2 & 0 & 1 \\
+ 2 & 0 & 0
+\end{pmatrix} \\
+& =
+\begin{pmatrix}
+-1 & 0 & 0
+\end{pmatrix}
+-
+\begin{pmatrix}
+-\frac{12}{5} & -\frac{6}{5} & -\frac{3}{5}
+\end{pmatrix} \\
+& =
+\begin{pmatrix}
+\frac{7}{5} & \frac{6}{5} & \frac{3}{5}
+\end{pmatrix}
+\end{align*}
+
+\mbox{}
+
+$\bx = ( 1/5, 0, 8/5, 0, 0, 4)$ est une solution optimale.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe et décomposition LU}
+
+$\bB^{-1}$ n'apparaît que dans la résolution de systèmes linéaires. Mais dans ce contexte, on ne calcule jamais $\bB^{-1}$ pour des raisons de stabilité numérique.
+
+\mbox{}
+
+Reformulons le simplexe pour faire apparaître les termes linéaires.
+
+\mbox{}
+
+{\bf Etape 1}
+\[
+\bx_{\bB} = \by_0,
+\]
+avec
+\[
+\bB\by_0 = b.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe et décomposition LU}
+
+{\bf Etape 2}
+Résoudre
+\[
+\blambda^T \bB = \bc_{\bB}^T,
+\]
+et
+\[
+\br_{\bD}^T = \bc_{\bD}^T - \blambda^T \bD.
+\]
+Si $\br_{\bD} \geq 0$, stop: la solution actuelle est optimale.
+
+\mbox{}
+
+{\bf Etape 3}
+Déterminer le vecteur $\ba_q$ qui va entrer la base en sélectionnant le coefficient de coût réduit le plus négatif, et résoudre
+\[
+\bB \by_q = \ba_q.
+\]
+
+\mbox{}
+
+{\bf Etape 4}
+Si aucun $\by_{iq} > 0$, stop: le problème est non borné. Sinon, calculer les rapports $\by_{i0}/\by_{iq}$ pour $\by_{iq} > 0$, et sélectionner le rapport le plus négatif pour déterminer quel vecteur sortira de la base.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe et décomposition LU}
+
+{\bf Etape 5}
+Mise à jour de $\bB$. Retour à l'étape 1.
+
+\mbox{}
+
+Cette manière de formuler le simplexe offre
+\begin{enumerate}
+\item
+une meilleure stabilité numérique,
+\item
+des avantages de stockage mémoire (par exemple, si $\bB$ est une matrice creuse, $\bB^{-1}$ peut être pleine).
+\end{enumerate}
+
+\mbox{}
+
+On décompose $\bB$ comme
+\[
+\bB = \bL.\bU
+\]
+où
+\begin{itemize}
+\item
+$\bL$ est une matrice triangulaire inférieure,
+\item
+$\bU$ est une matrice triangulaire supérieure.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe et décomposition}
+
+Alors
+\begin{align*}
+\bB \bx & = \bb, \\
+\Leftrightarrow \bL\bU\bx &= \bb \\
+\Leftrightarrow \bL \by &= \bb, \quad \by = \bU\bx
+\end{align*}
+
+\mbox{}
+
+Résoudre un système triangulaire est immédiat!
+
+\mbox{}
+
+\[
+\begin{pmatrix}
+a_{11} & & \\
+a_{21} & a_{22} & \\
+a_{31} & a_{32} & a_{33}
+\end{pmatrix}
+\begin{pmatrix}
+x_1 \\ x_2 \\ x_3
+\end{pmatrix}
+=
+\begin{pmatrix}
+b_1 \\ b_2 \\ b_3
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Résolution de système triangulaire}
+
+\begin{align*}
+x_1 &= b_1/a_{11} \\
+x_2 &= (b_2 - a_{21}x_1)/a_{22} \\
+x_3 &= (b_3 - a_{31}x_1 - a_{32}x_2)/a_{33}
+\end{align*}
+
+\mbox{}
+
+Conditions: $a_{ii} \ne 0$, $\forall \, i$.
+
+\mbox{}
+
+Note: on ne suppose aucun échange de ligne (parfois opéré pour préserver la précision et le caractère creux).
+
+\mbox{}
+
+Mise à jour:
+\[
+\bB =
+\begin{pmatrix}
+\vdots & & \vdots \\
+\ba_1 & \cdots & \ba_m \\
+\vdots & & \vdots
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Résolution de système triangulaire}
+
+Nouvelle base
+\[
+\overline{\bB} =
+\begin{pmatrix}
+\vdots & \vdots & & \vdots & \vdots & & \vdots & \vdots \\
+\ba_1 & \ba_2 & \cdots & \ba_{k-1} & \ba_{k+1} & \cdots & \ba_m & \ba_q \\
+\vdots & \vdots & & \vdots & \vdots & & \vdots & \vdots
+\end{pmatrix}
+\]
+
+\mbox{}
+
+Alors
+\begin{align*}
+\bL^{-1}\overline{\bB} &=
+\begin{pmatrix}
+\vdots& & \vdots & \vdots & & \vdots & \vdots \\
+\bL^{-1}\ba_1 & \cdots & \bL^{-1}\ba_{k-1} & \bL^{-1}\ba_{k+1} & \cdots & \bL^{-1}\ba_m & \bL^{-1}\ba_q \\
+\vdots & & \vdots & \vdots & & \vdots & \vdots
+\end{pmatrix} \\
+&=
+\begin{pmatrix}
+ u_1 & \ldots & u_{k-1} & u_{k+1} & \ldots & u_m & \bL^{-1}\ba_q
+\end{pmatrix}
+\\
+&=
+\overline{H}.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Résolution de système triangulaire}
+
+En effet
+\begin{align*}
+\bB &= \bL \bU \\
+\Leftrightarrow
+\begin{pmatrix}
+\ba_1 & \ldots & \ba_m
+\end{pmatrix}
+&=
+\bL
+\begin{pmatrix}
+\bu_1 & \ldots & \bu_m
+\end{pmatrix} \\
+\Leftrightarrow \bL^{-1}
+\begin{pmatrix}
+\ba_1 & \ldots & \ba_m
+\end{pmatrix}
+&=
+\begin{pmatrix}
+\bu_1 & \ldots & \bu_m
+\end{pmatrix}
+\end{align*}
+
+\mbox{}
+
+$\overline{\bH}$ a la forme
+\[
+\begin{pmatrix}
+\times & \times & \times & \times & \times & \times \\
+0 & \times & \times & \times & \times & \times \\
+0 & 0 & \times & \times & \times & \times \\
+0 & 0 & \times & \times & \times & \times \\
+0 & 0 & 0 & \times & \times & \times \\
+0 & 0 & 0 & 0 & \times & \times
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Résolution de système triangulaire}
+
+$\bL^{-1}\ba_q$ est un sous-produit du calcul de $\by_q$, aussi c'est "gratuit".
+
+\mbox{}
+
+$\overline{\bH}$ peut être ramené à une forme triangulaire supérieure grâce à une série d'éliminations de Gauss.
+
+\mbox{}
+
+\[
+\overline{\bU} = \bM_{m-1} \bM_{m-2} \ldots \bM_k \overline{\bH}
+\]
+où $\bM_i$ a la forme
+\[
+\bM_i =
+\begin{pmatrix}
+1 \\
+& 1 \\
+& & \ddots \\
+& & & 1 \\
+& & & m_i & 1 \\
+& & & & & \ddots \\
+& & & & & & 1
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Résolution de système triangulaire}
+
+\[
+\overline{\bB} = \overline{\bL}\overline{\bU}
+\]
+avec
+\[
+\overline{\bL} = \bL\bM_k^{-1}\ldots\bM_{m-1}^{-1}.
+\]
+
+\mbox{}
+
+\[
+\bM_i^{-1} =
+\begin{pmatrix}
+1 \\
+& 1 \\
+& & \ddots \\
+& & & 1 \\
+& & & -m_i & 1 \\
+& & & & & \ddots \\
+& & & & & & 1
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\end{document}

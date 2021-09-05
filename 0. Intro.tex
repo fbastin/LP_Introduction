@@ -1,0 +1,367 @@
+\documentclass[usepdftitle=false]{beamer}
+\usepackage[utf8]{inputenc}
+\usetheme{Singapore}
+\usepackage{xcolor}
+% \setbeamercovered{transparent}
+%\usecolortheme{crane}
+\title[IFT2505]{IFT 2505\\Programmation Linéaire\\Introduction}
+\author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal}
+\date{}
+
+\usepackage[french]{babel}
+
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{ulem}
+\usepackage{tikz}
+
+\def\bb{\boldsymbol{b}}
+\def\bc{\boldsymbol{c}}
+\def\bx{\boldsymbol{x}}
+\def\bA{\boldsymbol{A}}
+\def\bB{\boldsymbol{B}}
+\def\bD{\boldsymbol{D}}
+
+\newtheorem{exe}{Exemple}
+
+\begin{document}
+\frame{\titlepage}
+
+% ------------------------------------------------------------------------------------------------------------------------------------------------------
+\begin{frame}
+\frametitle{Objectifs du cours}
+
+\begin{enumerate}
+\item
+Bases de la programmation mathématique:
+\begin{itemize}
+\item
+objectif, contraintes;
+\item
+solution(s) réalisable(s).
+\item
+solution(s) optimale(s), valeur optimale;
+\end{itemize}
+\item
+Comprendre les principes de base de la programmation linéaire (PL), et de ses méthodes de résolution. La méthode du simplexe sera étudiée avec un niveau élevé de détails.
+\item
+Comprendre la notion de dualité.
+\item
+Principes de base des méthodes de points intérieurs.
+\item
+Introduction à la programmation en nombres entiers.
+\item
+Aspects numériques de la PL (utilisation de Julia).
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Ouvrages de références}
+
+\begin{itemize}
+	\item
+	Luenberger et Ye, Linear and Nonlinear Programming, 4e édition, Springer, 2016, \url{https://link.springer.com/book/10.1007\%2F978-3-319-18842-3}
+	\item
+	Chan, Batson, Dang, Applied Integer Programming: Modeling and Solution, Wiley, 2011,
+	\url{https://onlinelibrary.wiley.com/doi/book/10.1002/9781118166000}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Modalités}
+
+Évaluations:
+\begin{itemize}
+	\item 5 devoirs, 10\% chaque;
+	\item Examen intra: 20\%, une page de notes autorisée;
+	\item Examen final: 30\%, deux pages de notes autorisées.
+\end{itemize}
+{\bf Le règlement sur le plagiat sera de stricte application!}
+
+\mbox{}
+
+Démonstrateur: Jean Laprés-Chartrand\\
+
+\mbox{}
+
+\begin{itemize}
+	\item 
+Notebooks: \url{https://github.com/fbastin/optim};
+\item
+Slides: \url{https://github.com/fbastin/LP_Introduction};
+\item
+Canal discord: \url{https://discord.gg/Z4ZU6P8K}.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{PL: forme standard}
+
+\begin{align*}
+\min_{\bx}\ z &= c_1x_1+c_2x_2+\ldots +c_nx_n \\
+\mbox{sujet à } &
+a_{11}x_1 + a_{12}x_2 + \ldots + a_{1n}x_n = b_1 \\
+&a_{21}x_1 + a_{22}x_2 + \ldots + a_{2n}x_n = b_2 \\
+& \qquad \vdots \qquad \vdots \\
+& a_{m1}x_1 + a_{m2}x_2 + \ldots + a_{mn}x_n = b_m \\
+& x_1 \geq 0,\ x_2 \geq 0, \ldots, x_n \geq 0 \\
+\end{align*}
+
+\mbox{}
+\end{frame}
+
+\begin{frame}
+\frametitle{Ecriture matricielle}
+
+\begin{align*}
+\min_{\bx} \ z &= \bc^T x \\
+\mbox{sujet à } \bA x &= \bb \\
+\bx & \geq 0
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Retour à la forme standard}
+
+{\bf Variables d'écart}
+
+\begin{align*}
+& a_{j1}x_1 + a_{j2}x_2 + \ldots + a_{jn}x_n \leq b_j \\
+\rightarrow & a_{j1}x_1 + a_{j2}x_2 + \ldots + a_{jn}x_n + s_j = b_j \end{align*}
+
+\mbox{}
+
+{\bf Variables de surplus}
+
+\begin{align*}
+& a_{j1}x_1 + a_{j2}x_2 + \ldots + a_{jn}x_n \geq b_j \\
+\rightarrow & a_{j1}x_1 + a_{j2}x_2 + \ldots + a_{jn}x_n - u_j = b_j \end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Retour à la forme standard (suite)}
+
+{\bf Variables libres}
+
+$x_j$ non contraint: \sout{$x_j \geq 0$}
+
+\mbox{}
+
+{\bf Première approche: décomposition}
+
+\[
+x_j = s_j - u_j,\quad s_j \geq 0,\ u_j \geq 0.
+\]
+
+\mbox{}
+
+{\bf Deuxième approache: substitution}
+
+Supposons $a_{kj} \ne 0$
+\[
+x_j = \frac{b_k}{a_{kj}} - \frac{a_{k1}}{a_{kj}}x_1 - \frac{a_{k2}}{a_{kj}}x_2 - \ldots - \frac{a_{k,j-1}}{a_{kj}}x_{j-1} - \frac{a_{k,j+1}}{a_{kj}}x_{j+1} -  \ldots - \frac{a_{kn}}{a_{kj}}x_n.
+\]
+On remplace dans les autres contraintes.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Maximisation vs minimisation}
+
+Le problème
+\begin{align*}
+\max_{\bx} \ & \bc^T x \\
+\mbox{sujet à } & \bA x = \bb \\
+& \bx \geq 0
+\end{align*}
+est équivalent à
+\begin{align*}
+- \min_{\bx} \ & -\bc^T x \\
+\mbox{sujet à } &  \bA x = \bb \\
+& \bx \geq 0
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Réalisabilité -- optimalité}
+
+$\bx$ est une solution réalisable si $\bA\bx = \bb$ et $\bx \geq 0$.
+
+\mbox{}
+
+$\bx$ est une solution optimale si $\bx$ est réalisable et il n'existe pas de de $\bx'$ réalisable tel que $\bc^T \bx' < \bc^T \bx$.
+
+\mbox{}
+
+Supposons $m \leq n$ et rang($\bA$) = $m$.
+Sans perte de généralité, supposons les $m$ premières colonnes de $\bA$ indépendantes, et formons
+\[
+\bA =
+\begin{pmatrix}
+ \bB & \bD
+\end{pmatrix}
+\]
+Solution de base: $\bx = (\bx_b \ 0)$, avec $\bB\bx_b = \bb$.
+
+\end{frame}
+
+\begin{frame}
+\begin{exe}[Wyndor Glass]
+\label{ex:wyndor}
+La compagnie Wyndor Glass Co. produit des produits verriers de haute qualité, incluant des fenêtres et des portes vitrées.
+Elle dispose à cette fin de trois usines (usine 1, usine 2, usine 3), qui ont chacune une capacité de production limitée.
+Les châssis en aluminium et les matériaux sont produits dans l'usine 1, les châssis en bois sont fabriqués dans l'usine 2, et l'usine 3 produit le verre et assemble les produits.
+La compagnie a décidé de mettre en place de ligne de production:
+\begin{itemize}
+\item
+produit 1: une porte vitrée avec un châssis d'aluminium;
+\item
+produit 2: une fenêtre double-vitrage avec châssis en bois.
+\end{itemize}
+
+Un lot de 20 unités donne lieu à un profit de \$3000 et \$5000, respectivement pour le produit 1 et le produit 2.
+\end{exe}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{exe}[Wyndor Glass]
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|}
+\hline
+& Produit 1 & Produit 2 & Capacité de \\
+& Tps de prod. (h) & Tps de prod. (h)& production (h)\\
+\hline
+Usine 1 & 1 & 0 & 4 \\
+\hline
+Usine 2 & 0 & 2 & 12 \\
+\hline
+Usine 3 & 3 & 2 & 18 \\
+\hline
+\end{tabular}
+\end{center}
+
+Chaque lot d'un produit est le résultat combiné de la production dans les trois usines.
+Nous souhaitons déterminer le taux de production pour chaque produit (nombre de lots par semaine) de façon à maximiser le profit total.
+
+Les variables de décision sont
+\begin{itemize}
+\item
+$x_1$, le nombre de lots du produit 1;
+\item
+$x_2$, le nombre de lots du produit 2.
+\end{itemize}
+Le fonction objectif est le profit total, qui vaut $3x_1 +5x_2$, en l'exprimant en miller de dollars. Nous voulons maximiser ce profit.
+\end{exe}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{exe}[Wyndor Glass]
+En résumé, nous avons le problème d'optimisation suivant:
+\begin{align*}
+\max_x\ & z = 3x_1 + 5x_2 \\
+\mbox{t.q. } & x_1\qquad & \leq 4 & \mbox{ (usine 1)} \\
+& 2x_2 & \leq 12 & \mbox{ (usine 2)} \\
+& 3x_1 + 2x_2 & \leq 18 & \mbox{ (usine 3)} \\
+& x_1 \geq 0,\ x_2 \geq 0 & \mbox{ (non-négativité)}
+\end{align*}
+
+Dans l'exemple
+\[
+z = 3x_1+5x_2 \Leftrightarrow x_2 = -\frac{3}{5}x_1 + \frac{1}{5}z.
+\]
+L'ordonnée à l'origine, dépendant de la valeur de $z$, est $\frac{1}{5}z$, et la pente vaut $-\frac{3}{5}$.
+Maximiser revient à augmenter $z$.
+\end{exe}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Solution graphique}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.7]
+\draw[->] (0,0) -- (10,0) node[below,right] {$x_1$};
+\draw[->] (0,0) -- (0,10) node[above,left] {$x_2$};
+\draw (6,0) -- (0,9) node[above,right] {$3x_1 + 2x_2 \leq 18$};
+\draw (0,6) -- (8,6) node[right] {$2x_2 \leq 12$};
+\draw (4,0) -- (4,8) node[above,right] {$x_1 \leq 4$};
+
+\foreach \x in {0,1,2,3,4,5,6,7,8,9}
+  \draw (\x,1pt) -- (\x,-1pt) node[anchor=north] {$\x$};
+\foreach \y in {0,1,2,3,4,5,6,7,8,9}
+  \draw (1pt,\y) -- (-1pt,\y) node[anchor=east] {$\y$};
+
+\filldraw[fill=yellow]
+  (0,0) -- (0,6) -- (2,6) -- (4,3) -- (4,0) -- (0,0);
+  
+\draw (2,3) node[text width=2cm,text ragged] {domaine réalisable};
+
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Solution graphique}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.65]
+\draw[->] (0,0) -- (10,0) node[below,right] {$x_1$};
+\draw[->] (0,0) -- (0,10) node[above,left] {$x_2$};
+
+\foreach \x in {0,1,2,3,4,5,6,7,8,9}
+  \draw (\x,1pt) -- (\x,-1pt) node[anchor=north] {$\x$};
+\foreach \y in {0,1,2,3,4,5,6,7,8,9}
+  \draw (1pt,\y) -- (-1pt,\y) node[anchor=east] {$\y$};
+
+\filldraw[fill=yellow]
+  (0,0) -- (0,6) -- (2,6) -- (4,3) -- (4,0) -- (0,0);
+
+\draw (5.0,-1) -- (-1,13.0/5) node[above,left] {$10=3x_1+5x_2$};
+\draw (25.0/3,-1) -- (-1,23.0/5) node[above,left] {$20=3x_1+5x_2$};
+\draw (38.5/3,-0.5) -- (-1,39.0/5) node[above,left] {$36=3x_1+5x_2$};
+
+\draw (2,6) node[above] {$(2,6)$};
+\fill (2,6) circle (2 pt);
+
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{JuMP}
+
+JuMP: Julia for Mathematical Optimization
+
+\begin{verbatim}
+using JuMP
+using Clp
+
+m = Model(with_optimizer(Clp.Optimizer))
+
+@variable(m, 0 <= x <= 4)
+@variable(m, 0 <= y <= 6)
+
+@constraint(m, 3x + 2y <= 18.0)
+
+@objective(m, Max, 3x+5y)
+
+status = optimize!(m)
+\end{verbatim}
+
+\end{frame}
+
+\end{document}
+

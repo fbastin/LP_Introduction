@@ -1,0 +1,301 @@
+\documentclass[usepdftitle=false]{beamer}
+\usepackage[utf8]{inputenc}
+\usetheme{Singapore}
+\usepackage{xcolor}
+% \setbeamercovered{transparent}
+%\usecolortheme{crane}
+
+\title[IFT2505]{IFT 2505\\Programmation Linéaire\\Variables artificielles}
+\author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal}
+\date{}
+
+\usepackage[normalem]{ulem}
+
+\setbeamertemplate{footline}[frame number]
+
+\def\ba{\boldsymbol{a}}
+\def\bb{\boldsymbol{b}}
+\def\bc{\boldsymbol{c}}
+\def\be{\boldsymbol{e}}
+\def\bx{\boldsymbol{x}}
+\def\by{\boldsymbol{y}}
+\def\bz{\boldsymbol{z}}
+\def\bA{\boldsymbol{A}}
+\def\bB{\boldsymbol{B}}
+\def\bD{\boldsymbol{D}}
+\def\bzero{\boldsymbol{0}}
+
+\begin{document}
+\frame{\titlepage}
+
+% ------------------------------------------------------------------------------------------------------------------------------------------------------\begin{frame}
+
+\begin{frame}
+\frametitle{Motivation}
+
+Pour débuter la méthode du simplexe, il faut une solution de base réalisable initiale.
+
+\mbox{}
+
+Comment trouver cette solution de base initiale?
+
+\mbox{}
+
+\textcolor{red}{Principe de base}
+\begin{itemize}
+	\item
+	identifier les variables isolées;
+	\item
+compléter en introduisant des variables artificielles.
+\end{itemize}:
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Variable isolée}
+
+Dans un système d'équations linéaires, une variable est {\em isolée} si son coefficient est égal à 1 dans une équation et à 0 dans les autres.
+
+\mbox{}
+
+Exemple:
+$$
+\begin{matrix}
+x_1 & + & x_2 & + & x_3 & + &  x_4 & = & 100 \\
+5x_1 & & & + & 4x_3 & & & = & 200 \\
+x_1 & & & & & -  & x_4 & = & 0
+\end{matrix}
+$$
+$x_2$ est la seule variable isolée dans ce système.
+
+\mbox{}
+
+Si des variables sont isolées, on pourra les identifier comme variables de base dans la base initiale. S'il y a moins de $m$ variables isolées, disons $p$, on devra identifier $m-p$ variables supplémentaires.
+\end{frame}
+
+\begin{frame}
+\frametitle{Variables artificielles}
+
+Reprenons le système
+\[
+\bA\bx = \bb, \ \bx \geq 0,
+\]
+où, s.p.d.g., $\bb \geq 0$, et supposons qu'il n'y a aucune variable isolée.
+
+\mbox{}
+
+Considérons le programme artificiel
+\begin{align*}
+\min_y \ & \sum_{i = 1}^m y_i\\
+\mbox{t.q. } & \bA\bx + \by = \bb,\\
+& \bx \geq 0, \ \by \geq 0.
+\end{align*}
+
+$\by = (y_1, y_2,\ldots, y_m)$ est un vecteur de variables artificielles.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Variables artificielles}
+
+Le programme artificiel est déjà sous forme canonique, avec comme solution de base $\by = \bb$.
+
+\mbox{}
+
+Si le programme initial est réalisable, une solution optimale du programme artificiel est $\by = 0$.
+En effet, nous avons alors qu'il existe un $\bx \geq 0$ tel que $\bA\bx = \bb$. Dès lors $\by = 0$ est réalisable pour le programme artificiel, et est clairement optimale.
+Sinon, si le programme initial n'est pas réalisable, aucun $\bx \geq 0$ ne satisfait le système linéaire $\bA \bx = \bb$.
+La valeur optimale du programme artificiel est $> 0$.
+
+\mbox{}
+
+Si dans la solution finale certaines composantes de $\by$ sont toujours dans la base, nous avons une solution de base dégénérée. Si $A$ est de rang plein, on peut échanger chacun des $y_i$ avec une variable hors-base. Si la solution est non-dégénérée, aucune composante de $\by$ n'est encore dans la base.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Variables artificielles: exemple}
+
+On considère le système
+\begin{align*}
+& 2x_1 + x_2 + 2x_3 = 4 \\
+& 3x_1 + 3x_2 + x_3 = 3 \\
+& x_1 \geq 0,\ x_2 \geq 0,\ x_3 \geq 0.
+\end{align*}
+
+\mbox{}
+
+Variables artificielles: $x_4$, $x_5$. Le programme artificiel est
+\begin{align*}
+\min\ & x_4 + x_5 \\
+\mbox{t.q. }
+& 2x_1 + x_2 + 2x_3 + x_4 = 4 \\
+& 3x_1 + 3x_2 + x_3 + x_5 = 3 \\
+& x_1 \geq 0,\ x_2 \geq 0,\ x_3 \geq 0, \\
+& x_4 \geq 0,\ x_5 \geq 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Variables artificielles: exemple}
+
+Sous forme tableau:
+\[
+\begin{matrix}
+& x_1 & x_2 & x_3 & x_4 & x_5 & \bb \\
+& 2 & 1 & 2 & 1 & 0 & 4 \\
+& 3 & 3 & 1 & 0 & 1 & 3 \\
+c^T & 0 & 0 & 0 & 1 & 1 & 0
+\end{matrix}
+\]
+
+Pour obtenir une solution de base réalisable, il faut annuler les coefficients de $x_4$ et $x_5$.
+Nous obtenons le nouveau tableau
+\[
+\begin{matrix}
+& x_1 & x_2 & x_3 & x_4 & x_5 & \bb \\
+& 2 & 1 & 2 & 1 & 0 & 4 \\
+& 3 & 3 & 1 & 0 & 1 & 3 \\
+c^T & -5 & -4 & -3 & 0 & 0 & -7
+\end{matrix}
+\]
+
+\mbox{}
+
+On peut maintenant continuer la résolution du système en utilisant le simplexe, comme d'ordinaire.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Variables artificielles: exemple}
+
+Le premier pivotage donne
+\[
+\begin{matrix}
+& x_1 & x_2 & x_3 & x_4 & x_5 & \bb \\
+& 0 & -1 & 4/3 & 1 & -2/3 & 2 \\
+& 1 & 1 & 1/3 & 0 & 1/3 & 1 \\
+c^T & 0 & 1 & -4/3 & 0 & 5/3 & -2
+\end{matrix}
+\]
+
+\mbox{}
+
+Le second,
+\[
+\begin{matrix}
+& x_1 & x_2 & x_3 & x_4 & x_5 & \bb \\
+& 0 & -3/4 & 1 & 3/4 & -1/2 & 3/2 \\
+& 1 & 5/4 & 0 & -1/4 & 1/2 & 1/2 \\
+c^T & 0 & 0 & 0 & 1 & 1 & 0
+\end{matrix}
+\]
+
+\mbox{}
+
+Ceci donne la solution réalisable $(1/2,0,3/2)^T$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode à deux phases}
+
+\textbf{Phase I}\\
+Recherche d'une solution de base réalisable par l'intermédiaire de variables artificielles.
+
+\mbox{}
+
+\textbf{Phase II}\\
+Oubli des variables artificielles et résolution du programme original.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode à deux phases: exemple}
+
+Prenons le programme
+\begin{align*}
+\min_x \ & 4x_1 + x_2 + x_3 \\
+& 2x_1 + x_2 + 2x_3 = 4 \\
+& 3x_1 + 3x_2 + x_3 = 3 \\
+& x_1 \geq 0,\ x_2 \geq 0,\ x_3 \geq 0.
+\end{align*}
+
+\mbox{}
+
+De ce qui précède, on part du tableau
+\[
+\begin{matrix}
+& x_1 & x_2 & x_3  & \bb \\
+& 0 & -3/4 & 1 & 3/2 \\
+& 1 & 5/4 & 0 & 1/2 \\
+c^T & 4 & 1 & 1 & 0
+\end{matrix}
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode à deux phases: exemple}
+
+Il faut faire apparaître des 0 comme coûts réduits associés à la base:
+\[
+\begin{matrix}
+& x_1 & x_2 & x_3  & \bb \\
+& 0 & -3/4 & 1 & 3/2 \\
+& 1 & 5/4 & 0 & 1/2 \\
+c^T & 0 & -13/4 & 0 & -7/2
+\end{matrix}
+\]
+
+\mbox{}
+
+Par après, on trouve
+\[
+\begin{matrix}
+& x_1 & x_2 & x_3  & \bb \\
+& 3/5 & 0 & 1 & 9/5 \\
+& 4/5 & 1 & 0 & 2/5 \\
+c^T & 13/5 & 0 & 0 & -11/5
+\end{matrix}
+\]
+
+\mbox{}
+
+La solution optimale est donc $(0, 2/5, 9/5)$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Alternative: méthode du ``big-$M$''}
+
+Idée: plutôt que de créer un nouveau problème, on va directement intégrer les variables artificielles dans les contraintes initiales.
+
+\mbox{}
+
+Comment? On intègre les variables artificielles dans l'objectif initial, mais avec un coût si grand qu'elles ne peuvent qu'être mises à zéro dans une solution optimale. Pour ce faire, on les multiplie avec un certain $M$ \textsl{suffisamment} grand.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Alternative: méthode du ``big-$M$''}
+
+Si $\sum_{j = 1,\ldots,n} a_{ij}x_j = b_i$ et qu'aucune variable n'est isolée:
+\begin{enumerate}
+\item
+nous ajoutons une variable artificielle $x_{n+1} \geq 0$;
+\item
+nous lui associons un profil très positif: $M$
+\begin{align*}
+\min\ & \sum_{j = 1}^{n} c_{j}x_j + M x_{n+i} \\
+\mbox{t.q. } & \ldots \\
+& \sum_{j = 1}^n a_{ij}x_j + x_{n+i} = b_i \\
+& \ldots \\
+& x_1 \geq 0, i=1,\ldots,n+1.
+\end{align*}
+\end{enumerate}
+Si le problème est réalisable, nous devrions avoir $x_{n+i} = 0$.
+
+\end{frame}
+
+\end{document}

@@ -1,0 +1,1785 @@
+\documentclass[usepdftitle=false, aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+
+%\usetheme{Warsaw}
+%\usepackage{xcolor}
+
+% \setbeamercovered{transparent}
+%\usecolortheme{crane}
+\title[IFT2505]{IFT 2505\\Méthodes de points intérieurs}
+\author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal}
+\date{}
+
+\usetheme{Singapore}
+\usepackage{xcolor}
+
+\setbeamertemplate{footline}[frame number]
+
+\usepackage{ulem}
+\usepackage{cancel}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\def\ba{\boldsymbol{a}}
+\def\bb{\boldsymbol{b}}
+\def\bc{\boldsymbol{c}}
+\def\bd{\boldsymbol{d}}
+\def\be{\boldsymbol{e}}
+\def\br{\boldsymbol{r}}
+\def\bs{\boldsymbol{s}}
+\def\bu{\boldsymbol{u}}
+\def\bx{\boldsymbol{x}}
+\def\by{\boldsymbol{y}}
+\def\bz{\boldsymbol{z}}
+\def\bA{\boldsymbol{A}}
+\def\bB{\boldsymbol{B}}
+\def\bD{\boldsymbol{D}}
+\def\bH{\boldsymbol{H}}
+\def\bI{\boldsymbol{I}}
+\def\bL{\boldsymbol{L}}
+\def\bM{\boldsymbol{M}}
+\def\bU{\boldsymbol{U}}
+\def\bX{\boldsymbol{X}}
+\def\bzero{\boldsymbol{0}}
+\def\bone{\boldsymbol{1}}
+\def\blambda{\boldsymbol{\lambda}}
+
+\def\cF{\mathcal{F}}
+\def\cR{\mathcal{R}}
+
+\def\RR{\mathcal{R}}
+
+\usepackage[french]{babel}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Approche primale}
+
+%Aspects similaires à la programmation linéaire:
+%\begin{itemize}
+%	\item
+%	algorithmes itératifs
+%	\item
+%	pour un itéré donné, calcul d'une direction de recherche, puis d'une longueur de pas le long de cette direction.
+%\end{itemize}
+
+%\mbox{}
+
+Considérons le programme
+\begin{align*}
+\min_x \ & c^Tx \\
+\mbox{s.à. } & Ax = b\\
+& x \geq 0.
+\end{align*}
+
+\mbox{}
+
+Définissons les ensembles
+\begin{align*}
+\mathcal{F}_P \overset{\mbox{def}}{=} \lbrace x \,|\, Ax = b, x \geq 0 \rbrace\\
+\mathring{\mathcal{F}}_P \overset{\mbox{def}}{=} \lbrace x \,|\, Ax = b, x > 0 \rbrace\\
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Problème barrière}
+
+On suppose que $\mathring{\mathcal{F}}_P$ est non vide et que l'ensemble de solutions optimales pour ce problème est borné.
+
+\mbox{}
+
+Soit $\mu \geq 0$. Problème barrière (PB):
+\begin{align*}
+\min_x \ & c^Tx - \mu \sum_{j = 1}^n \log x_j \\
+\mbox{s.à. } & Ax = b \\
+& x > 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Prbolème barrière vs Problème linéaire}
+
+Si $\mu = 0$, on retrouve le problème original en permettant à $x$ d'avoir des composantes nulles:
+\begin{align*}
+\min_x \ & c^Tx \cancel{- \mu \sum_{j = 1}^n \log x_j} \\
+\mbox{s.à. } & Ax = b \\
+& x \boldsymbol{\geq} 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin central}
+
+Soit $x(\mu)$, la solution au PB étant donné $\mu$.
+En faisant varier $\mu$ continûment vers 0, nous obtenons le chemin central primal.
+
+\mbox{}
+
+Si $\mu \rightarrow \infty$, la solution s'approche du centre analytique de la région réalisable, lorsque celle-ci est bornée: le terme barrière prédomine alors dans l'objectif.
+
+\mbox{}
+
+Comme $\mu \rightarrow 0$, ce chemin converge vers le centre analytique de la face optimale $\lbrace x \,|\, c^Tx = z^*,\ Ax = b,\ x \geq 0 \rbrace$, où $z^*$ est la valeur optimale du programme linéaire.
+
+\mbox{}
+
+L'idée de base est de résoudre une succession de problèmes barrières pour des valeurs décroissantes de $\mu$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Centre analytique}
+
+Considérons un ensemble $\mathcal{S}$ dans un sous-ensemble $\mathcal{X}$ de $E^n$, défini comme
+\[
+\mathcal{S} = \lbrace \bx \in \mathcal{X}\,:\, g_j(\bx) \geq 0,\ j = 1,2,\ldots,m \rbrace,
+\]
+et supposons que les fonctions $g_j$ sont continues.
+
+\mbox{}
+
+Nous supposons aussi que $\mathcal{S}$ a un intérieur non-vide:
+\[
+\mathring{\mathcal{S}} = \lbrace \bx \in \mathcal{X} \,:\, g_j(\bx) > 0,\ \forall\, j \rbrace \ne \emptyset.
+\]
+
+\mbox{}
+
+Définissons aussi sur $\mathring{\mathcal{S}}$ la {\em fonction potentiel}
+\[
+\psi(\bx) = -\sum_{j = 1}^m \log g_j(\bx).
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Centre analytique}
+
+Le {\em centre analytique} de $\mathcal{S}$ est le vecteur (ou l'ensemble de vecteurs) qui minimise le potentiel.
+
+\mbox{}
+
+En d'autres termes, c'est le vecteur (ou l'ensemble de vecteurs) qui résout
+\[
+\min_{\bx} \psi(\bx) =
+\min_{\bx}
+\left\lbrace
+-\sum_{j = 1}^m \log g_j(\bx) \,:\, \bx \in \mathcal{X},\ g_j(\bx) > 0\ \forall\, j
+\right\rbrace.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: un cube}
+
+Considérons l'ensemble $\mathcal{S}$ défini par $x_i \geq 0$, $(1-x_i) \geq 0$, pour $i = 1,2,\ldots,n$:
+\[
+\mathcal{S} = [0,1]^n,
+\]
+le cube unité dans $E^n$.
+
+\mbox{}
+
+Cherchons à minimser la fonction potentiel correspondante
+\[
+\psi(\bx) = -\sum_{i = 1}^n \log x_i - \sum_{i = 1}^n \log (1-x_i).
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: un cube}
+
+Pour ce faire, annulons le gradient de $\psi(\bx)$
+\[
+\nabla_x \psi(x) =
+\begin{pmatrix}
+- \frac{1}{x_1} + \frac{1}{1-x_1} \\
+- \frac{1}{x_2} + \frac{1}{1-x_2} \\
+\vdots \\
+- \frac{1}{x_n} + \frac{1}{1-x_n} \\
+\end{pmatrix}
+\]
+(Note: $\psi(x)$ est ici une fonction convexe.)
+
+\mbox{}
+
+On en tire $x_i = 1/2$ pour tout $i$.
+Dès lors, le centre analytique est identique à l'idée usuelle du centre du cube unité.
+
+\mbox{}
+
+Toutefois, en général, le centre analytique dépend de la manière dont l'ensemble est défini, en particulier les inégalités utilisées dans la définition.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: un cube}
+
+Par exemple, nous pourrions aussi définir le cube unité avec les inégalités
+\begin{align*}
+x_i &\geq 0, \ i = 1,\ldots,n\\
+(1-x_i)^d &\geq 0,\ i = 1,\ldots,n,
+\end{align*}
+avec $d > 1$, et $d$ impair.
+Dans ce cas, la solution est
+\[
+x_i = \frac{1}{d+1},\ \forall\, i.
+\]
+Pour un grand $d$, ce point est proche du coin intérieur, i.e. du point $(0,0,\ldots,0)$ du cube unité.
+
+\mbox{}
+
+De plus, l'ajout d'inégalités additionnelles redondantes peut aussi modifier la position du centre analytique. Répéter par exemple une inégalité donnée changera la position du centre.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Centre analytique}
+
+Il y a plusieurs ensembles associés avec des programmes linéaires pour lesquels le centre analytique est d'un intérêt particulier.
+
+\mbox{}
+
+Un tel ensemble est la région réalisable elle-même. Un autre est l'ensemble des solutions optimales. Il y a aussi les ensembles associés avec les formulations duale et primale-duale. Tous ceux-ci sont en fait reliés.
+
+\mbox{}
+
+Considérons par exemple le centre analytique associé à un polytope borné $\Omega$ dans $E^m$, représenté par $n$ ($> m$) inégalités linéaires:
+\[
+\Omega = \lbrace \by \in E^m \,:\, \bc^T - \by^T \bA \geq \bzero \rbrace,
+\]
+où $\bA \in E^{m \times n}$ et $c \in E^n$ sont données, et $A$ est de rang $m$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Centre analytique}
+
+Dénotons l'intérieur de $\Omega$ par
+\[
+\mathring{\Omega} = \lbrace \by \in E^m \,:\, \bc^T - \by^T\bA > 0 \rbrace.
+\]
+
+\mbox{}
+
+La fonction potentiel pour cet ensemble est
+\[
+\psi_{\Omega} (\by) = - \sum_{j = 1}^n \log (c_j - \by^T\ba_j) = -\sum_{j = 1}^n \log s_j,
+\]
+où $\bs = \bc^T - \by^T\bA$ est un vecteur d'écart.
+
+\mbox{}
+
+Dès lors, dans le cas présent, la fonction potentiel est l'opposé de la somme des logarithmes des variables d'écart, ou encore le produit de leur inverse:
+$$
+-\sum_{j = 1^n} \log s_j = \log \prod_{j = 1}^n \frac{1}{s_j}
+$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Centre analytique}
+
+Le centre analytique de $\Omega$ est le point de $\Omega$ qui minimise la fonction potentiel. Ce point, dénoté $\by^a$ est associé à $\bs^a = \bc - \bA\by^a$. La paire $(\by^a, \bs^a)$ est définie de manière unique, vu que la fonction potentiel est strictement convexe sur un ensemble convexe borné.
+
+\mbox{}
+
+Notons aussi que minimiser la fonction potentiel revient ici à maximiser le produit des variables d'écart.
+
+\mbox{}
+
+Comme,
+$$
+\frac{d}{dy_i} (c_j-\by^T\ba_j) = -a_{ij},
+$$
+nous avons
+$$
+\frac{d}{dy_i} \psi(\by) = \sum_{j = 1}^n \frac{a_{ij}}{c_j - \by^T\ba_j}.
+$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Centre analytique}
+
+Annuler le gradient de $\psi(\by)$ par rapport à $\by$ donne
+\[
+\sum_{j = 1}^n \frac{a_{ij}}{c_j - \by^T\ba_j} = 0,\ \forall\, i,
+\]
+ou encore
+\[
+\sum_{j = 1}^n \frac{a_{ij}}{s_j} = 0,\ \forall\, i,
+\]
+Définissons $x_j = 1/s_j$ pour tout $j$. Nous pouvons réécrire l'équation comme
+$$
+\sum_{j = 1}^n a_{ij}x_j = 0,\ \forall\, i,
+$$
+soit
+$$
+\bA\bx = \bzero.
+$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Centre analytique}
+
+Notons la multiplication composante par composante comme suit
+\[
+\bx \circ \bs = (x_1s_1, x_2s_2, \ldots, x_ns_n)^T.
+\]
+Le centre analytique est alors défini par les conditions
+\begin{align*}
+\bx \circ \bs &= \bone \\
+\bA\bx &= \bzero \\
+\bA^T\by + \bs & = \bc.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Centre analytique}
+
+Le centre analytique peut aussi être défini quand l'intérieur est vide ou que des égalités sont présentes, par exemple avec
+\[
+\Omega = \lbrace \by \in E^m \,:\, \bc^T-\by^T\bA \geq 0,\, \bB\by = \bb \rbrace
+\]
+Dans ce cas, le centre analytique est choisi sur la surface linéaire $\lbrace \by \,:\, \bB\by = \bb \rbrace$ pour maximiser le produit des variables d'écart.
+
+\mbox{}
+
+Dans ce contexte, l'intérieur de $\Omega$ réfère à l'intérieur de l'orthant positif des variables d'écart:
+\[
+R^n_+ := \lbrace \bs \,:\, \bs \geq 0 \rbrace.
+\]
+Cette définition d'intérieur dépend seulement de la région des variables d'écart.
+
+\mbox{}
+
+Meme s'il y a seulement un point dans $\Omega$ avec $\bs = \bc - \bA^T\by$ pour un certain $\by$ où $\bB\by = \bb$ avec $\bs > 0$, nous continuerons à dire que $\mathring{\Omega}$ est non vide.
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Fonction lagrangienne}
+
+Réécrivons la contrainte $Ax = b$ sous la forme $Ax - b = 0$, et introduisons un vecteur $y$, en associant une composante $y_i$ à la $i^e$ contrainte $\sum_{j = 1}^n a_{ij} x_j = b_i$.
+
+\mbox{}
+
+$y_i$ joue à peu près le même rôle que les variables duales précédentes, mais est appelé à présent multiplicateur de Lagrange.
+
+\mbox
+
+Lagrangien:
+\[
+L(x) = c^Tx - \mu \sum_{j = 1}^n \log x_j - y^T(Ax - b).
+\]
+On cherche à minimiser cette fonction en annulant son gradient.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Minimisation du lagrangien}
+
+\begin{align*}
+& \nabla_x L(x) = 0 \\
+\Leftrightarrow\ &
+c_j - \frac{\mu}{x_j} - y^Ta_j = 0,\ j = 1,\ldots,n\\
+\Leftrightarrow\ &
+\mu X^{-1}\bone + A^Ty = c,
+\end{align*}
+où $X = \text{diag}(x)$.
+
+\mbox{}
+
+En notant $s_j = \mu/x_j$, l'ensemble des conditions d'optimalité (primales, duales, minimisation du lagrangien) s'écrit:
+\begin{align*}
+\bx \circ \bs &= \mu \bone \\
+\bA\bx &= \bb \\
+\bA^T\by + \bs & = \bc.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Lien avec le dual}
+
+$y$ est une solution duale réalisable et $c - A^T y > 0$.
+
+\mbox{}
+
+En effet, le dual est
+\begin{align*}
+\max_y\ \ & y^T b \\
+\mbox{s.à. } & A^T y \leq c
+\end{align*}
+Comme
+\begin{align*}
+A^Ty + s &= c\\
+s_j &= \frac{\mu}{x_j}
+\end{align*}
+nous avons
+\[
+A^T y < c.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Considérons le programme
+\begin{align*}
+\max\ & x_1 \\
+\mbox{s.à. } & 0 \leq x_1 \leq 1 \\
+& 0 \leq x_2 \leq 1.
+\end{align*}
+
+\mbox{}
+
+On réécrit ce système sous forme standard
+\begin{align*}
+\min\ & -x_1 \\
+\mbox{s.à. } & x_1 + x_3 = 1\\
+& x_2 + x_4 = 1 \\
+& x_1 \geq 0, x_2 \geq 0, x_3 \geq 0, x_4 \geq 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Conditions d'optimalité}
+
+\begin{align*}
+x_1 s_1 &= \mu \\
+x_2 s_2 &= \mu \\
+x_3 s_3 &= \mu \\
+x_4 s_4 &= \mu \\
+x_1 + x_3 &= 1 \\
+x_2 + x_4 &= 1 \\
+y_1 + s_1 &= -1 \\
+y_2 + s_2 &= 0 \\
+y_1 + s_3 &= 0 \\
+y_2 + s_4 &= 0
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Conditions d'optimalité}
+
+De
+\begin{align*}
+y_2 + s_2 = 0 \\
+y_2 + s_4 = 0 \\
+\end{align*}
+on a $s_2 = s_4$.
+
+\mbox{}
+
+On en déduit aussi
+\[
+x_2 = x_4,
+\]
+et de là
+\[
+x_2 = x_4 = \frac{1}{2}.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Conditions d'optimalité}
+
+On a aussi
+\begin{align*}
+& -1 = s_1 - s_3 = \frac{\mu}{x_1} - \frac{\mu}{x_3} \\
+\Leftrightarrow\ & -1 = \frac{\mu}{x_1} - \frac{\mu}{1-x_1} \\
+\Leftrightarrow\ & -x_1(1-x_1) = \mu(1-x_1) - \mu x_1 \\
+\Leftrightarrow\ & x_1^2 - x_1 = \mu - 2\mu x_1 \\
+\Leftrightarrow\ & x_1^2 - (1-2\mu) x_1 -\mu = 0.
+\end{align*}
+Le discriminant de cette équation quadratique est
+\[
+\rho = (1-2\mu)^2 + 4\mu = 1+ 4\mu^2,
+\]
+et de là
+\[
+x_1 = \frac{1-2\mu \pm \sqrt{1+4\mu^2}}{2}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin central}
+
+Pour $\mu$ grand, on doit choisir la racine correspondant à '+'.
+
+D'autre part,
+\[
+x \rightarrow \left( 1, \frac{1}{2} \right), \mbox{ comme } \mu \rightarrow 0.
+\]
+
+\mbox{}
+
+On converge vers le centre analytique de la face optimale
+\[
+\lbrace x \,|\, x_1 = 1,\ 0 \leq x_2 \leq 1\rbrace
+\]
+plutôt qu'un coin du carré.
+
+\mbox{}
+
+De plus, quand $\mu \rightarrow +\infty$,
+\[
+x(\mu) \rightarrow \left( \frac{1}{2}, \frac{1}{2} \right)
+\]
+comme
+\[
+-2\mu + \sqrt{1+4\mu^2} = -2\mu + 2\mu\sqrt{\frac{1}{4\mu^2}+1}.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin central}
+
+Dès lors, le chemin central est une ligne droite progressant du centre analytique du carré (comme $\mu \rightarrow \infty$) vers le centre analytique de la face optimale (comme $\mu \rightarrow 0$).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin dual central}
+
+Partons à présent du problème dual
+\begin{align*}
+\max\ & y^Tb \\
+\mbox{s.à. } & y^TA + s^T = c^T \\
+& s \geq 0.
+\end{align*}
+
+\mbox{}
+
+Le problème barrière associé est
+\begin{align*}
+\max\ & y^Tb + \mu \sum^n_{j = 1} \log s_j \\
+\mbox{s.à. } & y^TA + s^T = c^T \\
+& s \geq 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin dual central}
+
+On suppose que $\mathring{\mathcal{F}}_P = \lbrace (y,s): y^TA + s^T = c^T,\ s > 0 \rbrace$ est non vide, et l'ensemble des solutions optimales du dual est borné.
+
+\mbox{}
+
+On obtient le chemin central dual en faisant tendre $\mu$ vers 0.
+
+\mbox{}
+
+Lagrangien:
+\[
+L(y,s) = y^Tb + \mu \sum_{j=1}^n \log s_j - (y^TA + s^T - c^T)x.
+\]
+
+\mbox{}
+
+Dès lors,
+\begin{align*}
+\nabla_y L &= 0 \Leftrightarrow b_i - a^i x = 0,\ \forall i ,\\ 
+\nabla_s L &= 0 \Leftrightarrow \frac{\mu}{s_j} - x_j = 0,\ \forall j.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin dual central: conditions d'optimlaité}
+
+On obtient les conditions d'optimalité
+\begin{align*}
+\bx \circ \bs &= \mu \bone \\
+\bA\bx &= \bb \\
+\bA^T\by + \bs & = \bc.
+\end{align*}
+
+\mbox{}
+
+On retrouve les mêmes conditions que pour le chemin central.
+
+\mbox{}
+
+Par conséquent, $x$ est une solution réalisable primale et $x > 0$.
+
+\mbox{}
+
+Considérons l'ensemble de niveau dual
+\[
+\Omega(z) = \lbrace y \,|\, c^T - y^T A \geq 0, y^T b = z\rbrace,
+\]
+avec $z < z^*$, la valeur optimale du dual.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin dual central: conditions d'optimlaité}
+
+Le centre analytique $(y(z), s(z))$ de $\Omega$ coïncide avec le chemin central dual comme $z$ tend vers $z^*$.
+
+%voir p.52 des notes manuscrites
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin dual central: exemple}
+
+Reprenons le problème
+\begin{align*}
+\min\ & -x_1 \\
+\mbox{s.à. } & x_1 + x_3 = 1 \\
+& x_2 + x_4 = 1 \\
+& x_1 \geq 0, x_2 \geq 0, x_3 \geq 0, x_4 \geq 0.
+\end{align*}
+
+Le dual s'écrit
+\begin{align*}
+\max\ & y_1 + y_2 \\
+\mbox{s.à. } & y_1 \leq -1 \\
+& y_2 \leq 0 \\
+& y_1 \leq 0 \\
+& y_2 \leq 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin dual central: exemple}
+
+On peut réécrire le dual comme
+\begin{align*}
+\max\ & y_1 + y_2 \\
+\mbox{s.à. } & y_1 + s_1 = -1 \\
+& y_2 + s_2 = 0.
+\end{align*}
+
+\mbox{}
+
+Les conditions d'optimalité sont les mêmes que pour le primal, aussi
+\[
+x_2 = x_4 = \frac{1}{2},
+\]
+d'où
+\begin{align*}
+%s_2 = s_4 = 2\mu,
+s_2 &= 2\mu, \\
+y_2 &= -2\mu.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin dual central: exemple}
+
+Nous avons également, en se rappelant de la résolution du primal,
+\begin{align*}
+y_1 & = -1 - s_1 \\
+& = -1 - \frac{\mu}{x_1(\mu)} \\
+& = -1 - \frac{2\mu}{1-2\mu\pm\sqrt{1+4\mu^2}}
+\end{align*}
+
+\mbox{}
+
+Comme $\mu \rightarrow 0$, $y_1 \rightarrow -1$, $y_2 \rightarrow 0$.
+
+\mbox{}
+
+Il s'agit de l'unique solution du problème linéaire (les deux contraintes sont actives)
+
+\mbox{}
+
+Si $\mu \rightarrow \infty$, $y$ est non borné, car l'ensemble dual réalisable est non borné.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin central primal-dual}
+
+Hypothèse: la région réalisable du problème de programmation linéaire a un intérieur non vide et un ensemble borné de solutions optimales.
+
+\mbox{}
+
+Le dual a un intérieur réalisable non vide, en vertu des conditions (d'optimalité) sur le lagrangien.
+
+\mbox{}
+
+Le chemin primal-dual est l'ensemble des vecteurs $(x(\mu), y(\mu), s(\mu))$ satisfaisant les conditions
+\begin{align*}
+\bx \circ \bs &= \mu \bone \\
+\bA\bx &= \bb \\
+\bA^T\by + \bs & = \bc \\
+x \geq 0,\ & s \geq 0 \\
+0 \leq \mu & < \infty.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Proposition}
+
+Si les ensembles réalisables primal et dual ont des intérieurs non vides, alors le chemin central $(x(\mu), y(\mu), s(\mu))$ existe pour tout $\mu$, $0 \leq \mu < \infty$.
+
+\mbox{}
+
+De plus, $x(\mu)$ est le chemin central primal, $(y(\mu), s(\mu))$ est le chemin central dual.
+
+\mbox{}
+
+$x(\mu)$ et $(y(\mu), s(\mu))$ convergent vers les centres analytiques des faces des solutions optimales primales et duales, respectivement, quand $\mu \rightarrow 0$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Saut de dualité}
+
+Soit $(x(\mu), y(\mu), s(\mu))$ sur le chemin central primal-dual.
+Nous avons
+\begin{align*}
+c^Tx - y^Tb &= (A^T y)^T x + s^Tx - y^T b \\
+& = y^T Ax + s^Tx - y^T b \\
+& = y^T b + s^Tx - y^T b \\
+& = s^Tx \\
+& = n\mu.
+\end{align*}
+
+\mbox{}
+
+Comme pour la dualité faible, $c^T x \geq y^T b$, et $n\mu$ est appelé le saut de dualité.
+
+\mbox{}
+
+Soit $g = c^Tx - y^Tb$.
+
+\mbox{}
+
+Comme $y^T b \leq z^*$, $z^* \geq c^Tx - g$, et donc, étant donné $(x, y, s)$, on peut mesurer la qualité de $x$ comme $c^T x - z^* \leq g$.
+\end{frame}
+\begin{frame}
+\frametitle{Stratégies de solution en points intérieurs}
+
+Trois grandes approches, suivant les différences dans les définitions du chemin central:
+\begin{enumerate}
+	\item
+	barrière primale, méthode de poursuite de chemin,
+	\item
+	méthode primale-duale de poursuite de chemin,
+	\item
+	méthode primale-duale de réduction de potentiel.
+\end{enumerate}
+
+\mbox{}
+
+Caractéristiques
+\begin{tabular}{c|ccc}
+	& R-P & R-D & Saut nul \\
+	\hline
+	simplexe primal & X & & X \\
+	simplexe dual & & X & X\\
+	barrière primale & X & & \\
+	poursuite de chemin primale-duale & X & X & \\
+	réduction de potentiel primale-duale & X & X & \\
+\end{tabular}
+
+R: réalisabilité, P: primal, D: dual
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode primale barrière}
+
+Nous partons du problème primal barrière
+\begin{align*}
+\min_x \ & c^Tx - \mu \sum_{j = 1}^n \log x_j \\
+\mbox{s.à. } & Ax = b \\
+& x \geq 0.
+\end{align*}
+
+\mbox{}
+
+Nous voudrions le résoudre pour $\mu$ petit.
+
+\mbox{}
+
+Par exemple, $\mu = \epsilon/n$ permet d'obtenir un saut de dualité inférieur à $\epsilon$.
+
+\mbox{}
+
+Souci: difficile de résoudre pour $\mu$ proche de 0.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode primale barrière}
+
+Une stratégie générale est de commencer avec $\mu$ modérément large (p.e. $\mu = 100$) et de résoudre le problème approximativement.
+
+\mbox{}
+
+La solution correspondante est approximativement sur le chemin central primal, mais probablement assez loin du point correspondant à $\mu \rightarrow 0$.
+
+\mbox{}
+
+Ce point ne servira que de point de départ pour le problème avec un $\mu$ plus petit.
+
+\mbox{}
+
+Typiquement, on mettra à jour $\mu$ de l'itération $k$ à l'itération $k+1$ comme
+\[
+\mu_{k+1} = \gamma \mu_k,
+\]
+pour $0< \gamma < 1$ fixé.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode primale barrière}
+
+Si on commence avec une valeur $\mu_0$, à l'itération $k$,
+\[
+\mu_{k} = \gamma^k \mu_0,
+\]
+
+\mbox{}
+
+Dès, réduire $\mu_k/\mu_0$ sous $\epsilon$ requiert
+\[
+k = \left\lceil \frac{\log \epsilon}{\log \gamma} \right\rceil.
+\]
+
+\mbox{}
+
+Souvent, une variante de la méthode de Newton est utilisée pour résoudre les sous-problèmes ainsi construits:
+\begin{align*}
+\bx \circ \bs &= \mu \bone \\
+\bA\bx &= \bb \\
+\bA^T\by + \bs & = \bc
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme général}
+
+\begin{description}
+	\item[Etape 1]
+	Choisir $\mu_0$ et un point de départ $(x_0, y_0, s_0)$, tel que
+	\begin{align*}
+	Ax_0 &= b \\
+	A^Ty_0 + s_0 &= c^T
+	\end{align*}
+	et $y_0, s_0 \geq 0$, $x_0 > 0$. Poser $k = 0$, et choisir $\epsilon$.
+	\item[Etape 2]
+	Projeter $x_k$ sur le chemin central avec la méthode de Newton: calculer le vecteur $(d_x, d_y, d_s)$ et poser
+	\begin{align*}
+	x_{k+1} &= x_k + d_x \\
+	y_{k+1} &= y_k + d_y \\
+	s_{k+1} &= s_k + d_s
+	\end{align*}
+	Si $\mu_k < \epsilon$, arrête.
+	Sinon, définir $\mu_{k + 1} = \gamma \mu_k$, poser $k := k+1$, et retourner au début de l'étape 2.
+\end{description}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode primale barrière}
+
+Nous pouvons en particulier appliquer la méthode de Newton pour trouver un zéro du gradient associé au lagrangien du problème de barrière logarithmique primale.
+
+\mbox{}
+
+Rappelons que le lagrangien du problème barrière logarithmique primale est
+$$
+L(x) = c^Tx - \mu \sum_{j = 1}^n \log x_j - y^T(Ax-b)
+$$
+
+\mbox{}
+
+Il est facile d'exprimer le gradient et le hessien de ce problème:
+\begin{align*}
+\nabla L(x) &= c-\mu X^{-1}\bone - A^Ty \\
+H(x) & = \mu X^{-2}
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Système d'équation non linéaires: méthode de Newton}
+	
+	Considérons le système d'équations non linéaires
+	$$
+	F(\bx) = 0
+	$$
+	avec $F: \RR^n \rightarrow \RR^m$.
+	
+	\mbox{}
+	
+	En partant d'un point $\bx_0$, la méthode de Newton construit une suite d'itérés à partir de la récurrence
+	$$
+	\bx_{k+1} = \bx_k - J^{-1}(\bx_k) F(\bx_k)
+	$$
+	où $J(\bx_k)$ est la matrice jacobienne de f:
+	\[
+	J(\bx) =
+	\begin{pmatrix}
+		\nabla^T_x f_1(x) \\
+		\nabla^T_x f_2(x) \\
+		\vdots \\
+		\nabla^T_x f_n(x) \\
+	\end{pmatrix}
+	\]
+	
+	La méthode converge si on est suffisamment proche d'un zéro de la fonction.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Méthode de Newton en optimisation}
+
+Supposons que $f \in C^2$.
+On peut appliquer la méthode de Newton à la résolution du sytème non-linéaire
+$$
+\nabla f(x) = 0.
+$$
+Dans ce cas, la matrice jacobienne de $f$ n'est rien d'autre que la matrice hessienne:
+\begin{align*}
+J(\bx) &=
+\begin{pmatrix}
+	\nabla^T_x \frac{d}{dx_1} f(\bx) \\
+	\nabla^T_x \frac{d}{dx_2} f(\bx) \\
+	\vdots \\
+	\nabla^T_x \frac{d}{dx_n} f(\bx)
+\end{pmatrix}
+=
+\begin{pmatrix}
+	\frac{d^2}{dx_1^2} f(\bx) & \frac{d^2}{dx_1x_2} f(\bx) & \cdots & \frac{d^2}{dx_1x_n} f(\bx) \\
+	\frac{d^2}{dx_1x_2} f(\bx) & \frac{d^2}{dx_2^2} f(\bx) & \cdots & \frac{d^2}{dx_2x_n} f(\bx) \\
+	\vdots & \vdots & \ddots & \vdots \\
+	\frac{d^2}{dx_1x_n} f(\bx) & \frac{d^2}{dx_2x_n} f(\bx) & \cdots & \frac{d^2}{dx_n^2} f(\bx)
+\end{pmatrix} \\
+&= H(\bx)
+\end{align*}
+	
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode de Newton}
+
+La récurrence de Newton devient dès lors
+$$
+\bx_{k+1} = \bx_k - H^{-1}(\bx_k) \nabla f(\bx_k).
+$$
+On suppose ici que $H(\bx_k)$ est définie positive.
+
+\mbox{}
+
+Note: nous ne calculons pas $H^{-1}(\bx_k)$ pour des questions de précision numériques, mais nous obtenons le pas $\bd_k$ en résolvant le système linéaire
+$$
+H(\bx_k) \bd_k = -\nabla f(\bx_k).
+$$
+La récurrence de Newton se réécrit
+$$
+\bx_{k+1} = \bx_k + \bd_k.
+$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode de Newton: difficultés}
+
+La convergence n'est assurée que si le point de départ est suffisamment proche de la solution, et est alors quadratique.
+
+\mbox{}
+
+On peut obtenir la convergence globale en utilisant la direction de Newton comme direction de descente avec une méthode de recherche linéaire: on cherche une longueur de pas appropriée $\alpha_k$ pour produire le nouvel itéré
+$$
+\bx_{k+1} := \bx_k+\alpha_k \bd_k, 
+$$
+en s'assurant que $\alpha_k$ puisse prendre la valeur 1 afin d'assurer une convergence quadratique au cours des dernières itérations.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode primale barrière}
+
+Dès lors, la méthode de Newton pour la méthode primale barrière conduit à calculer
+$$
+\bd_x = - H^{-1}\nabla L(x)
+$$
+ou encore
+\begin{align*}
+& -H\bd_x =  c-\mu X^{-1}\bone - A^Ty \\
+\Leftrightarrow\  &  H(-\bd_x) + A^Ty =  c-\mu X^{-1}\bone
+\end{align*}
+
+\mbox{}
+
+Nous devons cependant aussi nous assurer que le nouvel itéré $\bx + \bd_x$ est réalisable, i.e.
+$$
+A(\bx + \bd_x) =b
+$$
+Ceci nous mène à imposer $A\bd_x = 0$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode primale barrière}
+
+Les deux équations précédentes donnent, sous forme matricielle,
+$$
+\begin{pmatrix}
+H & A^T \\
+A & 0
+\end{pmatrix}
+\begin{pmatrix}
+-\bd_x \\ \by
+\end{pmatrix}
+=
+\begin{pmatrix}
+c - \mu X^{-1}\bone \\ 0
+\end{pmatrix}
+$$
+
+\mbox{}
+
+Reprenons la première ligne du système
+$$
+-H\bd_x + A^T\by = c - \mu X^{-1}\bone
+$$
+et multiplions de part et d'autre par $AX^2$. Nous obtenons
+$$
+-\mu A\bd_x + AX^2A^T\by = AX^2c - \mu AX \bone 
+$$
+
+%Etant donné un point $x \in \mathring{\mathcal{F}}_P$, la méthode de Newton consistera à chercher des direction $\bd_x$, $\bd_y$ et $\bd_s$ à partir du système
+%\begin{align*}
+%\mu \bX^{-2} \bd_x + \bd_s &= \mu \bX^{-1}\bone - \bc \\
+%\bA\bd_x &= \bzero %\\
+%-\bA^T\bd_y + \bd_s & = 0
+%\end{align*}
+
+Comme $A\bd_x = 0$, nous obtenons un système linéaire permettant de trouver $\by$:
+$$
+AX^2A^T\by = AX^2c - \mu AX \bone 
+$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode primale barrière}
+
+Repartons de
+$$
+-H\bd_x + A^T\by = c - \mu X^{-1}\bone
+$$
+avec $\by$ connu. Nous avons dès lors
+\begin{align*}
+\bd_x &= \mu H^{-1}X^{-1}\bone - H^{-1}c + H^{-1}A^T\by \\
+&= x + \frac{1}{\mu}X^2(A^T\by-c)
+\end{align*}
+
+\mbox{}
+
+Nous avons dès lors obtenu la direction $\bd_x$.
+Nous nous déplacerons le long de cette direction d'une longueur de pas $\alpha$, obtenue en minimisant le problème barrière le long de $\bd_x$:
+$$
+\min_{\alpha} c^T\bx^+ - \mu \sum_{j = 1}^n \log \bx^+_j
+$$
+avec $\bx^+ = \bx+\alpha \bd_x$
+
+%On construit le nouveau point comme
+%\[
+%\bx^+ = \bx + \bd_x.
+%\]
+
+%\mbox{}
+
+%Si $\bx \circ \bs = \mu \bone$ pour un certain $\bs = \bc - \bA^T\by$, alors $\bd \equiv (\bd_x, \bd_y, \bd_s) = 0$.\\
+%Si une composante de $\bx \circ \bs$ est plus petite que $\mu$, l'approche tendera à augmenter cette composante, et inversément si la composante est plus grande que $\mu$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode primale barrière}
+
+La méthode marche relativement bien si $\mu$ est modérément grand, ou si l'algorithme est démarré avec un point proche de la la solution.
+
+%\mbox{}
+
+%Pour trouver $(\bd_x, \bd_y, \bd_s)$, prémultiplions les deux côtés de la première égalité du système de Newton par $\bX^2$:
+%\[
+%\mu \bd_x + \bX^2 \bd_s = \mu \bX \bone - \bX^2 \bc.
+%\]
+%En prémultipliant par $\bA$ et en utilisant $\bA d_x = \bzero$, nous avons
+%\[
+%\bA \bX^2 \bd_s = \mu \bA \bX \bone - \bA \bX^2 \bc.
+%\]
+%Comme $\bd_s = \bA^T \bd_y$, nous avons
+%\[
+%\bA \bX^2 \bA^T \bd_y = \mu \bA \bX \bone - \bA \bX^2 \bc.
+%\]
+%On en tire $\bd_y$, et de là, $\bd_s$ puis $\bd_x$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Poursuite de chemin primal-dual}
+
+Une autre approche consiste à suivre le chemin central à partir d'une paire initiales de solutions primale et duale.
+À nouveau, considérons la paire
+\begin{equation}
+\begin{aligned}
+\min_x\ & c^T x \\
+\mbox{s.c. } & Ax = b \\
+& x \geq 0,
+\end{aligned}
+\tag{P}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+\max_y \  & b^T y \\
+\mbox{s.c. } & A^T y + s = c. \\
+& s \geq 0
+\end{aligned}
+\tag{D}
+\end{equation}
+
+Nous supposons que $\mathring{\mathcal{F}} \ne \emptyset$, ou de manière équivalente
+\begin{align*}
+	\mathring{\mathcal{F}}_P &= \lbrace x \,|\, Ax = b, x > 0 \rbrace \ne \emptyset \\
+	\mathring{\mathcal{F}}_D &= \lbrace (y,s) \,|\, s = c-A^Ty > 0 \rbrace \ne \emptyset \\
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Conditions d'optimalité}
+
+\begin{align*}
+A^T y + s &= c \\
+Ax &= b \\
+XS\bone &= 0 \\
+x \geq 0,&\ s \geq 0
+\end{align*}
+
+\mbox{}
+
+Les méthodes de points intérieurs primales-duales diffèrent des méthodes primales strictes en un point-clé: la direction de recherche est calculé tant pour $x$ que pour $(y,s)$, mais numériquement, ce changement a révolutionné la programmation linéaire, et l'approche est maintenant à la base de nombreux solveurs.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Points intérieurs}
+
+Nous perturbons les conditions de complémentarité pour obtenir
+\begin{align*}
+A^T y + s &= c \\
+Ax &= b \\
+XS\bone &= \mu\bone \\
+x \geq 0,&\ s > 0
+\end{align*}
+
+On cherche dès lors un zéro du système
+$$
+F(x,y,s) =
+\begin{pmatrix}
+A^T y + s - c \\
+Ax - b \\
+XS\bone - \mu\bone
+\end{pmatrix}
+$$
+avec $x, s > 0$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Points intérieurs}
+
+Appliquons la méthode de Newton pour résoudre ce système.
+
+\mbox{}
+
+Notons $J(Ax) = A$. En effet, la $i^e$ composante de $Ax$ vaut
+$$
+(Ax)_i = \sum_{j = 1}^n a_{ij} x_j.
+$$
+Dès lors
+$$
+\nabla_x (Ax)_i = a^i.
+$$
+
+\mbox{}
+
+On peut aussi le voir en remarquant que chaque colonne de la matrice jacobienne s'obtient en dérivant par rapport à la même variable, or
+$$
+Ax = \sum_{i = 1}^n x_i a_i.
+$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Points intérieurs}
+
+En étendant le raisonnement précédent,
+$$
+J(F(x,y,s)) =
+\begin{pmatrix}
+	0 & A^T & I \\
+	A & 0 & 0 \\
+	S & 0 & X
+\end{pmatrix}
+$$
+
+\mbox{}
+
+Le système à résoudre pour trouver la direction de recherche est à présent
+$$
+\begin{pmatrix}
+	0 & A^T & I \\
+	A & 0 & 0 \\
+	S & 0 & X
+\end{pmatrix}
+\begin{pmatrix}
+	\bd_x \\ \bd_y \\ \bd_s
+\end{pmatrix}
+=
+-
+\begin{pmatrix}
+	A^Ty+s-c \\ Ax-b \\ XS\bone - \mu\bone
+\end{pmatrix}
+$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Direction de recherche}
+
+En prenant $x$ et $(y,s)$ réalisables pour le problème primal et le problème dual, respectivement, le système se simplifie comme
+$$
+\begin{pmatrix}
+0 & A^T & I \\
+A & 0 & 0 \\
+S & 0 & X
+\end{pmatrix}
+\begin{pmatrix}
+\bd_x \\ \bd_y \\ \bd_s
+\end{pmatrix}
+=
+\begin{pmatrix}
+0 \\ 0 \\ \mu\bone - XS\bone
+\end{pmatrix}
+$$
+
+Le nouveau point $(x^+, y^+, s^+)$ est obtenu en se déplaçant le long de $(\bd_x, \bd_y, \bd_s)$ d'une longueur de pas $\alpha$:
+$$
+(x^+, y^+, s^+) = (x, y, s) + \alpha (\bd_x, \bd_y, \bd_s).
+$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Squelette d'algorithme}
+
+\begin{description}
+	\item[Étape 0] Choisir $x_0 \in \mathring{\mathcal{F}}_P$, $(y_0, s_0) \in \mathring{\mathcal{F}}_D$, $\mu_0 > 0$, $\gamma \in (0,1)$, $\epsilon > 0$. Poser $k = 0$, $X_k = diag(x_k)$, $S_k = diag(s_k)$.
+	\item[Étape 1] Si $\mu_k < \epsilon$, arrêt. Sinon, passer à l'étape 2.
+	\item[Étape 2] Résoudre
+$$
+\begin{pmatrix}
+	0 & A^T & I \\
+	A & 0 & 0 \\
+	S_k & 0 & X_k
+\end{pmatrix}
+\begin{pmatrix}
+	\bd_x \\ \bd_y \\ \bd_s
+\end{pmatrix}
+=
+\begin{pmatrix}
+	0 \\ 0 \\ \mu\bone - X_kS_k\bone
+\end{pmatrix}
+$$
+\item[Étape 3] Calculer $\alpha_k$ tel que $x_k + \alpha_k\bd_x > 0$, $s_k + \alpha_k\bs_x > 0$ et permettant une réduction suffisante de l'objectif. Poser
+\begin{align*}
+& \mu_{k+1} = \gamma \mu_k,\quad x_{k+1} = x_k + \alpha_k\bd_x, \\
+& y_{k+1} = y_k + \alpha_k\bd_y,\quad s_{k+1} = x_k + \alpha_k\bd_s.
+\end{align*}
+Incrémenter $k$ de 1, et retourner à l'étape 1.
+\end{description}
+
+\end{frame}
+
+%\begin{frame}
+%\frametitle{Pas prédicteur}
+
+%Nous avons
+%$$
+%(x^+)^Ts^+ = (1-\alpha) x^Ts 
+%$$
+%Le saut de dualité est dès lors réduit d'un facteur $(1-\alpha)$.
+
+%\mbox{}
+
+%Ce pas est souvent suivi d'une étape de correction pour rester dans un voisinage du chemin central.
+
+%\mbox{}
+
+%Différentes extensions existent, et sont couvertes notamment dans {\it Primal-Dual Interior-Point Methods}, Stephen J. Wright, SIAM, 1997 (\url{https://epubs.siam.org/doi/book/10.1137/1.9781611971453}).
+
+%\end{frame}
+
+\begin{frame}
+	\frametitle{Calcul du centre analytique}
+	
+	Rappelons que le centre analytique peut se calculer en considérons les conditions
+	\begin{align*}
+		\bx \circ \bs &= \bone \\
+		\bA\bx &= \bzero \\
+		\bA^T\by + \bs & = \bc.
+	\end{align*}
+
+\mbox{}
+
+De ce qui précède, le système de Newton à considérer pour résoudre ce système est
+$$
+\begin{pmatrix}
+	0 & A^T & I \\
+	A & 0 & 0 \\
+	S & 0 & X
+\end{pmatrix}
+\begin{pmatrix}
+	\Delta x \\ \Delta y \\ \Delta s
+\end{pmatrix}
+=
+-
+\begin{pmatrix}
+	A^Ty+s-c \\ Ax \\ XS\bone - \bone
+\end{pmatrix}
+$$
+	
+\end{frame}
+
+\begin{frame}
+\frametitle{Calcul du centre analytique}
+
+Nous pouvons réorganiser le système comme
+$$
+\begin{pmatrix}
+	0 & 0 & A \\
+	0 & X & S \\
+	A^T & I & 0 \\
+\end{pmatrix}
+\begin{pmatrix}
+	\Delta y \\ \Delta s \\ \Delta x
+\end{pmatrix}
+=
+-
+\begin{pmatrix}
+	Ax \\ XS\bone - \bone \\ A^Ty+s-c
+\end{pmatrix}
+$$
+
+\mbox {}
+
+La contrainte $\bx \circ \bs = \bone$ peut se réécrire comme
+$$
+x-S^{-1}\bone = 0
+$$
+Utilisant cette nouvelle expression, similairement à ce qui précède, nous pouvons construire le système de Newton
+$$
+\begin{pmatrix}
+	0 & 0 & A \\
+	0 & S^{-2} & I \\
+	A^T & I & 0 \\
+\end{pmatrix}
+\begin{pmatrix}
+	\Delta y \\ \Delta s \\ \Delta x
+\end{pmatrix}
+=
+-
+\begin{pmatrix}
+	Ax \\ x-S^{-1}\bone \\ A^Ty+s-c
+\end{pmatrix}
+$$
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Calcul du centre analytique: pas de Newton}
+
+En notant	
+$$
+r_p = s + A^Ty - c,\quad r_d = \begin{pmatrix} Ax \\ x-S^{-1}\bone \end{pmatrix},\quad H = S^{-2}
+$$
+le système devient
+	$$
+	\begin{pmatrix}
+		0 & 0 & A \\ 0 & H & I \\ A^T & I & 0
+	\end{pmatrix}
+\begin{pmatrix}
+	\Delta y \\ \Delta s \\ \Delta x
+\end{pmatrix}
+	=
+	-
+	\begin{pmatrix}
+		r_d \\ r_p
+	\end{pmatrix},
+	$$
+
+\mbox{}
+
+Après réorganisation des équations, nous pouvons obtenir
+\begin{align*}
+	\Delta y &= (AHA^T)^{-1} (Ax - AHr_p )\\
+	\Delta s &= -A^T\Delta y - r_p \\
+	\Delta x &= -H\Delta s - x + S^{-1}\bone
+\end{align*}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Calcul du centre analytique: pas de Newton}
+	
+	
+	\mbox{}
+	
+	L'approche est expliquée en détails dans Goffin et Sharifi-Mokhtarian, ``Primal--Dual--Infeasible Newton Approach for the Analytic Center Deep-Cutting Plane Method'', Journal of Optimization Theory and Applications 101(1), 1999, pp. 35--58, disponible à l'adresse \url{https://link.springer.com/article/10.1023/A:1021714926231}.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Calcul du centre analytique: algorithme}
+	
+	Soient $y_0$, $\epsilon > 0$, $\alpha \in (0, 1/2)$, $\beta \in (0,1)$, $s_0 > 0$, $k = 0$, $k_{\max}$.
+	
+	$s_0$ peut être défini comme précédemment, et on prendra $\alpha = 0.01$, $\beta = 0.5$, $k_{\max} = 50$.
+	
+	Posons $x_0 = 0$, et calculons $r_p$, $r_d$.
+	
+	Répéter
+	\begin{enumerate}
+		\item Calculer le pas de Newton $(\Delta y, \Delta s, \Delta x)$.
+		\item Déterminer une longueur de pas $t$.
+		\item Mettre à jour la solution:
+		$$
+		\begin{pmatrix}
+			y_{k+1} \\ s_{k+1} \\ x_{k+1}
+		\end{pmatrix}
+		= 
+		\begin{pmatrix}
+			y_{k} \\ s_{k} \\ x_{k} 
+		\end{pmatrix}
+		+ t
+		\begin{pmatrix}
+			\Delta y_{k} \\ \Delta s_{k} \\ \Delta x_{k} 
+		\end{pmatrix}
+		$$
+		\item Poser $k :=  k+1$.
+	\end{enumerate}
+	Jusqu'à $s = c - A^Ty$ et $\| r(y,s,\lambda)\|_2 \leq \epsilon$, ou $k > k_{\max}$.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Calcul du centre analytique: longueur du pas}
+	
+	Cela se fait par \textit{backtracking} (recherche arrière) sur $\| r \|_2$.
+	
+	\mbox{}
+	
+	Posons $t = 1$.
+	
+	\mbox{}
+	
+	Tant que des composantes de $s + t\Delta s$ sont négatives ou nulles, faire $t := \beta t$.
+	
+	\mbox{}
+	
+	Tant que
+	$$
+	\|r(y + t\Delta y, s + t\Delta s, \lambda + t\Delta \lambda) \|_2 > (1 - \alpha t) \| r(y,s,\lambda) \|_2
+	$$
+	faire $t := \beta t$.
+	
+\end{frame}
+
+\begin{frame}
+\frametitle{Un exemple d'algorithme}
+
+Source: Sanjay Mehrotra, ``On the Implementation of a Primal-Dual Interior Point Method'', SIAM Journal on Optimization 2(4), pp. 575--601.
+
+\mbox{}
+
+\textit{Avec l'aide d'Arnaud L'Heureux}.
+
+\mbox{}
+
+La méthode nécessite un point de départ satisfaisant les contraintes de non-négativité, mais pouvons violer les autres contraintes.
+	
+\end{frame}
+
+\begin{frame}
+\frametitle{Point de départ}
+
+Nous commençons par calculer
+\begin{align*}
+\overline{x} &= A^{T}(AA^{T})^{-1}b \\
+\overline{\lambda} &= (AA^{T})^{-1}c \\
+\overline{s} &= c - A^{T}\overline{\lambda}
+\end{align*}
+puis
+\begin{align*}
+\delta_x &= \max \{-1.5\min\{\overline{x}_i\}, 0 \} \\
+\delta_s &= \max \{ -1.5\min\{\overline{s}_i\}, 0 \}
+\end{align*}
+Finalement, nous calculons
+\begin{align*}
+\overline{\delta_x} &= \delta_x + 0.5 \frac{(\overline{x}+\delta_x\bone)^T(\overline{s}+\delta_s\bone)}{\sum_{i=1}^n(\overline{s}_i+\delta_s)} \\
+\overline{\delta_s} &= \delta_s + 0.5 \frac{(\overline{x}+\delta_x\bone)^T(\overline{s}+\delta_s\bone)}{\sum_{i=1}^n(\overline{x}_i+\delta_x)}
+\end{align*}
+	
+\end{frame}
+
+\begin{frame}
+\frametitle{Point de départ}
+
+Le point de départ de l'algorithme est alors calculé come
+\begin{align*}
+x_0 &= \overline{x} + \overline{\delta_x} \bone \\
+\lambda_0 &= \overline{\lambda} \\
+s_0 &= \overline{s} + \overline{\delta_s} \bone
+\end{align*}
+
+\mbox{}
+
+Les constantes $1.5$ et $0.5$ sont arbitraires. La même heuristique fonctionne en remplaçant $1.5$ par $k > 1$ et $0.5$ par $\ell > 0, \ell \in \mathbb{R}$.
+	
+\end{frame}
+
+\begin{frame}
+\frametitle{Système KKT}
+
+Rappelons les conditions KKT perturbées:
+\begin{align*}
+Ax &= b \\
+A^T\lambda + s &= c \\
+XS\bone &= \mu\bone \\
+x \geq 0,\ s & \geq 0
+\end{align*}
+où $X = diag(x)$, $S= diag(s)$.
+
+\mbox{}
+
+Soit $u = (x,\lambda, s)$. Si $u$ n'est pas optimal, nous appliquons la méthode de Newton au système
+$$
+F_{\mu}(u) = \begin{pmatrix}
+	A^T\lambda+s-c  \\
+	Ax-b  \\
+	XS\bone - \mu\bone 
+\end{pmatrix} = 0, \ (x,s) \geq 0
+$$
+où $\mu > 0$ est le paramètre de barrière.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Direction de Newton}
+
+La direction $\Delta u$ est donnée par
+$$
+J_{\mu}(u)\Delta u = F_{\mu}(u)
+$$
+soit
+$$
+\begin{pmatrix}
+	0 & A^T & I  \\
+	A & 0 & 0\\
+	S & 0 & X
+\end{pmatrix}
+\begin{pmatrix}
+	\Delta x  \\
+	\Delta \lambda \\
+	\Delta s
+\end{pmatrix} = \begin{pmatrix}
+	A^T\lambda+s-c  \\
+	Ax-b  \\
+	XS-\mu \bone
+\end{pmatrix}$$
+Multipliant la dernière ligne par la gauche par $S^{-1}$,
+$$
+\begin{pmatrix}
+	0 & A^T & I  \\
+	A & 0 & 0\\
+	I & 0 & S^{-1}X
+\end{pmatrix}
+\begin{pmatrix}
+	\Delta x  \\
+	\Delta \lambda \\
+	\Delta s
+\end{pmatrix} = \begin{pmatrix}
+	r_d  \\
+	r_p  \\
+	S^{-1}r_c 
+\end{pmatrix}$$
+où $r_d$, $r_p$ et $r_c$ sont respectivement les résidus du dual, de primal et de complémentarité.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Direction de Newton}
+
+Notant $M = AXS^{-1}A^T$ et $t_d = r_p-AS^{-1}(r_c-Xr_d)$, nous pouvons montrer que le pas est
+\begin{align*}
+\Delta \lambda &= M^{-1}t_d \\
+\Delta s &= r_d - A^{T}\Delta \lambda \\
+\Delta x &= S^{-1}(r_c-X \Delta s)
+\end{align*}
+La solution est mise à jour avec
+$$
+\begin{pmatrix}
+\lambda^+ \\
+s^+ \\
+x^+
+\end{pmatrix}
+=
+\begin{pmatrix}
+	\lambda \\
+	s \\
+	x
+\end{pmatrix}
+-
+\alpha
+\begin{pmatrix}
+	\Delta \lambda \\
+	\Delta s \\
+	\Delta x
+\end{pmatrix}
+$$
+où $\alpha$ est choisi pour garantir $(x^+, s^+) \geq 0$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Terminaison}
+
+$\mu$ est calculé suivant le saut de dualité à chaque itération:
+$$
+\mu = \frac{x^Ts}{n}.
+$$
+
+\mbox{}
+
+L'algorithme s'arrête lors que $\max(\mu, \|r_p\|, \|r_d\|) < \epsilon$, avec $\epsilon > 0$ choisi à l'avance. Autrement dit, nous exigeons que la solution satisfasse, à une tolérance près, la faisabilité primale, duale, et les conditions de complémentarité.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme de Mehrotra}
+
+L'algorithme est divisé en deux étapes:
+\begin{enumerate}
+\item
+étape prédictive,
+\item
+étape correctrice.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Étape prédictive}
+
+L'étape prédictive consiste à calcul le pas de Newton classique, en résolvant
+$$\begin{pmatrix}
+	0 & A^T & I  \\
+	A & 0 & 0\\
+	I & 0 & S^{-1}X
+\end{pmatrix}\begin{pmatrix}
+	\Delta x_p  \\
+	\Delta \lambda_p \\
+	\Delta s_p
+\end{pmatrix} = \begin{pmatrix}
+	r_d  \\
+	r_p  \\
+	S^{-1}r_c 
+\end{pmatrix}$$
+puis en limitant le longueur de pas pour satisfaire les contraintes de non-négativité.
+
+\mbox{}
+
+Calculons d'abord
+\begin{align*}
+\alpha_p^p &= \min \left\{1, \min_{\Delta x_i^p>0} \frac{x_i}{\Delta x_i^p} \right\} \\
+\alpha_d^p &= \min \left\{1, \min_{\Delta s_i^p>0} \frac{s_i}{\Delta s_i^p} \right\}
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Étape prédictive}
+
+Le solution n'est pas nécessairement proche du chemin primal-dual.
+Nous nous en rapprochons en calculant tout d'abord le paramètre
+$$
+\sigma = \left(\frac{(x - \alpha_p^p\Delta x_p)^T(s - \alpha_d^p\Delta s_p)}{n\mu}\right)^3,
+$$
+comparant la solution prédite avec le saut dualité théorique.
+
+\mbox{}
+
+Nous résolvons ensuite le système
+$$\begin{pmatrix}
+	0 & A^T & I  \\
+	A & 0 & 0\\
+	I & 0 & S^{-1}X
+\end{pmatrix}\begin{pmatrix}
+	\Delta x  \\
+	\Delta \lambda \\
+	\Delta s
+\end{pmatrix} = \begin{pmatrix}
+	r_d  \\
+	r_p  \\
+	S^{-1}(Xs - \sigma \mu \bone + \Delta x_p \Delta s_p) 
+\end{pmatrix}$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Étape de correction}
+
+Nous calculons finalement le pas primal et dual. Soit
+\begin{align*}
+\alpha_p &= \min \left\{1, \eta \min_{\Delta x_i>0} \frac{x_i}{\Delta x_i} \right\} \\
+\alpha_d &= \min \left\{1, \eta \min_{\Delta s_i>0} \frac{s_i}{\Delta s_i} \right\}
+\end{align*}
+où $\eta = \max\{0.995, 1 - \mu\}$, le nouveau point est
+\begin{align*}
+x^+ &= x - \alpha_p \Delta x \\
+\lambda^+ &= \lambda - \alpha_d \Delta \lambda \\
+s^+ &= s - \alpha_d \Delta s
+\end{align*}
+
+\end{frame}
+
+\end{document}

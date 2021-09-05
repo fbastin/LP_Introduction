@@ -1,0 +1,1168 @@
+\documentclass[usepdftitle=false]{beamer}
+
+\usepackage[utf8]{inputenc}
+
+\usetheme{Singapore}
+\usepackage{xcolor}
+
+\setbeamertemplate{footline}[frame number]
+
+\usepackage[frenchb]{babel}
+
+\usepackage{xcolor}
+% \setbeamercovered{transparent}
+%\usecolortheme{crane}
+\title[IFT2505]{IFT 2505\\Programmation Linéaire\\Problèmes de transport}
+\author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal}
+\date{}
+
+\usepackage{ulem}
+\usepackage{cancel}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\def\ba{\boldsymbol{a}}
+\def\bb{\boldsymbol{b}}
+\def\bc{\boldsymbol{c}}
+\def\bd{\boldsymbol{d}}
+\def\be{\boldsymbol{e}}
+\def\br{\boldsymbol{r}}
+\def\bs{\boldsymbol{s}}
+\def\bu{\boldsymbol{u}}
+\def\bx{\boldsymbol{x}}
+\def\by{\boldsymbol{y}}
+\def\bz{\boldsymbol{z}}
+\def\bA{\boldsymbol{A}}
+\def\bB{\boldsymbol{B}}
+\def\bC{\boldsymbol{C}}
+\def\bD{\boldsymbol{D}}
+\def\bH{\boldsymbol{H}}
+\def\bI{\boldsymbol{I}}
+\def\bL{\boldsymbol{L}}
+\def\bM{\boldsymbol{M}}
+\def\bX{\boldsymbol{X}}
+\def\bU{\boldsymbol{U}}
+\def\bzero{\boldsymbol{0}}
+\def\bone{\boldsymbol{1}}
+\def\blambda{\boldsymbol{\lambda}}
+
+\def\cR{\mathcal{R}}
+
+\makeatletter
+\renewcommand*\env@matrix[1][c]{\hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{*\c@MaxMatrixCols #1}}
+\makeatother
+
+\usepackage[frenchb]{mathlist}
+
+\begin{document}
+\frame{\titlepage}
+
+% ------------------------------------------------------------------------------------------------------------------------------------------------------\begin{frame}
+
+\begin{frame}
+\frametitle{Problèmes de transport}
+
+Beaucoup de problèmes linéaires présentent certaines structures qui simplifient grandement leur résolution.
+
+\mbox{}
+
+Supposons que nous avons $m$ origines contenant certains quantités d'une marchandise qui doit etre transportée à $n$ destinations pour satisfaires certaines demandes:
+\begin{itemize}
+\item
+origine $i$: contient la quantité $a_i$;
+\item
+destination $j$: présente une demande $b_j$.
+\end{itemize}
+
+\mbox{}
+
+Nous supposons le problème équilibré, i.e. l'offre totale est égale à la demande totale:
+\[
+\sum_{i = 1}^m a_i = \sum_{j = 1}^n b_j.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Formulation}
+
+Les nombres $a_i$ et $b_j$, $i = 1,2,\ldots,m$, $j = 1,2,\ldots,n$, sont supposés non-négatifs, et de plus, souvent entiers.
+
+\mbox{}
+
+$c_{ij}$: coût de transport d'une unité de marchandise de l'origine $i$ à la destination $j$.
+
+\mbox{}
+
+On veut déterminer les quantitiés à transporter pour chaque paire $(i,j)$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Formulation}
+
+Programme mathématique:
+\begin{align*}
+\min_x \ & \sum_{i = 1}^m \sum_{j = 1}^n c_{ij} x_{ij} \\
+\mbox{s.à. } & \sum_{j = 1}^n x_{ij} = a_i, \ i = 1,2,\ldots,m \\
+& \sum_{i = 1}^m x_{ij} = b_j,\ j = 1,2,\ldots,n \\
+& x_{ij} \geq 0,\ \forall\, i, j.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Formulation}
+
+Réécrivons les contraintes d'égalité:
+\[
+\begin{matrix}[l]
+x_{11} + \ldots + x_{1n} & & & & = & a_1 \\
+& x_{21} + \ldots + x_{2n} & & & = &  a_2 \\
+& & & & \vdots \\
+& & \mbox{ } & x_{m1} + \ldots + x_{mn} & = &  a_m \\
+x_{11} & + x_{21} & & + x_{m1} & = & b_1 \\
+\quad \quad x_{12} & \quad \quad + x_{22} & & \quad \quad + x_{m2} & = & b_2 \\
+& & & & \vdots \\
+\quad \quad \quad \qquad x_{1n} &  \quad \quad \quad \qquad +x_{2n} & &  \quad \quad \quad \qquad +x_{mn} & = & b_n 
+\end{matrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Formulation}
+
+En d'autres termes, la matrice $\bA$ a la structure
+\[
+A =
+\begin{pmatrix}
+\bone^T \\
+& \bone^T \\
+& & \vdots \\
+& & & \bone^T \\
+\bI & \bI & \ldots & \bI
+\end{pmatrix}
+\]
+où $I$ est la matrice identité ($n \times n$).
+
+\mbox{}
+
+Notation plus compacte:
+\[
+\begin{matrix}
+\begin{matrix}
+\ba = (a_1, a_2,\ldots, a_m) \\
+\bb = (b_1, b_2,\ldots, a_n) \\
+\end{matrix}
+&
+\bC = 
+\begin{pmatrix}
+c_{11} & c_{12} & \ldots & c_{1n} \\
+c_{21} & c_{22} & \ldots & c_{2n} \\
+\vdots & \vdots & \ddots & \vdots \\
+c_{m1} & c_{m2} & \ldots & c_{mn} \\
+\end{pmatrix}
+\end{matrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+\[
+\begin{matrix}
+\begin{matrix}
+\ba = (30, 80, 10, 60) \\
+\bb = (10, 50, 20, 80, 20) \\
+\end{matrix}
+&
+\bC = 
+\begin{pmatrix}
+3 & 4 & 6 & 8 & 9 \\
+2 & 2 & 4 & 5 & 5 \\
+2 & 2 & 2 & 3 & 2 \\
+3 & 3 & 2 & 4 & 2
+\end{pmatrix}
+\end{matrix}
+\]
+
+\mbox{}
+
+La somme de l'offre, ainsi que de la demande, est 180.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Réalisabilité et optimalité}
+
+Première étape: montrer que le problème est réalisable.
+
+\mbox{}
+
+Soit $S$ la demande totale (et donc, l'offre totale): $S = \sum_{i = 1}^m a_i = \sum_{j = 1}^n b_j$.
+\[
+x^0_{ij} = \frac{a_ib_j}{S},\ i=1,2,\ldots,m,\ j = 1,2,\ldots,n,
+\]
+est réalisable:
+\begin{align*}
+\sum_{j = 1}^n x^0_{ij} = \sum_{j = 1}^n \frac{a_ib_j}{S} = a_i \\
+\sum_{i = 1}^m x^0_{ij} = \sum_{i = 1}^m \frac{a_ib_j}{S} = b_j
+\end{align*}
+
+\mbox{}
+
+De plus, $x_{ij}$ est bornée par $a_i$ (et $b_j$).
+Un programme avec un ensemble réalisable et borné a toujours une solution optimale. Dès lors, un problème de transport a toujours une solution optimale.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Redondance}
+
+Nous avons un ensemble de $m+n$ contraintes linéaires. Toutefois,
+\begin{align*}
+\sum_{i = 1}^m \sum_{j = 1}^n x_{ij} = \sum_{i = 1}^m a_i,
+\sum_{i = 1}^m \sum_{j = 1}^n x_{ij} = \sum_{j = 1}^n b_j.
+\end{align*}
+
+\mbox{}
+
+On a formé deux combinaisons linéaires distinctes des contraintes, pour former des termes de gauche identiques (et les termes de droite sont également identiques en vertu de l'hypothèse de départ).
+
+\mbox{}
+
+Considérons la première contraintes:
+\[
+\sum_{j = 1}^n x_{1j} = a_1
+\Leftrightarrow
+\sum_{i = 1}^m \sum_{j = 1}^n x_{ij} - 
+\sum_{2 = 1}^m \sum_{j = 1}^n x_{ij}
+= \sum_{j =1}^n b_j - \sum_{i = 2}^m a_i
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Redondance}
+
+Autrement dit, nous avons pu réécrire la première contrainte comme une combinaison linéaire des autres contraintes.
+
+\mbox{}
+
+On pourrait faire la même chose avec n'importe quelle contrainte. Il y a donc une contrainte redondante.
+
+\mbox{}
+
+On va établir qu'on ne peut trouver qu'une redondance, et donc ramener le problème à un ensemble de $m + n - 1$ vecteurs. Une solution de base réalisable non-dégénérée consistera de $m + n -1$ variables.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème}
+
+Un problème de transport a toujours une solution, mais il y a exactement une constrainte d'égalité redondante.
+Quand on retire n'importe laquelle des contraintes d'égalité, le système restant de $n+m-1$ contraintes d'égalité est linéairement indépendant.
+
+\mbox{}
+
+\emph{Preuve}
+
+\mbox{}
+
+L'existence d'une solution et la redondance ont déjà été établis.
+La somme de toutes les contraintes d'origine moins la somme de toutes les contraintes de destination est égale à zéro, et n'importe quelle contrainte peut être exprimée comme une combinaison linéaire des autres. On peut donc retirer n'importe laquelle de ces contraintes. Supposons qu'on retire la dernière.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème}
+
+Nous avons donc le système d'équations
+\begin{footnotesize}
+\begin{align*}
+\sum_{j = 1}^n x_{1j} - a_1 & = 0  \\
+\sum_{j = 1}^n x_{2j} - a_2 & = 0  \\
+\quad \vdots & \\
+\sum_{j = 1}^n x_{mj} - a_m & = 0  \\
+\sum_{i = 1}^m x_{i1} - b_1 & = 0  \\
+\quad \vdots & \\
+\sum_{i = 1}^m x_{i,{n-1}} - b_{n-1} & = 0
+\end{align*}
+\end{footnotesize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème}
+
+Supposons par l'absurde qu'il existe une combinaison linéaire des équations restantes qui soit nulle.
+
+Notons les coefficients d'une telle combinaison $\alpha_i$, $i = 1,2,\ldots,m$, et $\beta_j$, $j = 1,2,\ldots,n-1$:
+\[
+\sum_{i = 1}^m \alpha_i \left( \sum_{j = 1}^n x_{ij} - a_i \right) +
+\sum_{j = 1}^{n-1} \beta_j \left( \sum_{i = 1}^m x_{ij} - b_j \right) = 0\left( \sum_{i = 1}^m \sum_{j = 1}^n x_{ij} \right).
+\]
+
+\mbox{}
+
+Comme nous avons écarté la dernière contrainte, $x_{in}$, $i = 1,2,\ldots,m$ apparaît seulement dans la $i^e$ équation, de sorte que
+\[
+\sum_{i = 1}^m \alpha_i x_{in} + \sum_{i = 1}^m \alpha_i \left( \sum_{j = 1}^{n-1} x_{ij} - a_i \right) +
+\sum_{j = 1}^{n-1} \beta_j \left( \sum_{i = 1}^m x_{ij} - b_j \right) = 0.
+\]
+Dès lors, $\alpha_i = 0$, $i = 1, 2,\ldots,m$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème}
+
+Il reste
+\[
+\sum_{j = 1}^{n-1} \beta_j \left( \sum_{i = 1}^m x_{ij} - b_j \right) = 0.
+\]
+
+Autrement dit, chaque $x_{ij}$ n'apparaît que dans une équation (jamais si $j=n$), aussi $\beta_j = 0$, $j = 1,2,\ldots,n-1$.
+
+\mbox{}
+
+Dès lors, l'ensemble d'équations est linéairement indépendant.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Découverte d'une solution réalisable de base}
+
+Du théorème précédent, on voit qu'une base pour le problème de transport consiste de $m+n-1$ vecteurs, et qu'un solution réalisable de base non dégénérée consiste de $m+n-1$ variables.
+
+\mbox{}
+
+Tableau de solution:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$x_{11}$ & $x_{12}$ & $x_{13}$ & \ldots & $x_{1n}$ & $a_1$ \\
+\hline
+$x_{21}$ & $x_{22}$ & $x_{23}$ & \ldots & $x_{2n}$ & $a_2$ \\
+\hline
+$\vdots$ & $\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ & $\vdots$ \\
+\hline
+$x_{m1}$ & $x_{m2}$ & $x_{m3}$ & \ldots & $x_{mn}$ & $a_m$ \\
+\hline
+$b_1$ & $b_2$ & $b_3$ & \ldots & $b_n$ & \\
+\hline
+\end{tabular}
+\end{center}
+
+\mbox{}
+
+Les éléments individuels du tableau apparaissent dans des cellules et représentent une solution. Une cellule vide dénote une valeur nulle.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Règle du coin Nord-Ouest}
+
+\begin{description}
+\item[Etape 0.]
+Le tableau est créé, avec toutes les cellules vides.
+\item[Etape 1.]
+On sélectionne la cellule dans le coin supérieur gauche (d'où le nom de la méthode).
+\item[Etape 2.]
+On alloue le montant maximum réalisable compatible avec les exigences de sommes sur la ligne et la colonne impliquant cette colonne (au moins une de ces exigences sera remplie).
+\item[Etape 3.]
+On se déplace d'une cellule vers la droite s'il reste des exigences de ligne à satisfaire (offre). Autrement, on se déplace d'une cellule vers le bas. Si toutes les exigences sont remplies, arrêt. Sinon, retour à l'étape 2.
+\end{description}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Règle du coin Nord-Ouest: exemple}
+
+\[
+\begin{matrix}
+\ba = (30, 80, 10, 60) \\
+\bb = (10, 50, 20, 80, 20) \\
+\end{matrix}
+\]
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c}
+\hline
+10 & 20 & & & & 30 \\
+\hline
+& 30 & 20 & 30 & & 80 \\
+\hline
+& & & 10 & & 10 \\
+\hline
+& & & 40 & 20 & 60 \\
+\hline
+10 & 50 & 20 & 80 & 20 & \\
+\end{tabular}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Règle du coin Nord-Ouest: dégénérescence}
+
+Il existe la possibilité qu'à un certain point, les exigences de ligne et de colonne correspondant à une cellule soient toutes deux remplies.
+
+\mbox{}
+
+La prochaine entrée sera alors un zéro, indiquant une solution de base dégénérée. Dans pareil cas, il y a un choix à faire quand à l'endroit où place le zéro: à droite ou en-dessous.
+
+\mbox{}
+
+\begin{center}
+\begin{minipage}{.4\linewidth}
+\begin{tabular}{|c|c|c|c|c}
+\hline
+30 & & & & 30 \\
+\hline
+20 & 20 & & & 40 \\
+\hline
+& 0 & 20 & & 20 \\
+\hline
+& & 20 & 40 & 60 \\
+\hline
+50 & 20 & 40 & 40 & \\
+\end{tabular}
+\end{minipage}
+\begin{minipage}{.4\linewidth}
+\begin{tabular}{|c|c|c|c|c}
+\hline
+30 & & & & 30 \\
+\hline
+20 & 20 & 0 & & 40 \\
+\hline
+& & 20 & & 20 \\
+\hline
+& & 20 & 40 & 60 \\
+\hline
+50 & 20 & 40 & 40 & \\
+\end{tabular}
+\end{minipage}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Matrices triangulaires}
+
+{\bf Définition.}
+Une matrice carrée $M$ non singulière est dite triangulaire si elle
+peut être mise sous la forme d'une matrice triangulaire inférieure au moyen d'une permutation de ses lignes et colonnes.
+
+\mbox{}
+
+\begin{center}
+\begin{minipage}{.4\linewidth}
+\[
+\begin{pmatrix}
+1 & 2 & 0 & 1 & 0 & 2 \\
+4 & 1 & 0 & 5 & 0 & 0 \\
+0 & 0 & 0 & 4 & 0 & 0 \\
+2 & 1 & 7 & 2 & 1 & 3 \\
+2 & 3 & 2 & 0 & 0 & 3 \\
+0 & 2 & 0 & 1 & 0 & 0
+\end{pmatrix}
+\]
+\end{minipage}
+\begin{minipage}{.4\linewidth}
+\[
+\begin{pmatrix}
+4 & 0 & 0 & 0 & 0 & 0 \\
+1 & 2 & 0 & 0 & 0 & 0 \\
+5 & 1 & 4 & 0 & 0 & 0 \\
+1 & 2 & 1 & 2 & 0 & 0 \\
+0 & 3 & 2 & 3 & 2 & 0 \\
+2 & 1 & 2 & 3 & 7 & 1
+\end{pmatrix}
+\]
+\end{minipage}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base}
+
+{\sl Chaque base du problème de transport est triangulaire.}
+
+\mbox{}
+
+On repart du système de contraintes
+\[
+\begin{matrix}[l]
+x_{11} + \ldots + x_{1n} & & & & = & a_1 \\
+& x_{21} + \ldots + x_{2n} & & & = &  a_2 \\
+& & & & \vdots \\
+& & \mbox{ } & x_{m1} + \ldots + x_{mn} & = &  a_m \\
+x_{11} & + x_{21} & & + x_{m1} & = & b_1 \\
+\quad \quad x_{12} & \quad \quad + x_{22} & & \quad \quad + x_{m2} & = & b_2 \\
+& & & & \vdots \\
+\quad \quad \quad \qquad x_{1n} &  \quad \quad \quad \qquad +x_{2n} & &  \quad \quad \quad \qquad +x_{mn} & = & b_n 
+\end{matrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base}
+
+Changeons le signe de la demi-partie supérieure du système; la matrice de coefficients consiste d'entrées égales à +1, -1 ou 0.
+\[
+\begin{matrix}[l]
+-x_{11} - \ldots - x_{1n} & & & & = & -a_1 \\
+& -x_{21} - \ldots - x_{2n} & & & = &  -a_2 \\
+& & & & \vdots \\
+& & \mbox{ } & - x_{m1} - \ldots - x_{mn} & = &  -a_m \\
+x_{11} & + x_{21} & & + x_{m1} & = & b_1 \\
+\quad \quad x_{12} & \quad \quad + x_{22} & & \quad \quad + x_{m2} & = & b_2 \\
+& & & & \vdots \\
+\quad \quad \quad \qquad x_{1n} &  \quad \quad \quad \qquad +x_{2n} & &  \quad \quad \quad \qquad +x_{mn} & = & b_n 
+\end{matrix}
+\]
+
+On peut également supprimer n'importe quelle de ces équations pour éliminer la redondance.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base}
+
+De la matrice de coefficients résultante, on forme une base $\bB$ en sélectionnant un sous-ensemble non singulier de $m+n-1$ colonnes.
+
+\mbox{}
+
+Chaque colonne de $\bB$ contient au plus deux entrées non-nulles: un +1 et un -1. Dès lors, il y a au plus $2(m+n-1)$ entrées non nulles dans la base. 
+
+\mbox{}
+
+Cependant, si chaque colonne contient deux entrées non nulles, alors la somme de toutes les lignes serait zéro, contredisant la non-singularité de $\bB$.
+
+\mbox{}
+
+Dès lors, au moins une colonne de $\bB$ doit contenir seulement une seule entrée non nulle. Ceci signifie que le nombre totale d'entrées non nulles dans $\bB$ est inférieur à $2(m+n-1)$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base}
+
+Dès lors, il y a au moins une ligne avec seulement une entrée non-nulle, que l'on peut isoler pour créer la première ligne de la matrice triangulaire.
+
+\mbox{}
+
+Un argument similaire peut être appliqué à la sous-matrice de $\bB$ obtenue en supprimant la ligne contenant une seule entrée non nulle et la colonne correspondant à cette entrée. Cette sous-matrice doit également contenir une ligne avec une seule entrée non-nulle. On repète l'argument jusqu'à obtenir $\bB$ triangulaire.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base: illustration}
+
+Considérons la solution réalisable
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c}
+\hline
+10 & 20 & & & & 30 \\
+\hline
+& 30 & 20 & 30 & & 80 \\
+\hline
+& & & 10 & & 10 \\
+\hline
+& & & 40 & 20 & 60 \\
+\hline
+10 & 50 & 20 & 80 & 20 & \\
+\end{tabular}
+\end{center}
+Il est facile de voir que la matrice $\bx$ est triangulaire.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base: illustration}
+
+Sont dans la base: $x_{11}, x_{12}, x_{22}, x_{23}, x_{24}, x_{34}, x_{44}, x_{45}$, pour le système d'équations
+\begin{align*}
+x_{11} + x_{12} &= 30 \\
+x_{22} + x_{23} + x_{24} &= 80 \\
+x_{34} &= 10 \\
+x_{44} + x_{45} &= 60 \\
+x_{11} & = 10 \\
+x_{12} + x_{22} &= 50 \\
+x_{23} &= 20 \\
+x_{24} + x_{34} + x_{44} &= 80 \\
+\cancel{x_{45}} &\cancel{= 20}
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base: illustration}
+
+Sous forme matricielle, en laissant tomber la dernière contrainte,
+\[
+\begin{pmatrix}
+ 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\
+ 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 1 & 1 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 1 & 1 & 1 & 0
+\end{pmatrix}
+\begin{pmatrix}
+x_{11} \\
+x_{12} \\
+x_{22} \\
+x_{23} \\
+x_{24} \\
+x_{34} \\
+x_{44} \\
+x_{45}
+\end{pmatrix}
+=
+\begin{pmatrix}
+30 \\
+80 \\
+10 \\
+60 \\
+10 \\
+50 \\
+20 \\
+80
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base: illustration}
+
+Permutons la première et la cinquième lignes.
+Cela donne le système suivant:
+\[
+\begin{pmatrix}
+ 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\
+ 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 1 & 1 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 1 & 1 & 1 & 0
+\end{pmatrix}
+\begin{pmatrix}
+x_{11} \\
+x_{12} \\
+x_{22} \\
+x_{23} \\
+x_{24} \\
+x_{34} \\
+x_{44} \\
+x_{45}
+\end{pmatrix}
+=
+\begin{pmatrix}
+10 \\
+80 \\
+10 \\
+60 \\
+30 \\
+50 \\
+20 \\
+80
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base: illustration}
+
+Permutons ensuite la deuxième et la septième lignes.
+\[
+\begin{pmatrix}
+ 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\
+ 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 1 & 1 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 1 & 1 & 1 & 0
+\end{pmatrix}
+\begin{pmatrix}
+x_{11} \\
+x_{12} \\
+x_{22} \\
+x_{23} \\
+x_{24} \\
+x_{34} \\
+x_{44} \\
+x_{45}
+\end{pmatrix}
+=
+\begin{pmatrix}
+10 \\
+20 \\
+10 \\
+60 \\
+30 \\
+50 \\
+80 \\
+80
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base: illustration}
+
+Permutons maintenant la deuxième et la quatrième colonnes
+\[
+\begin{pmatrix}
+ 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\
+ 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 1 & 1 & 0 & 0 & 0 & 0 \\
+ 0 & 1 & 1 & 0 & 1 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 1 & 1 & 1 & 0
+\end{pmatrix}
+\begin{pmatrix}
+x_{11} \\
+x_{23} \\
+x_{22} \\
+x_{12} \\
+x_{24} \\
+x_{34} \\
+x_{44} \\
+x_{45}
+\end{pmatrix}
+=
+\begin{pmatrix}
+10 \\
+20 \\
+10 \\
+60 \\
+30 \\
+50 \\
+80 \\
+80
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base: illustration}
+
+On continue\ldots
+\[
+\begin{pmatrix}
+ 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\
+ 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 1 & 0 & 1 & 0 & 0 \\
+ 0 & 1 & 0 & 0 & 1 & 1 & 0 & 0 \\
+ 0 & 0 & 1 & 0 & 1 & 0 & 1 & 0
+\end{pmatrix}
+\begin{pmatrix}
+x_{11} \\
+x_{23} \\
+x_{34} \\
+x_{12} \\
+x_{24} \\
+x_{22} \\
+x_{44} \\
+x_{45}
+\end{pmatrix}
+=
+\begin{pmatrix}
+10 \\
+20 \\
+10 \\
+60 \\
+30 \\
+50 \\
+80 \\
+80
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base: illustration}
+
+\[
+\begin{pmatrix}
+ 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+ 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\
+ 0 & 0 & 0 & 1 & 0 & 1 & 0 & 0 \\
+ 0 & 1 & 0 & 0 & 1 & 1 & 0 & 0 \\
+ 0 & 0 & 1 & 0 & 1 & 0 & 1 & 0
+\end{pmatrix}
+\begin{pmatrix}
+x_{11} \\
+x_{23} \\
+x_{34} \\
+x_{12} \\
+x_{24} \\
+x_{22} \\
+x_{44} \\
+x_{45}
+\end{pmatrix}
+=
+\begin{pmatrix}
+10 \\
+20 \\
+10 \\
+30 \\
+60 \\
+50 \\
+80 \\
+80
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base: illustration}
+
+\[
+\begin{pmatrix}
+ 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+ 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 1 & 0 & 1 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\
+ 0 & 1 & 0 & 0 & 1 & 1 & 0 & 0 \\
+ 0 & 0 & 1 & 0 & 1 & 0 & 1 & 0
+\end{pmatrix}
+\begin{pmatrix}
+x_{11} \\
+x_{23} \\
+x_{34} \\
+x_{12} \\
+x_{24} \\
+x_{22} \\
+x_{44} \\
+x_{45}
+\end{pmatrix}
+=
+\begin{pmatrix}
+10 \\
+20 \\
+10 \\
+30 \\
+50 \\
+60 \\
+80 \\
+80
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base: illustration}
+
+\[
+\begin{pmatrix}
+ 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+ 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\
+ 0 & 1 & 0 & 0 & 1 & 1 & 0 & 0 \\
+ 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0
+\end{pmatrix}
+\begin{pmatrix}
+x_{11} \\
+x_{23} \\
+x_{34} \\
+x_{12} \\
+x_{22} \\
+x_{24} \\
+x_{44} \\
+x_{45}
+\end{pmatrix}
+=
+\begin{pmatrix}
+10 \\
+20 \\
+10 \\
+30 \\
+50 \\
+60 \\
+80 \\
+80
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base: illustration}
+
+\[
+\begin{pmatrix}
+ 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+ 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 \\
+ 0 & 1 & 0 & 0 & 1 & 1 & 0 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\
+ 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0
+\end{pmatrix}
+\begin{pmatrix}
+x_{11} \\
+x_{23} \\
+x_{34} \\
+x_{12} \\
+x_{22} \\
+x_{24} \\
+x_{44} \\
+x_{45}
+\end{pmatrix}
+=
+\begin{pmatrix}
+10 \\
+20 \\
+10 \\
+30 \\
+50 \\
+80 \\
+60 \\
+80
+\end{pmatrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème de triangularité de base: illustration}
+
+\[
+\begin{pmatrix}
+ 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\
+ 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\
+ 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 \\
+ 0 & 1 & 0 & 0 & 1 & 1 & 0 & 0 \\
+ 0 & 0 & 1 & 0 & 0 & 1 & 1 & 0 \\
+ 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1
+\end{pmatrix}
+\begin{pmatrix}
+x_{11} \\
+x_{23} \\
+x_{34} \\
+x_{12} \\
+x_{22} \\
+x_{24} \\
+x_{44} \\
+x_{45}
+\end{pmatrix}
+=
+\begin{pmatrix}
+10 \\
+20 \\
+10 \\
+30 \\
+50 \\
+80 \\
+80 \\
+60 \\
+\end{pmatrix}
+\]
+
+Il est facile de voir que l'on bien le même système d'équations qu'au départ.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Solutions entières}
+
+Puisque n'importe quelle matrice de base est triangulaire , il suit que le processus de substitution en arrière impliquera simplement des additions et des soustractions de lignes et de colonnes. Aucune multiplication n'est requise.
+
+\mbox{}
+
+Il suit que si les lignes et les colonnes originales sont entières, les valeurs de toutes les variables de base sont entières.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Application du simplexe}
+
+{\sl Idée}: exploiter le fait que les bases sont triangulaires.
+
+\mbox{}
+
+On va décomposer le vecteur des multiplicateurs du simplexe en écrivant
+\[
+\lambda = (u,v)
+\]
+$u_i$ est associé à la $i^e$ contrainte de ligne, et $v_j$ à la $j^e$ contrainte de colonne. Une contrainte étant redondante, on peut associer une valeur arbitraire à un des multiplicateurs. On va poser $v_n = 0$.
+
+\mbox{}
+
+Etant donnée une base $B$, nous allons développer l'équation
+\[
+\lambda^T B = c_B^T.
+\]
+Si $x_{ij}$ est dans la base, la colonne correspondante de $A$ (et donc de $B$) aura exactement deux entrées égales à +1 (les autres sont nulles).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Application du simplexe}
+
+Dès lors, le produit
+\[
+\lambda^T a_i = c_{ij}
+\]
+va donner
+\[
+u_i + v_j = c_{ij}.
+\]
+Rappelons que nous avons posé $v_n = 0$. Partant de là, nous pouvons déterminer toutes les valeurs $u_i$ et $v_j$ par substitution. De plus, nous avons le résultat suivant.
+
+\begin{mltheorem}
+Si les coûts $c_{ij}$ d'un problème de transport sont tous entiers, alors (en supposant qu'un multiplicateur du simplexe est posé arbitrairement comme égal à un entier fixé), les multiplicateurs du simplexe associés à n'importe quelle base sont entiers.
+\end{mltheorem}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Coûts réduits}
+
+De
+\[
+r_D^T = c_D^T - \lambda^T D,
+\]
+nous avons
+\[
+r_{ij} = c_{ij} - u_i - v_j,
+\]
+si $x_{ij}$ est hors-base. Si $x_{ij}$ est une variable de base,
+\[
+r_{ij} = 0.
+\]
+On peut facilement calculer les coûts réduits en considérant le tableau
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+$c_{11}$ & $c_{12}$ & $c_{13}$ & \ldots & $c_{1n}$ & $u_1$ \\
+\hline
+$c_{21}$ & $c_{22}$ & $c_{23}$ & \ldots & $c_{2n}$ & $u_2$ \\
+\hline
+$\vdots$ & $\vdots$ & $\vdots$ & $\ddots$ & $\vdots$ & $\vdots$ \\
+\hline
+$c_{m1}$ & $c_{m2}$ & $c_{m3}$ & \ldots & $c_{mn}$ & $u_m$ \\
+\hline
+$v_1$ & $v_2$ & $v_3$ & \ldots & $v_n$ & \\
+\hline
+\end{tabular}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Coûts réduits}
+
+\begin{description}
+\item[\'Etape 1]
+Affecter une valeur arbitraire à un des multiplicateurs.
+\item[\'Etape 2]
+Sélectionner un $c_{ij}$ associé à une variable de base $x_{ij}$ pour lequel soit $u_i$, soit $v_j$ n'a pas encore été determiné, mais l'un des deux multiplicateurs a une valeur connue.
+\item[\'Etape 3]
+Calculer le multiplicateur inconnu à partir de l'équation
+\[
+c_{ij} = u_i + v_j.
+\]
+Si tous les multiplicateurs ont été déterminés, arrêt. Sinon, retour à l'étape 2.
+\end{description}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Coûts réduits: exemple}
+
+En reprenant l'exemple précédant, et en posant (arbitrairement) $v_5 = 0$
+\begin{center}
+	\begin{tabular}{ccccc|c}
+		{\bf 3} & {\bf 4} & 6 & 8 & 9 & x \\
+		2 & {\bf 2} & {\bf 4} & {\bf 5} & 5 & x \\
+		2 & 2 & 2 & {\bf 3} & 2 & x \\
+		3 & 3 & 2 & {\bf 4} & {\bf 2} & x \\
+		\hline
+		x & x & x & x & 0 & 
+	\end{tabular}
+\end{center}
+On parcourt alors le tableau à la recherche d'un élément dont un seul multiplicateur est inconnu. Il s'agit ici de l'élément inférieur droit, ce qui donne
+\begin{center}
+	\begin{tabular}{ccccc|c}
+		{\bf 3} & {\bf 4} & 6 & 8 & 9 & x \\
+		2 & {\bf 2} & {\bf 4} & {\bf 5} & 5 & x \\
+		2 & 2 & 2 & {\bf 3} & 2 & x \\
+		3 & 3 & 2 & {\bf 4} & {\bf 2} & 2 \\
+		\hline
+		x & x & x & x & 0 & 
+	\end{tabular}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Coûts réduits: exemple}
+
+En continuant de la sorte, nous obtenons le tableau
+\begin{center}
+\begin{tabular}{ccccc|c}
+{\bf 3} & {\bf 4} & 6 & 8 & 9 & 5 \\
+2 & {\bf 2} & {\bf 4} & {\bf 5} & 5 & 3 \\
+2 & 2 & 2 & {\bf 3} & 2 & 1 \\
+3 & 3 & 2 & {\bf 4} & {\bf 2} & 2 \\
+\hline
+-2 & -1 & 1 & 2 & 0 & 
+\end{tabular}
+\end{center}
+
+Nous observons que certains coûts réduits sont négatifs, et par conséquant, nous allons devoir échanger une variable de base et une variable hors base.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Expression des colonnes hors base}
+
+\begin{theorem}
+Soit $B$ une base de $A$ (en ignprant une ligne) et soit $d$ une colonne hors-base de $A$.
+Si $y = B^{-1}d$, alors $y_i \in \{ -1, 0, +1 \}$, $i = 1,\ldots,n$.
+\end{theorem}
+
+\end{frame}
+
+\end{document}

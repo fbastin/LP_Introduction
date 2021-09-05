@@ -1,0 +1,263 @@
+\documentclass[usepdftitle=false]{beamer}
+\usepackage[utf8]{inputenc}
+
+\usetheme{Singapore}
+\usepackage{xcolor}
+
+\setbeamertemplate{footline}[frame number]
+
+% \setbeamercovered{transparent}
+%\usecolortheme{crane}
+\title[IFT2505]{IFT 2505\\Programmation Linéaire\\Stratégies de points intérieurs}
+\author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal\\\mbox{}}
+\date{}
+
+\usepackage{ulem}
+\usepackage{cancel}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\def\ba{\boldsymbol{a}}
+\def\bb{\boldsymbol{b}}
+\def\bc{\boldsymbol{c}}
+\def\bd{\boldsymbol{d}}
+\def\be{\boldsymbol{e}}
+\def\br{\boldsymbol{r}}
+\def\bs{\boldsymbol{s}}
+\def\bu{\boldsymbol{u}}
+\def\bx{\boldsymbol{x}}
+\def\by{\boldsymbol{y}}
+\def\bz{\boldsymbol{z}}
+\def\bA{\boldsymbol{A}}
+\def\bB{\boldsymbol{B}}
+\def\bD{\boldsymbol{D}}
+\def\bH{\boldsymbol{H}}
+\def\bI{\boldsymbol{I}}
+\def\bL{\boldsymbol{L}}
+\def\bM{\boldsymbol{M}}
+\def\bX{\boldsymbol{X}}
+\def\bU{\boldsymbol{U}}
+\def\bzero{\boldsymbol{0}}
+\def\bone{\boldsymbol{1}}
+\def\blambda{\boldsymbol{\lambda}}
+
+\def\cA{\mathcal{A}}
+\def\cN{\mathcal{N}}
+\def\cR{\mathcal{R}}
+
+\def\RR {\mathcal{R}}
+
+\usepackage[french]{babel}
+
+\begin{document}
+\frame{\titlepage}
+
+% ------------------------------------------------------------------------------------------------------------------------------------------------------\begin{frame}
+
+\begin{frame}
+\frametitle{Stratégies de solution en points intérieurs}
+
+Trois grandes approches, suivant les différences dans les définitions du chemin central:
+\begin{enumerate}
+\item
+barrière primale, méthode de poursuite de chemin,
+\item
+méthode primale-duale de poursuite de chemin,
+\item
+méthode primale-duale de réduction de potentiel.
+\end{enumerate}
+
+\mbox{}
+
+Caractéristiques
+\begin{tabular}{c|ccc}
+& R-P & R-D & Saut nul \\
+\hline
+simplexe primal & X & & X \\
+simplexe dual & & X & X\\
+barrière primale & X & & \\
+poursuite de chemin primale-duale & X & X & \\
+réduction de potentiel primale-duale & X & X & \\
+\end{tabular}
+
+R: réalisabilité, P: primal, D: dual
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode primale barrière}
+
+Nous partons du problème primal barrière
+\begin{align*}
+\min_x \ & c^Tx - \mu \sum_{j = 1}^n \log x_j \\
+\mbox{s.à. } & Ax = b \\
+& x \geq 0.
+\end{align*}
+
+\mbox{}
+
+Nous voudrions le résoudre pour $\mu$ petit.
+
+\mbox{}
+
+Par exemple, $\mu = \epsilon/n$ permet d'obtenir un saut de dualité inférieur à $\epsilon$.
+
+\mbox{}
+
+Souci: difficile de résoudre pour $\mu$ proche de 0.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode primale barrière}
+
+Une stratégie générale est de commencer avec $\mu$ modérément large (p.e. $\mu = 100$) et de résoudre le problème approximativement.
+
+\mbox{}
+
+La solution correspondante est approximativement sur le chemin central primal, mais probablement assez loin du point correspondant à $\mu \rightarrow 0$.
+
+\mbox{}
+
+Ce point ne servira que de point de départ pour le problème avec un $\mu$ plus petit.
+
+\mbox{}
+
+Typiquement, on mettra à jour $\mu$ de l'itération $k$ à l'itération $k+1$ comme
+\[
+\mu_{k+1} = \gamma \mu_k,
+\]
+pour $0< \gamma < 1$ fixé.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode primale barrière}
+
+Si on commence avec une valeur $\mu_0$, à l'itération $k$,
+\[
+\mu_{k} = \gamma^k \mu_0,
+\]
+
+\mbox{}
+
+Dès, réduire $\mu_k/\mu_0$ sous $\epsilon$ requiert
+\[
+k = \left\lceil \frac{\log \epsilon}{\log \gamma} \right\rceil.
+\]
+
+\mbox{}
+
+Souvent, une variante de la méthode de Newton est utilisée pour résoudre les sous-problèmes ainsi construits:
+\begin{align*}
+\bx \circ \bs &= \mu \bone \\
+\bA\bx &= \bb \\
+\bA^T\by + \bs & = \bc
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Système d'équation non linéaires: méthode de Newton}
+
+Considérons le système d'équations non linéaires
+$$
+F(\bx) = 0
+$$
+avec $F: \RR^n \rightarrow \RR^m$.
+
+\mbox{}
+
+En partant d'un point $\bx_0$, la méthode de Newton construit une suite d'itérés à partir de la récurrence
+$$
+\bx_{k+1} = \bx_k - J^{-1}(\bx_k) F(\bx_k)
+$$
+où $J(\bx_k)$ est le Jacobien de f:
+\[
+J(\bx) =
+\begin{pmatrix}
+\nabla^T_x f_1(x) \\
+\nabla^T_x f_2(x) \\
+\vdots \\
+\nabla^T_x f_n(x) \\
+\end{pmatrix}
+\]
+
+La méthode converge si on est suffisamment proche d'un zéro de la fonction.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode primale barrière}
+
+Etant donné un point $x \in \mathring{\mathcal{F}}_P$, la méthode de Newton consistera à chercher des direction $\bd_x$, $\bd_y$ et $\bd_s$ à partir du système
+\begin{align*}
+\mu \bX^{-2} \bd_x + \bd_s &= \mu \bX^{-1}\bone - \bc \\
+\bA\bd_x &= \bzero \\
+-\bA^T\bd_y + \bd_s & = 0
+\end{align*}
+
+\mbox{}
+
+On construit le nouveau point comme
+\[
+\bx^+ = \bx + \bd_x.
+\]
+
+\mbox{}
+
+Si $\bx \circ \bs = \mu \bone$ pour un certain $\bs = \bc - \bA^T\by$, alors $\bd \equiv (\bd_x, \bd_y, \bd_s) = 0$.\\
+Si une composante de $\bx \circ \bs$ est plus petite que $\mu$, l'approche tendera à augmenter cette composante, et inversément si la composante est plus grande que $\mu$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode primale barrière}
+
+La méthode marche relativement bien si $\mu$ est modérément grand, ou si l'algorithme est démarré avec un point proche de la la solution.
+
+\mbox{}
+
+Pour trouver $(\bd_x, \bd_y, \bd_s)$, prémultiplions les deux côtés de la première égalité du système de Newton par $\bX^2$:
+\[
+\mu \bd_x + \bX^2 \bd_s = \mu \bX \bone - \bX^2 \bc.
+\]
+En prémultipliant par $\bA$ et en utilisant $\bA d_x = \bzero$, nous avons
+\[
+\bA \bX^2 \bd_s = \mu \bA \bX \bone - \bA \bX^2 \bc.
+\]
+Comme $\bd_s = \bA^T \bd_y$, nous avons
+\[
+\bA \bX^2 \bA^T \bd_y = \mu \bA \bX \bone - \bA \bX^2 \bc.
+\]
+On en tire $\bd_y$, et de là, $\bd_s$ puis $\bd_x$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme général}
+
+\begin{description}
+\item[Etape 1]
+Choisir $\mu_0$ et un point de départ $(x_0, y_0, s_0)$, tel que
+\begin{align*}
+Ax_0 &= b \\
+A^Ty_0 + s_0 &= c^T
+\end{align*}
+et $y_0, s_0 \geq 0$, $x_0 > 0$. Poser $k = 0$, et choisir $mu_0$, $\epsilon$.
+\item[Etape 2]
+Projeter $x_k$ sur le chemin central avec la méthode de Newton: calculer le vecteur $(d_x, d_y, d_s)$ et poser
+\begin{align*}
+x_{k+1} &= x_k + d_x \\
+y_{k+1} &= y_k + d_y \\
+s_{k+1} &= s_k + d_s
+\end{align*}
+Si $\mu_k < \epsilon$, arrête.
+Sinon, définir $\mu_{k + 1} = \gamma \mu_k$, poser $k := k+1$, et retourner au début de l'étape 2.
+\end{description}
+
+\end{frame}
+
+\end{document}

@@ -1,0 +1,460 @@
+\documentclass[t,usepdftitle=false]{beamer}
+\usepackage[utf8]{inputenc}
+\usetheme{Warsaw}
+\usepackage{xcolor}
+% \setbeamercovered{transparent}
+%\usecolortheme{crane}
+\title[IFT2505]{IFT 2505\\Programmation Linéaire}
+\author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal\\\mbox{}\\\url{http://www.iro.umontreal.ca/~bastin/ift2505.php}}
+\date{Automne 2012}
+
+\usepackage{ulem}
+\usepackage{cancel}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\def\ba{\boldsymbol{a}}
+\def\bb{\boldsymbol{b}}
+\def\bc{\boldsymbol{c}}
+\def\be{\boldsymbol{e}}
+\def\br{\boldsymbol{r}}
+\def\bs{\boldsymbol{s}}
+\def\bu{\boldsymbol{u}}
+\def\bx{\boldsymbol{x}}
+\def\by{\boldsymbol{y}}
+\def\bz{\boldsymbol{z}}
+\def\bA{\boldsymbol{A}}
+\def\bB{\boldsymbol{B}}
+\def\bD{\boldsymbol{D}}
+\def\bH{\boldsymbol{H}}
+\def\bI{\boldsymbol{I}}
+\def\bL{\boldsymbol{L}}
+\def\bM{\boldsymbol{M}}
+\def\bU{\boldsymbol{U}}
+\def\bzero{\boldsymbol{0}}
+\def\bone{\boldsymbol{1}}
+\def\blambda{\boldsymbol{\lambda}}
+
+\def\cR{\mathcal{R}}
+
+\usepackage[frenchb]{babel}
+
+\begin{document}
+\frame{\titlepage}
+
+% ------------------------------------------------------------------------------------------------------------------------------------------------------\begin{frame}
+
+\begin{frame}
+\frametitle{Exemple sur le simplexe dual et primal-dual}
+
+On considère le problème
+\begin{align*}
+\min_{x}\ & 3x_1 + 4x_2 + 6x_3 + 7x_4 + x_5 \\
+\mbox{s.à. } & 2x_1 - x_2 + x_3 +6x_4 - 5x_5 \geq 6 \\
+& x_1 + x_2 + 2x_3 + x_4 + 2x_5 \geq 3 \\
+& x_1, x_2, x_3, x_4, x_5 \geq 0.
+\end{align*}
+Le dual est
+\begin{align*}
+\max_{\lambda}\ & 6\lambda_1 + 3\lambda_2 \\
+& 2\lambda_1 + \lambda_2 \leq 3 \\
+& -\lambda_1 + \lambda_2 \leq 4 \\
+& \lambda_1 + 2\lambda_2 \leq 6 \\
+& 6\lambda_1 + \lambda_2 \leq 7 \\
+& -5\lambda_1 + 2\lambda_2 \leq 1 \\
+& \lambda_1, \lambda_2 \in \cR.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Admissibilité du dual}
+
+Comme tous les coefficients dans la fonction objectif sont strictement positifs, une solution réalisable pour le dual est
+\[
+\blambda = (0,0).
+\]
+
+\mbox{}
+
+Nous savons de plus que l'admissibilité de $\blambda$ est équivalente à l'existence d'une solution primale satisfaisant les conditions d'optimalite en termes de coûts réduits, mais violant possiblement les contraintes de non-négativités.
+
+\mbox{}
+
+Essayons de démarrer le simplexe.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Forme standard}
+
+\begin{align*}
+\min_{x}\ & 3x_1 + 4x_2 + 6x_3 + 7x_4 + x_5 \\
+\mbox{s.à. } & 2x_1 - x_2 + x_3 +6x_4 - 5x_5 - x_6 = 6 \\
+& x_1 + x_2 + 2x_3 + x_4 + 2x_5 - x_7 = 3 \\
+& x_1, x_2, x_3, x_4, x_5, x_6, x_7 \geq 0.
+\end{align*}
+
+Nous n'avons pas la forme canonique, mais nous pouvons facilement l'obtenir en multipliant les contraintes par -1:
+\begin{align*}
+\min_{x}\ & 3x_1 + 4x_2 + 6x_3 + 7x_4 + x_5 \\
+\mbox{s.à. } & -2x_1 + x_2 - x_3 - 6x_4 + 5x_5 + x_6 = -6 \\
+& -x_1 - x_2 - 2x_3 - x_4 - 2x_5 + x_7 = -3 \\
+& x_1, x_2, x_3, x_4, x_5, x_6, x_7 \geq 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Forme standard}
+
+Problème: la base associée à $x_6$, $x_7$ n'est pas réalisable vu que les termes non-nuls de la solution de base associée, à savoir $x_6 = -6$, $x_7 = -3$, violent les contraintes de non-négativité.
+
+\mbox{}
+
+Le dual, lui, devient
+\begin{align*}
+\max_{\lambda}\ & -6\lambda_1 -3\lambda_2 \\
+& -2\lambda_1 -\lambda_2 \leq 3 \\
+& \lambda_1 -\lambda_2 \leq 4 \\
+& -\lambda_1 -2\lambda_2 \leq 6 \\
+& -6\lambda_1 -\lambda_2 \leq 7 \\
+& 5\lambda_1 -2\lambda_2 \leq 1 \\
+& \lambda_1, \lambda_2 \in \cR.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Forme standard: dual}
+
+$(\lambda_1, \lambda_2) = (0,0)$ reste réalisable, et donc nous savons qu'il existe un $x$ pour lequel les conditions d'optimalités sur les coûts réduits sont satisfaits.
+
+\mbox{}
+
+On peut en déduire la motivation du simplexe duale:
+\begin{itemize}
+\item
+conserver les conditions d'optimalité et la réalisabilité duale;
+\item
+forcer la realisabilité primale (et partant de là, trouver une solution primale optimale).
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe dual}
+
+Sous forme de tableau, cela donne
+\[
+\begin{matrix}
+x_6 & -2 & 1 & -1 & -6 & 5 & 1 & 0 & -6 \\
+x_7 & -1 & -1 & -2 & -1 & -2 & 0 & 1 & -3 \\
+& 3 & 4 & 6 & 7 & 1 & 0 & 0 & 0
+\end{matrix}
+\]
+
+On doit décider d'une variable qui va quitter la base, car de mauvais signe. Il n'y a pas de règle de sélection ici; on se contente de sélectionner une ligne avec un terme de droite strictement négatif.
+
+\mbox{}
+
+Supposons que nous choisissions $x_7$.
+
+\mbox{}
+
+On calcule les rapports entre la dernière ligne et la ligne de $x_7$, en se limitant aux entrées strictement négatives. On sélectionne le minimum en valeur absolue de ces rapports.
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe dual}
+
+De ce qui précède, le pivot est sur $x_5$:
+\[
+\begin{matrix}
+x_6 & -2 & 1 & -1 & -6 & 5 & 1 & 0 & -6 \\
+x_7 & -1 & -1 & -2 & -1 & \circled{-2} & 0 & 1 & -3 \\
+& 3 & 4 & 6 & 7 & 1 & 0 & 0 & 0
+\end{matrix}
+\]
+conduisant au nouveau tableau
+\[
+\begin{matrix}
+x_6 & -\frac{9}{2} & -\frac{3}{2} & -6 & -\frac{17}{2} & 0 & 1 & \frac{5}{2} & -\frac{27}{2} \\
+x_5 & \frac{1}{2} & \frac{1}{2} & 1 & \frac{1}{2} & 1 & 0 & -\frac{1}{2} & \frac{3}{2} \\
+& \frac{5}{2} & \frac{7}{2} & 5 & \frac{13}{2} & 0 & 0 & \frac{1}{2} & -\frac{3}{2}
+\end{matrix}
+\]
+
+Il faut à présent faire sortir $x_6$. Les rapports à considérer sont $\frac{5}{9}$, $\frac{7}{3}$, $\frac{5}{6}$, $\frac{13}{17}$, et le minimum est $\frac{5}{9}$. La variable entrante est donc $x_1$.
+
+Cela donne
+\[
+\begin{matrix}
+x_1 & 1 & \frac{1}{3} & \frac{4}{3} & \frac{17}{9} & 0 & -\frac{2}{9} & -\frac{5}{9} & 3 \\
+x_5 & 0 & \frac{1}{3} & \frac{1}{3} & -\frac{4}{9} & 1 & \frac{1}{9} & -\frac{2}{9} & 0 \\
+& 0 & \frac{8}{3} & \frac{5}{3} & \frac{32}{18} & 0 & \frac{5}{9} & \frac{17}{9} & -9
+\end{matrix}
+\]
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe dual}
+
+On en déduit la solution primale
+\[
+\bx^* = ( 3, 0, 0 ,0, 0)
+\]
+associée à la solution duale
+\[
+\blambda^* = \left( -\frac{5}{9}, -\frac{17}{9} \right).
+\]
+
+\mbox{}
+
+Les valeurs optimales primales et duales sont égale à 9.
+
+\mbox{}
+
+On peut noter la correspondance entre les variables de base et les contraintes duales, comme seules les première et cinquième contrainte du dual sont actives.
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe primal-dual}
+
+Il peut y avoir un grand nombre de rapports à calculer, ce qui peut être coûteux s'il y a un grand nombre de variables et de contraintes, et il n'est pas toujours aisé d'avoir la forme canonique.
+
+\mbox{}
+
+On va essayer de limiter le nombre de variables qui peuvent être candidates pour entrer dans la base, et introduire des variables artificielles pour avoir une forme canonique initiale facile à définir.
+
+\mbox{}
+
+On part du primal: 
+\begin{align*}
+\min_{x}\ & 3x_1 + 4x_2 + 6x_3 + 7x_4 + x_5 \\
+\mbox{s.à. } & 2x_1 - x_2 + x_3 +6x_4 - 5x_5 - x_6 = 6 \\
+& x_1 + x_2 + 2x_3 + x_4 + 2x_5 - x_7 = 3 \\
+& x_1, x_2, x_3, x_4, x_5, x_6, x_7 \geq 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe primal-dual}
+
+Problème artificiel: 
+\begin{align*}
+\min_{x}\ & 3x_1 + 4x_2 + 6x_3 + 7x_4 + x_5 \\
+\mbox{s.à. } & 2x_1 - x_2 + x_3 +6x_4 - 5x_5 - x_6 + y_1 = 6 \\
+& x_1 + x_2 + 2x_3 + x_4 + 2x_5 - x_7 + y_2 = 3 \\
+& x_1, x_2, x_3, x_4, x_5, x_6, x_7, y_1, y_2 \geq 0.
+\end{align*}
+
+\mbox{}
+
+Tableau:
+\[
+\begin{matrix}
+2 & -1 & 1 & 6 & -5 & -1 & 0 & 1 & 0 & 6 \\
+1 & 1 & 2 & 1 & 2 & 0 & -1 & 0 & 1 & 3 \\
+-3 & 0 & -3 & -7 & -3 & 1 & 1 & 0 & 0 & -9.
+\end{matrix}
+\]
+
+On pourrait continuer la phase 1, mais on veut résoudre directement le problème. 
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe primal-dual}
+
+Regardons du côté du dual du problème initial:
+\begin{align*}
+\max_{\lambda}\ & 6\lambda_1 + 3\lambda_2 \\
+& 2\lambda_1 + \lambda_2 \leq 3 \\
+& -\lambda_1 + \lambda_2 \leq 4 \\
+& \lambda_1 + 2\lambda_2 \leq 6 \\
+& 6\lambda_1 + \lambda_2 \leq 7 \\
+& -5\lambda_1 + 2\lambda_2 \leq 1 \\
+& -\lambda_1 \leq 0 \\
+& -\lambda_2 \leq 0 \\
+& \lambda_1, \lambda_2 \in \cR.
+\end{align*}
+
+\mbox{}
+
+Une solution admissible du dual est, comme précédemment, $\lambda_1 = \lambda_2 = 0$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe primal-dual}
+
+Ajoutons au tableau les valeurs des contraintes du dual, sous la forme
+$c_i - \lambda^T a_i$:
+\[
+\begin{matrix}
+2 & -1 & 1 & 6 & -5 & -1 & 0 & 1 & 0 & 6 \\
+1 & 1 & 2 & 1 & 2 & 0 & -1 & 0 & 1 & 3 \\
+-3 & 0 & -3 & -7 & 3 & 1 & 1 & 0 & 0 & -9 \\
+3 & 4 & 6 & 7 & 1 & 0 & 0
+\end{matrix}
+\]
+
+\mbox{}
+
+Soit $P$ l'ensemble défini comme
+\[
+P \overset{def}{=} \lbrace i \,|\, \lambda^T a_i = c_i \rbrace,
+\]
+i.e. l'ensemble des indices des contraintes duales actives. Ici,
+\[
+P = \lbrace 6, 7 \rbrace.
+\]
+Notons toutefois que dans le cas présent, malgré le caractère actif de deux contraintes du dual, les variables primales associées sont hors-base. Ces contraintes pourront dès lors devenir inactives plus tard.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe primal-dual}
+
+On va se tourner vers le dual pour décider de la variable primale à entrer dans la base, tout en maintenant l'admissibilité du dual (et donc implicitement de l'existence des conditions d'optimalité pour le primal).
+
+\mbox{}
+
+Dual restreint:
+\begin{align*}
+\max\ & 6u_1 + 3u_2 \\
+\mbox{s.à. } & -u_1 \leq 0 \\
+& -u_2 \leq 0 \\
+& u_1 \leq 1 \\
+& u_2 \leq 1 \\
+& u_1, u_2 \in \mathcal{R}.
+\end{align*}
+
+\mbox{}
+
+Ce dual a comme solution immédiate $u_1 = 1$, $u_2 = 2$, mais en fait, celle-ci ne nous intéresse pas vraiment.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe primal-dual}
+
+Par contre, on peut observer que la ligne des coûts réduits, limitée aux variables primales originales (hors variables artificielles), donne les valeurs
+\[
+-u^Ta_i, \ \forall i.
+\]
+
+\mbox{}
+
+En effet, à l'optimalité pour le primal restreint, comprenant les contraintes $x_i = 0$ pour $i \notin P$, nous avons comme valeurs sur la ligne des coûts réduits
+\[
+c^T - u^T A = 0,
+\]
+où $B$ est la base optimale du primale restreint, hors, les composantes de $c$ correspondant aux variables primales originales sont nulles.
+
+\mbox{}
+
+Dès lors, il n'est \emph{jamais} nécessaire d'écrire explicitement le dual restreint, ni de chercher la solution duale explicitement.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe primal-dual}
+
+On voudrait rendre une des contraintes duales inactives active, autrement dit, introduire un zéro supplémentaire dans la dernière ligne.
+
+\mbox{}
+
+Pour ce faire, on calcule le rapport entre les deux dernières lignes, en se limitant aux éléments négatifs de l'avant-dernière ligne.
+
+\mbox{}
+
+Ici, on obtient les rapports 1, 2, 1. Le minimum est donc 1, conduisant à annuler $c_1 - \lambda^T a_1$ et $c_4 - \lambda^T a_4$.
+
+\mbox{}
+
+Le tableau devient (en ajoutant une fois la troisième ligne à la quatrième)
+\[
+\begin{matrix}
+2 & -1 & 1 & 6 & -5 & -1 & 0 & 1 & 0 & 6 \\
+1 & 1 & 2 & 1 & 2 & 0 & -1 & 0 & 1 & 3 \\
+-3 & 0 & -3 & -7 & 3 & 1 & 1 & 0 & 0 & -9 \\
+0 & 4 & 3 & 0 & 4 & 1 & 1
+\end{matrix}
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe primal-dual}
+
+A présent, $P = \lbrace 1, 4 \rbrace$. $x_1$ et $x_4$ peuvent entrer dans la base comme les contraintes duales associées sont à présent actives. Par contre, les variables d'écart $x_6$ et $x_7$ sont à présent exclues de l'ensemble des variables candidates.
+
+\mbox{}
+
+Le primal restreint s'écrit
+\begin{align*}
+\min\ & y_1 + y_2 \\
+\mbox{s.à. } & 2x_1 + 6x_4 + y_1 = 6 \\
+& x_1 + x_4 + y_2 = 3 \\
+& x_1, x_2, x_3, x_4, x_5, x_6, x_7, y_1, y_2 \geq 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe primal-dual}
+
+On applique le simplexe primal à ce problème.
+\[
+\begin{matrix}
+2 & -1 & 1 & \circled{6} & -5 & -1 & 0 & 1 & 0 & 6 \\
+1 & 1 & 2 & 1 & 2 & 0 & -1 & 0 & 1 & 3 \\
+-3 & 0 & -3 & -7 & -3 & 1 & 1 & 0 & 0 & -9 \\
+0 & 4 & 3 & 0 & 4 & 1 & 1
+\end{matrix}
+\]
+donne
+\[
+\begin{matrix}
+\frac{1}{3} & -\frac{1}{6} & \frac{1}{6} & 1 & -\frac{5}{6} & -\frac{1}{6} & 0 & \frac{1}{6} & 0 & 1 \\
+\frac{2}{3} & \frac{7}{6} & \frac{11}{6} & 0 & \frac{17}{6} & \frac{1}{6} & -1 & -\frac{1}{6}  & 1 & 2 \\
+-\frac{2}{3} & -\frac{7}{6} & -\frac{11}{6} & 0 & -\frac{17}{6} & -\frac{1}{6} & 1 & \frac{7}{6} & 0 & -2 \\
+0 & 4 & 3 & 0 & 4 & 1 & 1
+\end{matrix}
+\]
+On échange à présent $x_1$ avec $y_2$ (un échange avec $x_4$ créerait un danger de cycle, et de plus, en veut annuler les variables artificielles).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe primal-dual}
+
+Après application du pivot, nous obtenons
+\[
+\begin{matrix}
+0 & -\frac{3}{4} & -\frac{3}{4} & 1 & -\frac{9}{4} & -\frac{1}{4} & \frac{1}{2} & \frac{1}{4} & -\frac{1}{2} & 0 \\
+1 & \frac{7}{4} & \frac{11}{4} & 0 & \frac{17}{4} & \frac{1}{4} & -\frac{3}{2} & -\frac{1}{4} & \frac{3}{2} & 3 \\
+0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 & 0 \\
+0 & 4 & 3 & 0 & 4 & 1 & 1
+\end{matrix}
+\]
+
+\mbox{}
+
+On s'arrête comme $y_1 = y_2 = 0$.
+
+\mbox{}
+
+La solution optimale est (3,0,0,0,0).
+
+\mbox{}
+
+La solution duale (identifiée à partir des contraintes duales au niveau des variables d'écart) correspondante vaut cette fois (1,1). Les seules contraintes actives dans le duale sont les première et quatrième contraintes.
+
+\end{frame}
+
+\end{document}

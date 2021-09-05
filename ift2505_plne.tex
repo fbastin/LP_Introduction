@@ -1,0 +1,1123 @@
+\documentclass[usepdftitle=false]{beamer}
+\usepackage[utf8]{inputenc}
+
+\usetheme{Singapore}
+\usepackage{xcolor}
+
+\setbeamertemplate{footline}[frame number]
+
+% \setbeamercovered{transparent}
+%\usecolortheme{crane}
+\title[IFT2505 -- PLNE]{IFT 2505\\Programmation Linéaire\\Programmation linéaire en nombres entiers}
+\author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal\\\mbox{}}
+\date{}
+
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{amsmath,amssymb, amsthm}
+%\usepackage{colortbl}
+%\usepackage[english]{babel}
+%\usepackage{pstricks}
+%\usepackage{pictex}
+
+\usepackage[french]{mathlist}
+\uselanguage{French}
+\languagepath{French}
+
+\usepackage{times}
+
+%\usepackage{pst-tree}
+
+\usepackage{ulem}
+
+\usepackage{tikz}
+%\usetikzlibrary{shapes,arrows}
+\usepackage{pgfplots}
+
+%\usepackage{slashbox}
+
+\setbeamercovered{dynamic}
+
+\def\bx{\boldsymbol x}
+\def\bxi{\boldsymbol\xi}
+\def\bomega{\boldsymbol\omega}
+
+\def\cF{\mathcal{F}}
+\def\cR{\mathcal{R}}
+\def\RR{\cR}
+\def\NN{\mathcal{N}}
+
+\def\st{\mbox{t.q. }}
+\def\si{\mbox{ si }}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Présentation générale}
+
+Certaines quantités ne peuvent s'écrire sous forme de nombres réels, issus d'un domaine continu. Au contraire, certaines décisions sont par nature discrètes, et doivent se représenter à l'aide de nombres entiers.
+Considérons par exemple une entreprise de transport, qui décide de renouveller sa flotte de camions.
+Le nombre de camions à acheter est un nombre naturel.
+
+\mbox{}
+
+Dans le cas linéaire, nous parlerons de {\em programmation linéaire en nombres entiers (PLNE)}
+
+%\mbox{}
+
+%Nous pourrions bien entendu considérer le cas non-linéaire, mais les complications sont telles qu'à ce jour, aucune méthode pleinement satisfaisante n'existe, même si d'intenses recherches sont actuellement conduites à ce niveau.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Classification}
+
+La présence de telles variables entières modifie profondément la nature des programmes sous-jacents.
+
+\mbox{}
+
+Lorsqu'un problème est linéaire avec des variables entières, nous parlerons de {\sl programmation entière mixte}.
+
+\mbox{}
+
+Si toutes les variables sont entières, nous utiliserons la terminologie de de {\sl programmation (pure) en nombres entiers}.
+
+\mbox{}
+
+Si les variables entières sont à valeurs 0 ou 1 (binaires), nous parlerons de programmation 0--1 (binaire).
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Programme linéaire en nombres entiers}
+
+Considérons tout d'abord le cas où toutes les variables sont entières.
+\begin{equation}
+\begin{aligned}
+\min\ & c^Tx \\
+\mbox{s.à } & Ax = b \\
+& x_i \in \mathbb{N},\ i = 1,\ldots,n,
+\end{aligned}
+\tag{P}
+\label{eq:PLNE}
+\end{equation}
+où $\mathbb{N}$ est l'ensemble des entiers naturels.
+
+\mbox{}
+
+Notons $\cF = \{ x \,|\, Ax = b, x \in \mathbb{N}^n \}$,
+l'ensemble réalisable de \eqref{eq:PLNE}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Relaxation linéaire}
+
+%\subsection{Relaxation linéaire}
+
+Il est tentant ``d'oublier'' les contraintes d'intégralité, et de résoudre le problème en nombres continus ainsi produit:
+\begin{equation}
+	\begin{aligned}
+	\min\ & c^Tx \\
+	\mbox{s.à } & Ax = b \\
+	& x_i \geq 0,\ i = 1,\ldots,n,
+\end{aligned}
+\tag{PL}
+\label{eq:PL}
+\end{equation}
+
+Nous parlerons alors de {\sl relaxation} linéaire.
+
+\mbox{}
+
+%Ainsi, nous pourrons construire la relaxtion en programme linéraire d'un programme mixte entier.
+Une fois le programme relaxé résolu, nous pourrions arrondir aux valeurs entières les plus proches.
+
+\mbox{}
+
+Dans certains cas, cela peut fonctionner, mais
+%l'exemple du sac à dos montre que ce n'est pas toujours vérifié.
+cette méthode par arrondissement est parfois désastreuse.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Considérons le programme
+\begin{align*}
+\max\ & z = x_2\\
+\st & -x_1+x_2 \leq \frac{1}{2}, \\
+& x_1 + x_2 \leq \frac{7}{2}, \\
+& x_1, x_2 \geq 0 \mbox{ et entiers}.
+\end{align*}
+La relaxation en programme linéaire donne
+\begin{align*}
+\max\ & z = x_2\\
+\st & -x_1+x_2 \leq \frac{1}{2}, \\
+& x_1 + x_2 \leq \frac{7}{2}, \\
+& x_1, x_2 \geq 0.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Solution: $\left( \frac{3}{2},2\right)$. Que nous arrondissions cette solution à $(1,2)$ ou $(2,2)$, nous n'obtenons pas de solution réalisable.
+\begin{center}
+\begin{tikzpicture}[scale=1.65]
+\draw[->] (0,0) -- (3.5,0) node[below,right] {$x_1$};
+\draw[->] (0,0) -- (0,3.5) node[above,left] {$x_2$};
+
+\foreach \x in {0,1,2,3}
+\draw (\x,1pt) -- (\x,-1pt) node[anchor=north] {$\x$};
+\foreach \y in {0,1,2,3}
+\draw (1pt,\y) -- (-1pt,\y) node[anchor=east] {$\y$};
+
+\filldraw[fill=yellow]
+(0,0) -- (0,0.5) -- (1.5,2) -- (3.5,0) -- (0,0);
+
+\draw (1.5,0.5) node[text width=4cm,text ragged] {domaine réalisable du modèle de PL};
+
+\draw (1.5,2) node[above]{$\left( \frac{3}{2},2\right)$};
+
+\foreach \x in {0,1,2,3}
+\foreach \y in {0,1,2,3}
+\fill (\x,\y) circle (1 pt);;
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple 2}
+
+Considérons le programme
+\begin{align*}
+\max\ & z = x_1+5x_2\\
+\st & x_1+10x_2 \leq 20, \\
+& x_2 \leq 2, \\
+& x_1, x_2 \geq 0 \mbox{ et entiers}.
+\end{align*}
+La version relâchée de programme est
+\begin{align*}
+\max\ & z = x_1+5x_2\\
+\st & x_1+10x_2 \leq 20, \\
+& x_2 \leq 2, \\
+& x_1, x_2 \geq 0,
+\end{align*}
+qui a pour solution optimale $(2, 1.8)$. En arrondissant à $(2,1)$ afin de garantir l'admissibilité, nous obtenons la valeur 7 pour la fonction objectif, loin de la valeur optimale du PLNE, avec pour valeur optimale de 11, en $(1,2)$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple 2}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.50]
+\draw[->] (0,0) -- (4,0) node[below,right] {$x_1$};
+\draw[->] (0,0) -- (0,4) node[above,left] {$x_2$};
+
+\foreach \x in {0,1,2,3}
+\draw (\x,1pt) -- (\x,-1pt) node[anchor=north] {$\x$};
+\foreach \y in {0,1,2,3}
+\draw (1pt,\y) -- (-1pt,\y) node[anchor=east] {$\y$};
+
+\filldraw[fill=yellow]
+(0,0) -- (0,2) -- (2,1.8) -- (2,0) -- (0,0);
+
+\draw (-1,2.2) -- (4,1.2) node[above,right,sloped] {$z^* = 10 = x_1+5x_2$};
+
+\foreach \x in {0,1,2,3}
+\foreach \y in {0,1,2,3}
+\fill (\x,\y) circle (1 pt);;
+\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Approche par énumération}
+
+Un modèle en nombres entiers borné (par exemple, un modèle avec uniquement des variables 0--1) possède un nombre fini de solutions.
+Nous pourrions envisager de toutes les énumérer, mais le nombre de solutions explose rapidement. Pour $n = 20$ variables 0--1, il y a plus d'un million de solutions possibles.
+Pour $n=30$, c'est plus d'un milliard.
+Vite déraisonnable de procéder à une énumération complète des solutions.
+
+\mbox{}
+
+Alternative: énumération partielle.
+Cette technique est connue sous le vocable de {\sl branch-and-bound} (B\&B).
+Il s'agit d'une approche {\sl diviser-pour-régner}:
+\begin{itemize}
+\item
+décomposition du problème en sous-problèmes plus simples;
+\item
+combinaison de la résolution de ces sous-problèmes pour obtenir la solution du problème original.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme de branch-and-bound}
+
+Construction d'un arbre de solutions, où chaque sous-problème correspond à un sommet.
+
+\mbox{}
+
+Nous résolvons la relaxation linéaire de chaque sous-problème.
+L'information tirée de la relaxation linéaire nous permettra (peut-être) d'éliminer toutes les solutions pouvant être obtenues à partir de ce sommet.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme de branch \& bound: cas 0--1}
+
+Un algorithme simple pour énumérer toutes les solutions d'un modèle 0--1 consiste à:
+\begin{itemize}
+\item
+choisir un sommet dans l'arbre des solutions;
+\item
+choisir une variable $x$ non encore fixée relativement à ce sommet;
+\item
+générer les deux variables $x = 0$ et $x = 1$ (la variable $x$ est dite {\sl fixée}): chaque alternative correspond à un sommet de l'arbre des solutions;
+\item
+recommencer à partir d'un sommet pour lequel certaines variables ne sont pas encore fixées.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme de branch \& bound: cas 0--1}
+
+À la racine de l'arbre, aucune variable n'est encore fixée, tandis qu'aux feuilles de l'arbre, toutes les variables ont été fixées.
+Le nombre de feuilles est $2^n$ (pour $n$ variables 0--1).
+
+\mbox{}
+
+Le calcul de borne (ou évaluation) consiste à résoudre la relaxation linéaire en chaque sommet.
+L'élagage (ou élimination) consiste à utiliser l'information tirée de la résolution de la relaxation linéaire pour éliminer toutes les solutions émanant du sommet courant.
+Dès lors, le branch-and-bound est un algorithme de séparation et d'évaluation successives.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: California Mfg}
+
+Rappelons le problème
+\begin{align*}
+\max\ & z = 9x_1 + 5x_2 + 6x_3 + 4x_4 \\
+\st & 6x_1 + 3x_2 + 5x_3 + 2x_4 \leq 10; \\
+& x_3 + x_4 \leq 1; \\
+& -x_1 + x_3 \leq 0; \\
+& -x_2 + x_4 \leq 0; \\
+& x_1, x_2, x_3, x_4 \leq 1; \\
+& x_1, x_2, x_3, x_4 \geq 0; \\
+& x_1, x_2, x_3, x_4 \mbox{ entiers}.
+\end{align*}
+La relaxation linéaire permet aux variables de prendre les valeurs fractionnaires entre 0 et 1, ce qui conduit à la solution
+\[
+\left( \frac{5}{6}, 1, 0, 1 \right),
+\]
+avec comme valeur $z = 16,5$.
+Branchons sur la variable $x_1$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: California Mfg}
+
+Dénotons sous-problème 1 celui obtenu avec $x_1 = 0$:
+\begin{align*}
+\max\ & z = 5x_2 + 6x_3 + 4x_4 \\
+\st & 3x_2 + 5x_3 + 2x_4 \leq 10; \\
+& x_3 + x_4 \leq 1; \\
+& x_3 \leq 0; \\
+& -x_2 + x_4 \leq 0; \\
+& x_2, x_3, x_4 \mbox{ binaires}.
+\end{align*}
+La solution de la relaxation linéaire est $(x_1, x_2, x_3, x_4) = (0,1,0,1)$, avec $z = 9$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: California Mfg}
+
+Le sous-problème 2 est celui obtenu avec $x_1 = 1$:
+\begin{align*}
+\max\ & z = 5x_2 + 6x_3 + 4x_4 + 9 \\
+\st & 3x_2 + 5x_3 + 2x_4 \leq 4; \\
+& x_3 + x_4 \leq 1; \\
+& x_3 \leq 1; \\
+& -x_2 + x_4 \leq 0; \\
+& x_2, x_3, x_4 \mbox{ binaires}.
+\end{align*}
+La solution de la relaxation linéaire est alors
+\[
+(x_1, x_2, x_3, x_4) = \left( 1, \frac{4}{5},0, \frac{4}{5} \right),
+\]
+avec $z = 16+\frac{1}{5}$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: California Mfg}
+
+Nous obtenons dès lors les bornes suivantes:
+\begin{itemize}
+\item
+sous-problème 1: $Z_1 \leq 9$;
+\item
+sous-problème 2: $Z_2 \leq 16+\frac{1}{5}$.
+\end{itemize}
+
+\mbox{}
+
+Notons que toutes les variables sont binaires et tous les paramètres dans l'objectif sont des valeurs entières.
+Dès lors, la borne supérieure pour le sous-problème 2 est 16.
+Pour le sous-problème 1, la solution obtenue est entière: c'est la meilleure solution courante.
+
+\mbox{}
+
+Nous savons que la valeur optimale cherchée, Z, sera au moins
+\[
+Z^* = 9: Z \geq Z^*.
+\]
+
+Quels sous-problèmes pouvons-nous à présent considérer afin de nous approcher de la solution optimale? Tous les sous-problèmes actuellement traités doivent-ils donner naissance à d'autres problèmes?
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: California Mfg}
+
+Si un sous-problème ne donne lieu à aucun autre problème, nous parlerons d'élagage, en référence avec l'idée de couper la branche correspondante dans l'arbre d'exploration.
+
+\mbox{}
+
+Considérons le sous-problème 1: la solution optimale de la relaxation PL est entière.
+Il ne sert à rien de brancher sur les autres variables, puisque toutes les autres solutions entières (avec $x_1 = 0$) sont nécessairement de valeur inférieures ou égales à 9.
+Nous pouvons donc élaguer ce sommet.
+
+\mbox{}
+
+Pour le sous-problème 2, la solution optimale de la relaxation PL n'est pas entière:
+\[
+Z^* = 9 \leq Z \leq 16.
+\]
+La branche ($x_1 = 1$) peut encore contenir une solution optimale.
+Mais si nous avions eu $Z_2 \leq Z*$, nous aurions pu conclure que la
+branche ne pouvait améliorer la meilleure solution courante.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Élagage}
+
+Un sous-problème est elagué si une des trois conditions suivantes est satisfaite :
+\begin{itemize}
+\item
+test 1: sa borne supérieure (valeur optimale de la relaxation PL) est inférieure ou égale à $Z^*$ (valeur de la meilleure solution courante);
+\item
+test 2: sa relaxation PL n'a pas de solution réalisable;
+\item
+test 3: la solution optimale de sa relaxation PL est entière.
+\end{itemize}
+Lorsque le test 3 est verifié, nous testons si la valeur optimale de la relaxation PL du sous-problème, $Z_i$, est supérieure à $Z^*$.
+Si $Z_i > Z^*$, alors $Z^* := Z_i$, et nous conservons la solution, qui
+devient la meilleure solution courante.
+%En résumé, nous obtenons l'algorithme ci-dessous.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme branch-and-bound: cas binaire}
+
+\begin{enumerate}
+\item
+Initialisation:
+\begin{enumerate}[(a)]
+\item
+poser $Z^* = -\infty$;
+\item
+appliquer le calcul de borne et les critères d'élagage à la racine (aucune variable fixée).
+\end{enumerate}
+\item
+Critere d'arrêt : s'il n'y a plus de sous-problemes non élagués, arrêter.
+\item
+Branchement:
+\begin{enumerate}[(a)]
+\item
+parmi les sous-problèmes non encore élagués, choisir celui qui a été crée le plus récemment (s'il y a égalité, choisir celui de plus grande borne supérieure);
+\item
+appliquer le Test 1: si le sous-problème est élagué,
+retourner en 2.
+\item
+brancher sur la prochaine variable non fixée.
+\end{enumerate}
+\item
+Calcul de borne:
+\begin{enumerate}[(a)]
+\item
+résoudre la relaxation PL de chaque sous-problème;
+\item
+arrondir la valeur optimale si tous les paramètres de l'objectif sont entiers.
+\end{enumerate}
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme branch-and-bound: cas binaire}
+
+\begin{enumerate}
+\setcounter{enumi}{4}
+\item
+Élagage: élaguer un sous-problème si
+\begin{enumerate}[(a)]
+\item
+la borne superieure est inférieure ou égale à $Z^*$;
+\item
+la relaxation PL n'a pas de solution réalisable;
+\item
+la solution optimale de la relaxation PL est entière: si la borne supérieure est strictement supérieure à $Z^*$, $Z^*$ est mise à jour et la solution de la relaxation PL devient la meilleure solution courante.
+\end{enumerate}
+\item
+Retourner en 2.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Branchement}
+
+Plusieurs choix possibles du noeud duquel brancher; dans cette version, choix du sous-problème le plus récemment créé.
+L'avantage est que cette approche facilite la réoptimisation lors du calcul de borne, car il n'y a que peu de changements apportés par rapport au dernier sous-problème traité.
+Le désavantage est que cela peut créer un grand nombre de sous-problèmes.
+Une autre option est la règle de la meilleure borne: choisir le sous-problème ayant la plus grande borne supérieure.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Branchement}
+
+Dans cette version, la règle de branchement consiste à choisir la prochaine variable non fixée. Il est souvent plus intéressant de choisir une variable à valeur fractionnaire.
+En branchant sur une telle variable, il est certain que les deux sous-problèmes crées mènent à des solutions différentes de la solution courante.
+De nombreux autres critères existent de facon à orienter la recherche vers un élagage rapide.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: suite}
+
+Jusqu'à maintenant, voici l'arbre obtenu, en branchant sur la variable $x_1$.
+\begin{center}
+\begin{tikzpicture}
+\node (root) [circle,draw] {} [grow'=right]
+child {node (A) [circle,draw] {0}}
+child {node (B) [circle,draw] {1}};
+\draw (root) node[below, text width=5mm, text ragged]{\hspace{5mm} 16}; 
+\draw (B) node[below, text width=5mm, text ragged]{\hspace{5mm} 16}; 
+\draw (A) node[below, text width=12mm, text ragged]{\hspace{12mm} $9 = Z^*$}; 
+\draw (A) node[right] {\qquad $F(3)$};
+\end{tikzpicture}
+\end{center}
+$F(3)$ indique que le sous-probleme a été élagué ({\sl fathomed}) en raison du Test 3.
+
+\mbox{}
+
+Sélection: nous choisissons le sous-problème 2, le seul qui n'a pas encore été élagué.
+Nous branchons sur la prochaine variable, soit $x_2$.
+Deux nouveaux sous-problèmes sont crées:
+\begin{itemize}
+\item
+sous-problème 3: $x_1 = 1$, $x_2 = 0$;
+\item
+sous-problème 4: $x_1 = 1$, $x_2 = 1$.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: suite}
+
+Considérons tout d'abord le sous-problème 3 ($x_1 = 1$, $x_2 = 0$).
+Nous obtenons le problème
+\begin{align*}
+\max z_3 =\ & 6x_3 + 4x_4 + 9 \\
+\st{} & 5 x_3 + 2x_4 \leq 4 \\
+& x_3 + x_4 \leq 1 \\
+& x_3 \leq 1 \\
+& x_4 \leq 0 \\
+& x_3,\ x_4 \mbox{ binaires}.
+\end{align*}
+La solution de la relaxation PL est
+\[
+( x_1, x_2, x_3, x_4) = \left(1,0, \frac{4}{5},0 \right).
+\]
+et
+\[
+Z = 13+\frac{4}{5}:\ Z_3 \leq 13.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: suite}
+
+Le sous-problème 4 ($x_1 = 1$, $x_2 = 1$) devient
+\begin{align*}
+\max z_4 =\ & 6x_3 + 4x_4 + 14 \\
+\st{} & 5 x_3 + 2x_4 \leq 1 \\
+& x_3 + x_4 \leq 1 \\
+& x_3 \leq 1 \\
+& x_4 \leq 1 \\
+& x_3,\ x_4 \mbox{ binaires}.
+\end{align*}
+La solution de la relaxation PL est
+\[
+( x_1, x_2, x_3, x_4) = \left(1,1,0, \frac{1}{2} \right).
+\]
+et
+\[
+Z = 16:\ Z_4 \leq 16.
+\]
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: suite}
+
+Aucun des tests d'élagage ne s'applique sur ces sous-problèmes.
+Nous devons dès lors choisir un des deux sous-problèmes pour effectuer un branchement, puisque ce sont ceux créés le plus récemment.
+Nous choisissons celui de plus grande borne supérieure, soit le sous-problème 4.
+
+\mbox{}
+
+Deux possibilités existent: brancher sur la variable fractionnaire, $x_4$, ou choisir la prochaine variable non fixée, $x_3$.
+Nous explorons la deuxième approche: nous branchons sur $x_3$.
+
+\mbox{}
+
+Le sous-problème 5, défini avec $x_1 = 1$, $x_2 = 1$, $x_3 = 0$, s'écrit
+\begin{align*}
+\max z_5 =\ & 4x_4 + 14 \\
+\st{} & 2x_4 \leq 1 \\
+& x_4 \leq 1 \\
+& x_4 \leq 1 \\
+& x_4 \mbox{ binaire}.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: suite}
+
+La solution de la relaxation PL est
+\[
+( x_1, x_2, x_3, x_4) = \left(1,1,0, \frac{1}{2} \right)
+\]
+et
+\[
+Z = 16:\ Z_5 \leq 16.
+\]
+
+Le sous-problème 6, défini avec $x_1 = 1$, $x_2 = 1$, $x_3 = 1$, s'écrit
+\begin{align*}
+\max z_5 =\ & 4x_4 + 20 \\
+\st{} & 2x_4 \leq -1 \\
+& x_4 \leq 0 \\
+& x_4 \leq 1 \\
+& x_4 \mbox{ binaire}.
+\end{align*}
+La relaxation PL n'a pas de solution réalisable: ce sous-problème est élagué.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: suite}
+
+Le sous-problème 5 ne peut pas être élagué.
+Il est créé le plus récemment parmi les sous-problèmes non élagués (3 et 5), aussi choisissons-nous le pour effectuer un branchement.
+Nous branchons sur $x_4$ et générons les sous-problèmes suivants:
+\begin{itemize}
+\item
+sous-problème 7: $x_1 = 1$, $x_2 = 1$, $x_3 = 0$, $x_4 = 0$;
+\item
+sous-problème 8: $x_1 = 1$, $x_2 = 1$, $x_3 = 0$, $x_4 = 1$.
+\end{itemize}
+
+\mbox{}
+
+Toutes les variables sont fixées, aussi pouvons-nous directement résoudre ces sous-problèmes. 
+Le sous-problème 7 a pour solution $(x_1, x_2, x_3, x_4) = (1, 1, 0, 0)$, pour $Z_7 = 14$.
+La solution est entière, aussi nous élaguons le sous-problème en vertu du Test 3.
+Puisque $Z_7 > Z^*$, $Z^* = 14$ et la solution du sous-problème devient la meilleure solution courante.
+Le sous-problème 8 a pour solution $(x_1, x_2, x_3, x_4) = (1, 1, 0, 1)$.
+Cette solution n'est pas réalisable, car la première contrainte $(2x_4 \leq 1)$ est violée.
+Le sous-problème est par conséquent élagué par le Test 2.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: suite}
+
+Le sous-problème 3 est le seul non encore élagué.
+Appliquons le Test 1: $Z_3 = 13 \leq 14 = Z*$.
+Le sous-problème est donc elagué.
+Comme il n'y a plus de sous-problèmes non élagués, nous pouvons nous arrêter.
+La solution optimale est:
+\[
+(x_1, x_2, x_3, x_4) = (1,1,0,0),
+\]
+et la valeur optimale est $Z^* = 14$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: arbre}
+
+L'arbre obtenu suite à l'exécution de l'algorithme se présente comme suit:
+\begin{center}
+\begin{tikzpicture}
+\node (root) [circle,draw] {} [grow'=right]
+child {node (A) [circle,draw] {0}}
+child {node (B) [circle,draw] {1}
+child {node (C) [circle,draw] {0}}
+child {node (D) [circle,draw] {1}
+child {node (E) [circle,draw] {0}
+child {node (F) [circle,draw] {0}}
+child {node (G) [circle,draw] {1}}
+}
+child {node (H) [circle,draw] {1}}
+}
+};
+\draw (root) node[below, text width=5mm, text ragged]{\hspace{5mm} 16}; 
+\draw (B) node[below, text width=5mm, text ragged]{\hspace{5mm} 16}; 
+\draw (A) node[below, text width=5mm, text ragged]{\hspace{5mm} 9}; 
+\draw (D) node[below, text width=5mm, text ragged]{\hspace{5mm} 16}; 
+\draw (C) node[below, text width=5mm, text ragged]{\hspace{5mm} 13}; 
+\draw (E) node[below, text width=5mm, text ragged]{\hspace{5mm} 16}; 
+\draw (F) node[below, text width=5mm, text ragged]{\hspace{5mm} 14}; 
+\draw (A) node[right] {\quad $F(3)$};
+\draw (F) node[right] {\quad $F(3)$};
+\draw (C) node[right] {\quad $F(1)$};
+\draw (G) node[right] {\quad $F(2)$};
+\draw (H) node[right] {\quad $F(2)$};
+\draw (1.5,1.5) node {$x_1$};
+\draw (3,1.5) node {$x_2$};
+\draw (4.5,1.5) node {$x_3$};
+\draw (6,1.5) node {$x_4$};
+\end{tikzpicture}
+\end{center}
+$F(j)$: le sous-problème est élagué par le Test j
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme de branch \& bound: cas général}
+
+Considérons à présent le cas général d'un modèle de programmation (mixte) en nombres entiers: variables entières générales et variables continues.
+
+\mbox{}
+
+Comme précédemment, nous ignorons dans un premier temps les contraintes d'intégralité (les valeurs des variables entières sont traitées comme variables continues), et résolvons le programme linéaire résultant.
+
+\mbox{}
+
+Si la solution optimale de ce programme satisfait aux contraintes d'intégralité, alors cette solution est aussi solution optimale du programme avec variables entières.
+Sinon, il doit exister au moins une variable $x_j$ dont la valeur $\alpha$ est fractionnaire.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme de branch \& bound: cas général}
+
+Soit $d \in \mathbb{R}$. Dénotons $\lfloor d \rfloor$ le plus grand entier tel que $\lfloor d \rfloor \leq d$.
+
+\mbox{}
+La procédure de branchement se généralise alors comme suit: nous séparons alors le problème relaxé en deux sous-problèmes;
+un sous-problème contiendra la contrainte $x_j \leq \lfloor \alpha \rfloor$ et le second la contrainte $x_j \geq \lceil \alpha \rceil  = \lfloor \alpha \rfloor + 1$.
+Nous répétons le processus pour chacun des sous-problèmes.
+
+\mbox{}
+
+Cette procédure est habituellement représentée sous forme
+d'un arbre binaire où, à chaque niveau, une partition du sommet père s'effectue suivant la règle décrite précédemment.
+
+\mbox{}
+
+Il s'agit alors de parcourir cet arbre d'énumération afin d'y trouver la solution optimale.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme de branch \& bound: cas général}
+
+L'exploration d'un chemin de l'arbre peut prendre fin pour trois raisons:
+\begin{enumerate}
+\item
+la valeur de l'objectif correspondant à la solution optimale du problème relaxé est inférieure (moins bonne) à celle d'une solution admissible connue, possiblement obtenue à un autre sommet de l'arbre.
+\item
+le domaine admissible d'un sous-problème devient vide;
+\item
+la solution devient entière;
+\end{enumerate}
+Dans chacun de ces trois cas on dit que le sommet est sondé, et il est inutile de pousser plus loin dans cette direction.
+
+\mbox{}
+
+L'algorithme s'arrête lorsque tous les sommets sont sondés.
+La meilleure solution obtenue au cours du déroulement de l'algorithme est alors l'optimum global de notre problème.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme de B\&B: cas général}
+
+\begin{enumerate}
+\item
+Initialisation:
+\begin{enumerate}[(a)]
+\item
+Poser $Z^* = -\infty$.
+\item
+Appliquer le calcul de borne et les critères d'élagage à la racine (aucune variable fixée).
+\item
+Critere d'arrêt : s'il n'y a plus de sous-problèmes non élagués, arrêter.
+\end{enumerate}
+\item
+Branchement:
+\begin{enumerate}[(a)]
+\item
+Parmi les sous-problèmes non encore élagués, choisir celui qui a été créé le plus récemment (s'il y a égalité, choisir celui de plus grande borne supérieure).
+\item
+Appliquer le Test 1: si le sous-problème est élagué, retourner en 2.
+\item
+Brancher sur la prochaine variable entière à valeur non entière dans la relaxation PL.
+\end{enumerate}
+\item
+Calcul de borne: résoudre la relaxation PL de chaque sous-problème.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Algorithme de B\&B: cas général}
+
+\begin{enumerate}
+\setcounter{enumi}{3}
+\item
+Élagage: élaguer un sous-problème si
+\begin{enumerate}[(a)]
+\item
+La borne superieure est inférieure ou égale à $Z^*$.
+\item
+La relaxation PL n'a pas de solution réalisable.
+\item
+Dans la solution optimale de la relaxation PL, toutes les variables entières sont à valeurs entières: si la borne
+supérieure est strictement supérieure à $Z^*$, $Z^*$ est mise à jour et la solution de la relaxation PL devient la meilleure solution courante.
+\end{enumerate}
+\item
+Retourner en 2.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthodes de coupes}
+
+\textcolor{blue}{Principe de base}
+
+\mbox{}
+
+Nous cherchons à générer un ensemble de contraintes
+linéaires que nous ajoutons à \eqref{eq:PLNE}
+pour engendrer un nouveau
+problème restreint (PR) tel que
+\begin{align*}
+\cF{(PRL)} &\subseteq \cF \eqref{eq:PL} \\
+\cF{(PR)} &= \cF\eqref{eq:PLNE}
+\end{align*}
+où (PRL) désigne la relaxation linéaire du problème restreint.
+
+\mbox{}
+
+Nous voulons que si suffisamment de coupes sont ajoutees, en résolvant le problème relaxé, la solution optimale est entière et donc une solution optimale pour \eqref{eq:PLNE}.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Considérons à nouveau le programme
+\begin{align*}
+	\max\ & z = x_1+5x_2\\
+	\st & x_1+10x_2 \leq 20, \\
+	& x_2 \leq 2, \\
+	& x_1, x_2 \geq 0 \mbox{ et entiers}.
+\end{align*}
+Ajoutons la contrainte $x_1 + 2x_2 \leq 4$:
+\begin{align*}
+	\max\ & z = x_1+5x_2\\
+	\st & x_1+10x_2 \leq 20, \\
+	& x_2 \leq 2, \\
+	& x_1 + 2x_2 \leq 4, \\
+	& x_1, x_2 \geq 0 \mbox{ et entiers}.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+\begin{center}
+	\begin{tikzpicture}[scale=1.50]
+		\draw[->] (0,0) -- (3.5,0) node[below,right] {$x_1$};
+		\draw[->] (0,0) -- (0,3) node[above,left] {$x_2$};
+		
+		\foreach \x in {0,1,2,3}
+		\draw (\x,1pt) -- (\x,-1pt) node[anchor=north] {$\x$};
+		\foreach \y in {0,1,2}
+		\draw (1pt,\y) -- (-1pt,\y) node[anchor=east] {$\y$};
+		
+		\filldraw[fill=yellow]
+		(0,0) -- (0,2) -- (2,1.8) -- (2,0) -- (0,0);
+		
+		\filldraw[fill=red]
+		(0,2) -- (2,1) -- (2,1.8) -- (0,2);
+
+		\draw (-1,2.2) -- (4,1.2) node[above,right,sloped] {$z^* = 10 = x_1+5x_2$};
+		\draw [dashed](-1,2.5) -- (4,0) node[above,right,sloped] {$x_1 + 2x_2 = 4$};
+		
+		\foreach \x in {0,1,2,3}
+		\foreach \y in {0,1,2}
+		\fill (\x,\y) circle (1 pt);;
+	\end{tikzpicture}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Méthode des coupes de Gomory}
+
+\begin{itemize}
+	\item 
+\textcolor{blue}{Principe des méthodes de coupes:}
+Introduire de nouvelles contraintes linéaires au problème pour
+réduire le domaine réalisable du problème relaxé sans pour
+autant éliminer de points du domaine réalisable du problème
+avec les contraintes de nombre entier sur les variables.
+	\item 
+La procédure consiste à résoudre une suite de problèmes
+relaxés jusqu’à ce qu’une solution optimale en nombres entiers
+soit obtenue.
+	\item 
+Un problème de la suite est obtenu du précédent en lui ajoutant
+une contrainte linéaire (coupe) supplémentaire.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Construction des coupes}
+
+Reprenons le problème
+\begin{equation}
+	\begin{aligned}
+		\min\ & c^Tx \\
+		\mbox{s.à } & Ax = b \\
+		& x_i \in \mathbb{N},\ i = 1,\ldots,n.
+	\end{aligned}
+	\tag{P}
+\end{equation}
+
+\mbox{}
+
+Soit $B$ une base optimale de \eqref{eq:PL}, et $x_k$ la variable de base dans la $i^e$ ligne du tableau optimal prenant une valeur qui n'est pas entière.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Construction des coupes}
+
+Le tableau optimal du simplexe du problème relaxé est alors de la forme
+\begin{footnotesize}
+$$
+\begin{array}{c|ccccccccccc|c}
+& x_1 & \ldots & x_k & \ldots & x_{j_1}& \ldots & x_j & \ldots & x_{j_m} & \ldots & x_n & \\
+\hline
+x_{j_1}& y_{1,1} & \ldots & 0 & \ldots & 1 & \ldots & y_{1,j} & \ldots & 0 & \ldots & y_{1,n} & y_{1,0} \\
+\vdots & \vdots & \ddots & \vdots & \ddots & \vdots & \ddots & \vdots & \ddots & \vdots & \ddots & \vdots & \vdots \\
+x_k & y_{i,1} & \ldots & 1 & \ldots & 0 & \ldots & y_{i,j} & \ldots & 0 & \ldots & y_{i,n} & y_{i,0} \\
+\vdots & \vdots & \ddots & \vdots & \ddots & \vdots & \ddots & \vdots & \ddots & \vdots & \ddots & \vdots & \vdots \\
+x_{j_m} & y_{m,1} & \ldots & 0 & \ldots & 0 & \ldots & y_{m,j} & \ldots & 1 & \ldots & y_{m,n} & y_{m,0} \\
+\hline
+& r_1 & \ldots & 0 & \ldots & 0 & \ldots & r_j & \ldots & 0 & \ldots & r_n & -z_0
+\end{array}
+$$
+\end{footnotesize}
+
+La ligne correspondante dans le tableau final du simplexe est
+$$
+x_k + \sum_{j \in J} y_{i,j}x_j = y_{i,0},
+$$
+où $y_{i,0} \in \mathbb{R}^+ \setminus \mathbb{N}$ et $J$ est l'ensemble des indices des variables hors base.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Construction des coupes}
+
+Comme $x \geq 0$, nous avons
+$$
+x_k + \sum_{j \in J} \lfloor y_{i,j} \rfloor x_j \leq x_k + \sum_{j \in J} y_{i,j}x_j = y_{i,0}.
+$$
+Si nous considérons la contrainte d'intégralité, nous devrions avoir
+$$
+x_k + \sum_{j \in J} \lfloor y_{i,j} \rfloor x_j \leq \lfloor y_{i,0} \rfloor.
+$$
+Cette dernière inégalité doit être satisfaite par toute solution $x$ réalisable de \eqref{eq:PLNE}, comme par rapport à la base $B$, les contraintes linéaires peuvent se réécrire $B^{-1}Ax = B^{-1}b = y$.
+%De plus, comme $\cF{\eqref{eq:PLNE}} \subset \cF{\eqref{eq:PL}}$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Construction des coupes}
+
+
+En combinant ces deux inégalités, nous obtenons que toute solution de \eqref{eq:PLNE} doit satisfaire
+$$
+\sum_{j \in J} \left( \lfloor y_{i,j} \rfloor - y_{i,j} \right) x_i \leq \lfloor y_{i,0} \rfloor - y_{i,0}.
+$$
+L'introduction de cette contrainte dans \eqref{eq:PLNE} n'élimine donc aucune solution de \eqref{eq:PLNE}.
+
+\mbox{}
+
+Par contre, la solution actuelle du problème relaxé $\eqref{eq:PL}$ ne satisfait pas cette inégalité, et est rejetée en l'incluant dans le problème. En effet, la solution actuelle a comme composante $x_k = y_{i,0} > \lfloor y_{i,0} \rfloor$, et $x_j = 0, j \in J$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Retour au simplexe}
+
+Pour poursuivre la résolution, il suffit d'introduire la contrainte
+$$
+\sum_{j \in J} \left( \lfloor y_{i,j} \rfloor - y_{i,j} \right) x_j \leq \lfloor y_{i,0} \rfloor - y_{i,0}.
+$$
+qui revient à
+$$
+\sum_{j \in J} \left( \lfloor y_{i,j} \rfloor - y_{i,j} \right) x_j + s_{\tau} = \lfloor y_{i,0} \rfloor - y_{i,0}.
+$$
+où $s_{\tau}$ est une variable d'écart avec coût nul.
+
+\mbox{}
+
+Cette contrainte est ajoutée au dernier tableau du simplexe pour générer une solution de base au nouveau problème en considérant $s_{\tau}$ comme la variable de base dans la nouvelle ligne du tableau.
+Cette solution de base n'est pas réalisable puisque
+$$
+s_{\tau} = \lfloor y_{i,0} \rfloor - y_{i,0} < 0.
+$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Tableau du simplexe}
+
+\begin{footnotesize}
+	$$
+\arraycolsep=1pt
+	\begin{array}{c|cccccccccccc|c}
+		& x_1 & \ldots & x_k & \ldots & x_{j_1}& \ldots & x_j & \ldots & x_{j_m} & \ldots & x_n & s_{\tau} \\
+		\hline
+		x_{j_1}& y_{1,1} & \ldots & 0 & \ldots & 1 & \ldots & y_{1,j} & \ldots & 0 & \ldots & y_{1,n} & 0 & y_{1,0} \\
+		\vdots & \vdots & \ddots & \vdots & \ddots & \vdots & \ddots & \vdots & \ddots & \vdots & \ddots & \vdots & \vdots & \vdots \\
+		x_k & y_{i,1} & \ldots & 1 & \ldots & 0 & \ldots & y_{i,j} & \ldots & 0 & \ldots & y_{i,n} & 0 & y_{i,0} \\
+		\vdots & \vdots & \ddots & \vdots & \ddots & \vdots & \ddots & \vdots & \ddots & \vdots & \ddots & \vdots & \vdots & \vdots \\
+		x_{j_m} & y_{m,1} & \ldots & 0 & \ldots & 0 & \ldots & y_{m,j} & \ldots & 1 & \ldots & y_{m,n} & 0 & y_{m,0} \\
+		s_{\tau} & \lfloor y_{i,1} \rfloor - y_{i,1} & \ldots & 0 & \ldots & 0 & \ldots & \lfloor y_{i,j} \rfloor - y_{i,j} & \ldots & 1 & \ldots & \lfloor y_{i,n} \rfloor - y_{i,n} & 1 & \lfloor y_{i,0} \rfloor - y_{i,0} \\
+		\hline
+		& r_1 & \ldots & 0 & \ldots & 0 & \ldots & r_j & \ldots & 0 & \ldots & r_n & 0 & -z_0
+	\end{array}
+	$$
+\end{footnotesize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Simplexe dual}
+
+Il suffit de poursuivre la résolution avec l'algorithme dual du simplexe.
+
+\mbox{}
+
+\begin{enumerate}
+	\item
+	Si $\lfloor y_{ij} \rfloor = y_{ij}$, $\forall j \in J$, et si $y_{i0}$ n'est pas entier, alors
+    $$
+	x_k + \sum_{j \in J} y_{ij} x_j = y_{i0},
+	$$
+	indique que \eqref{eq:PLNE} n'est pas réalisable puisque le terme de gauche prend une
+	valeur entière pour toute solution réalisable de \eqref{eq:PLNE} alors que le terme de
+	droite n'est pas entier.
+	\item
+	Une dérivation similaire s'applique à toutes les itérations.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple 2}
+
+Reprenons à présent l'exemple
+\begin{align*}
+	\max\ & z = x_2\\
+	\st & -x_1+x_2 \leq \frac{1}{2}, \\
+	& x_1 + x_2 \leq \frac{7}{2}, \\
+	& x_1, x_2 \geq 0 \mbox{ et entiers}.
+\end{align*}
+
+Si nous ajoutons l'inégalité $x_2 \leq 1$, nous obtenons le problème
+\begin{align*}
+	\max\ & z = x_2\\
+	\st & -x_1+x_2 \leq \frac{1}{2}, \\
+	& x_1 + x_2 \leq \frac{7}{2}, \\
+	& x_2 \leq 1, \\
+	& x_1, x_2 \geq 0 \mbox{ et entiers}.
+\end{align*}
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+\begin{center}
+	\begin{tikzpicture}[scale=1.65]
+		\draw[->] (0,0) -- (3.5,0) node[below,right] {$x_1$};
+		\draw[->] (0,0) -- (0,2.5) node[above,left] {$x_2$};
+		
+		\foreach \x in {0,1,2,3}
+		\draw (\x,1pt) -- (\x,-1pt) node[anchor=north] {$\x$};
+		\foreach \y in {0,1,2}
+		\draw (1pt,\y) -- (-1pt,\y) node[anchor=east] {$\y$};
+		
+		\filldraw[fill=yellow]
+		(0,0) -- (0,0.5) -- (1,1) -- (2.5,1) -- (3.5,0) -- (0,0);
+		
+		\draw (1.5,0.5) node[text width=4cm,text ragged] {domaine réalisable du modèle de PL};
+		
+		\draw (1,1) node[above]{$\left( 1, 1 \right)$};
+		
+		\foreach \x in {0,1,2,3}
+		\foreach \y in {0,1,2}
+		\fill (\x,\y) circle (1 pt);;
+	\end{tikzpicture}
+\end{center}
+
+Dans ce cas, le point extrême $(1,1)$ est bien solution, mais il existe d'autres solutions pour le problème relaxé qui ne sont pas entières.
+
+\end{frame}
+
+\end{document}
