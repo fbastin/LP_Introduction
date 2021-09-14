@@ -6,7 +6,7 @@
 
 % \setbeamercovered{transparent}
 %\usecolortheme{crane}
-\title[IFT2505]{IFT 2505\\Programmation Linéaire\\Méthode du simplexe}
+\title[Méthode du simplexe]{Programmation Linéaire\\Méthode du simplexe}
 \author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal}
 \date{}
 
@@ -904,8 +904,15 @@ En ajoutant $\sum_{j = {m+1}}^{n} c_jx_j$ de part et d'autre, nous obtenons comm
 \begin{frame}
 \frametitle{Théorème: amélioration de la base optimale}
 
-\'Etant donnée une solution de base réalisable avec une valeur correspondante de la fonction objectif égale à $z_0$, supposons qu'il existe au moins un $j$ tel que $c_j - z_j < 0$. Il existe alors une solution réalisable donnant une valeur $z < z_0$.
-Si la colonne $\ba_j$ peut être échangée avec une colonne de la base originale, cela donnera une nouvelle solution de base réalisable, avec la valeur $z < z_0$. Si $\ba_j$ ne peut pas être échangée pour former une solution de base réalisable, alors l'ensemble réalisable $K$ est non borné et la fonction objectif peut être rendue arbitrairement petite (vers $-\infty$).
+\begin{itemize}
+\item
+\'Etant donnée une solution de base réalisable avec une valeur correspondante de la fonction objectif égale à $z_0$, supposons qu'il existe au moins un $j$ tel que $c_j - z_j < 0$.
+Il existe alors une solution réalisable donnant une valeur $z < z_0$.
+\item
+Si la colonne $\ba_j$ peut être échangée avec une colonne de la base originale, cela donnera une nouvelle solution de base réalisable, avec la valeur $z < z_0$.
+\item
+Si $\ba_j$ ne peut pas être échangée pour former une solution de base réalisable, alors l'ensemble réalisable $K$ est non borné et la fonction objectif peut être rendue arbitrairement petite (vers $-\infty$).
+\end{itemize}
 
 \end{frame}
 
@@ -975,7 +982,7 @@ Notons
 \[
 r_j = c_j - z_j.
 \] 
-Les $r_j$ sont appelés coefficients de coût relatif ou coefficients de coût réduit. Ces coefficients mesurent le coût d'une variable relativement à une base donnée. Par extension, le coût réduit d'une variable de base est 0.
+Les $r_j$ sont appelés coefficients de {\color{blue}coût relatif} ou coefficients de {\color{blue}coût réduit}. Ces coefficients mesurent le coût d'une variable relativement à une base donnée. Par extension, le coût réduit d'une variable de base est 0.
 
 \mbox{}
 
