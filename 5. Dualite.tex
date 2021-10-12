@@ -252,6 +252,28 @@ Dual
 \end{frame}
 
 \begin{frame}
+	\frametitle{Exemple}
+	
+	Primal
+	\begin{align*}
+		\min_x\ & 4x_1 + 2x_2 + x_3 \\
+		\text{t.q. } & x_1 + x_2 \geq 3 \\
+		& -2x_1 + 2x_2 -4 x_3 \leq 5 \\
+		& x_2 \geq 0,\ x_3 \leq 0.
+	\end{align*}
+	
+	Dual
+	\begin{align*}
+		\max_{\lambda}\ & 3\lambda_1 + 5\lambda_2 \\
+		\text{t.q. } & \lambda_1 -2\lambda_2 = 4 \\
+		& \lambda_1 +2\lambda_2 \leq 2 \\
+		& -4\lambda_2 \geq 1 \\
+		& \lambda_1 \geq 0,\ \lambda_2 \leq 0.
+	\end{align*}
+	
+\end{frame}
+
+\begin{frame}
 \frametitle{Exemple: le problème de regime alimentaire}
 
 \begin{itemize}
@@ -274,28 +296,6 @@ Primal: on veut minimiser sa consommation tout en satisfaisant les besoins minim
 \min_x \ & c^T x \\
 \mbox{t.q. } & Ax \geq b \\
 & x \geq 0
-\end{align*}
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Exemple}
-
-Primal
-\begin{align*}
-\min_x\ & 4x_1 + 2x_2 + x_3 \\
-\text{t.q. } & x_1 + x_2 \geq 3 \\
-& -2x_1 + 2x_2 -4 x_3 \leq 5 \\
-& x_2 \geq 0,\ x_3 \leq 0.
-\end{align*}
-
-Dual
-\begin{align*}
-	\max_{\lambda}\ & 3\lambda_1 + 5\lambda_2 \\
-	\text{t.q. } & \lambda_1 -2\lambda_2 = 4 \\
-    & \lambda_1 +2\lambda_2 \leq 2 \\
-    & -4\lambda_2 \geq -1 \\
- 	& \lambda_1 \geq 0,\ \lambda_2 \leq 0.
 \end{align*}
 
 \end{frame}
