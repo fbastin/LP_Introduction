@@ -12,7 +12,7 @@
 
 \setbeamertemplate{footline}[frame number]
 
-\usepackage[frenchb]{babel}
+\usepackage[french]{babel}
 
 \usepackage{ulem}
 \usepackage{tikz}
@@ -41,6 +41,8 @@
 
 \def\cR{\mathcal{R}}
 
+\def\RR{\mathbb{R}}
+
 \begin{document}
 \frame{\titlepage}
 
@@ -64,7 +66,7 @@ Le programme suivant est appelé {\bf dual}:
 \mbox{t.q. } & A^T \lambda \leq c \\
 & \lambda \geq 0
 \end{align*}
-$A \in \cR^{m \times n}$, $c, x, \in \cR^n$, $\lambda, b \in \cR^m$.
+$A \in \RR^{m \times n}$, $c, x, \in \RR^n$, $\lambda, b \in \RR^m$.
 
 Note: les contraintes duales peuvent aussi s'écrire $\lambda^T A \leq c^T$ (en appliquant l'opérateur de transposition de part et d'autre de l'inégalité).
 
@@ -126,7 +128,7 @@ ou, avec $\lambda = u - v$,
 \mbox{t.q. } & \lambda^T A \leq c^T \\
 \end{align*}
 
-Forme asymétrique: $\lambda \in \cR$.
+Forme asymétrique: $\lambda \in \RR$.
 
 \end{frame}
 
@@ -274,7 +276,7 @@ Dual
 \end{frame}
 
 \begin{frame}
-\frametitle{Exemple: le problème de regime alimentaire}
+\frametitle{Exemple: le problème de régime alimentaire}
 
 \begin{itemize}
 \item
@@ -301,7 +303,7 @@ Primal: on veut minimiser sa consommation tout en satisfaisant les besoins minim
 \end{frame}
 
 \begin{frame}
-\frametitle{Exemple: le problème de regime alimentaire}
+\frametitle{Exemple: le problème de régime alimentaire}
 
 Dual:
 \begin{align*}
@@ -863,7 +865,7 @@ Donc, $(1,0) \notin C$.
 
 \mbox{}
 
-Comme $C$ est un ensemble convexe fermé, cela implique qu'il existe un hyperplan séparant $(1,0)$ et $C$. Autrement dit, $\exists [s, \lambda] \in \cR^{m+1}$, $[s, \lambda] \ne 0$, et une constante $k$ t.q.
+Comme $C$ est un ensemble convexe fermé, cela implique qu'il existe un hyperplan séparant $(1,0)$ et $C$. Autrement dit, $\exists [s, \lambda] \in \RR^{m+1}$, $[s, \lambda] \ne 0$, et une constante $k$ t.q.
 \begin{align*}
 s = (s, \lambda)^T (1,0) &< \inf \lbrace (s, \lambda)^T(r,w) \mbox{ t.q. } (r,w) \in C \rbrace \\
 & = \inf \lbrace sr + \lambda^Tw \mbox{ t.q. } (r,w) \in C \rbrace = k
@@ -899,7 +901,7 @@ Aussi, sans perte de généralités, $s = -1$
 \frametitle{Dualité forte}
 
 \begin{proof}
-Comme $\inf \lbrace s r + \lambda^T w \mbox{ t.q. } (r,w) \in C \rbrace = 0$, si $s = -1$, nous avons $\exists \lambda \in \cR^m$ t.q.
+Comme $\inf \lbrace s r + \lambda^T w \mbox{ t.q. } (r,w) \in C \rbrace = 0$, si $s = -1$, nous avons $\exists \lambda \in \RR^m$ t.q.
 \[
 -r + \lambda^Tw \geq 0,\ \forall (r,w) \in C.
 \]
@@ -944,6 +946,1119 @@ Non réalisable & impossible & possible & possible \\
 \end{tabular}
 \end{center}
 
+\end{frame}
+
+\begin{frame}
+	\frametitle{Dualité: relations à la procédure du simplexe}
+	
+	Résoudre le primal par le simplexe donne la solution duale.
+	
+	\mbox{}
+	
+	Supposons que le programme
+	\begin{align*}
+		\min_x \ & c^Tx \\
+		\mbox{t.q. } & Ax = b\\
+		& x \geq 0.
+	\end{align*}
+	a pour solution réalisable de base optimale $x = (x_{B},0)$, avec la base $B$.
+	
+	\mbox{}
+	
+	Quelle est la solution du dual
+	\begin{align*}
+		\max_{\lambda} \ & \lambda^T b \\
+		\mbox{t.q. } & \lambda^T A \leq c^T
+	\end{align*}
+	en termes de $B$? Magie: on l'obtient de la résolution du primal.
+	
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Relations à la procédure du simplexe}
+	
+	Supposons
+	\[
+	A = \begin{pmatrix}
+		B & D
+	\end{pmatrix},
+	\quad
+	x_B = B^{-1}b,
+	\quad
+	r_D^T = c_D^T - c_B^T B^{-1} D.
+	\]
+	
+	\mbox{}
+	
+	Si $x$ est optimal, $r_D^T \geq 0$, et donc
+	\[
+	c_B^T B^{-1} D \leq c_D^T.
+	\]
+	
+	\mbox{}
+	
+	Avec
+	\[
+	\lambda^T = c_B^T B^{-1},
+	\]
+	nous avons
+	\begin{align*}
+		\lambda^T A &=
+		\begin{pmatrix}
+			\lambda^T B & \lambda^T D
+		\end{pmatrix} \\
+		&= \begin{pmatrix}
+			c_B^T B^{-1}B & c_B^T B^{-1} D
+		\end{pmatrix} \\
+		&\leq \begin{pmatrix}
+			c_B^T & c_D^T
+		\end{pmatrix} = c^T.
+	\end{align*}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Relations à la procédure du simplexe}
+	
+	Dès lors,
+	\[
+	\lambda^T A \leq c^T,
+	\]
+	i.e. $\lambda$ est réalisable pour le dual.
+	
+	\mbox{}
+	
+	De plus,
+	\[
+	\lambda^T b = c_B^T B^{-1}b = c_B^T x_B
+	\]
+	et donc la valeur de la fonction objectif duale pour ce $\lambda$ est égale à la valeur du problème primal. Dès lors $\lambda$ est optimal pour le dual.
+	
+	\mbox{}
+	
+	On retrouve le principal résultat du théorème de dualité.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Relations à la procédure du simplexe}
+	
+	{\bf Théorème}
+	Si le programme linéaire (sous forme standard) a une solution de base réalisable optimale, correspondant à la base $B$, le vecteur $\lambda$ t.q. $\lambda^T = c_B^T B^{-1}$ est une solution optimale du programme dual correspondant.
+	Les valeurs optimales des deux programmes sont égales.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exemple}
+	
+	Considérons le problème
+	\begin{align*}
+		\min_x \ & -x_1 - 4x_2 -3x_3 \\
+		\mbox{t.q. } & 2x_1 + 2x_2 + x_3 \leq 4 \\
+		& x_1 + 2x_2 + 2x_3 \leq 6 \\
+		& x_1 \geq 0,\ x_2 \geq 0,\ x_3 \geq 0.
+	\end{align*}
+	
+	\mbox{}
+	
+	Sous forme standard,
+	\begin{align*}
+		\min_x \ & -x_1 - 4x_2 -3x_3 \\
+		\mbox{t.q. } & 2x_1 + 2x_2 + x_3 + x_4 = 4 \\
+		& x_1 + 2x_2 + 2x_3 + x_5 = 6 \\
+		& x_1 \geq 0,\ x_2 \geq 0,\ x_3 \geq 0.
+	\end{align*}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exemple}
+	
+	Sous forme de tableau, cela donne
+	\[
+	\begin{matrix}
+		2 & 2 & 1 & 1 & 0 & 4 \\
+		1 & 2 & 2 & 0 & 1 & 6 \\
+		-1 & -4 & -3 & 0 & 0 & 0
+	\end{matrix}
+	\]
+	Le premier pivot donne
+	\[
+	\begin{matrix}
+		1 & 1 & \frac{1}{2} & \frac{1}{2} & 0 & 2 \\
+		-1 & 0 & 1 & -1 & 1 & 2 \\
+		3 & 0 & -1 & 2 & 0 & 8
+	\end{matrix}
+	\]
+	puis le second
+	\[
+	\begin{matrix}
+		\frac{3}{2} & 1 & 0 & 1 & -\frac{1}{2} & 1 \\
+		-1 & 0 & 1 & -1 & 1 & 2 \\
+		2 & 0 & 0 & 1 & 1 & 10
+	\end{matrix}
+	\]
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exemple}
+	
+	On a
+	\[
+	B = \begin{pmatrix}
+		2 & 1 \\
+		2 & 2
+	\end{pmatrix}
+	\qquad
+	B^{-1} = \begin{pmatrix}
+		1 & -\frac{1}{2} \\
+		-1 & 1
+	\end{pmatrix}
+	\]
+	
+	\mbox{}
+	
+	La solution optimale est
+	\[
+	x_1 = 0,\ x_2 = 1,\ x_3 = 2.
+	\]
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exemple: dual}
+	
+	\begin{align*}
+		\max_{\lambda}\ & 4\lambda_1 + 6\lambda_2 \\
+		\mbox{t.q. } & 2\lambda_1 + \lambda_2 \leq -1 \\
+		& 2\lambda_1 + 2\lambda_2 \leq -4 \\
+		& \lambda_1 + 2\lambda_2 \leq -3 \\
+		& \lambda_1 \leq 0, \ \lambda_2 \leq 0.
+	\end{align*}
+	
+	\mbox{}
+	
+	La solution du dual s'obtient directement de la dernière ligne du tableau du simplexe, sous les colonnes où apparaît l'identité dans le premier tableau (comme les coûts initiaux associés sont nuls):
+	\[
+	\lambda^T = \begin{pmatrix} -1 & -1 \end{pmatrix}.
+	\]
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Multiplicateurs du simplexe}
+	
+	\`A n'importe quelle itération du simplexe, nous pouvons former le vecteur $\lambda^T$ satisfaisant
+	\[
+	\lambda^T = c_B^T B^{-1}.
+	\]
+	
+	\mbox{}
+	
+	Ce vecteur n'est pas une solution (réalisable) du dual à moins que $B$ ne soit une base optimale pour le primal. Mais il peut être utilisé à chaque itération pour calculer les coûts réduits, et il aura une interprétation économique.
+	
+	\mbox{}
+	
+	Pour cette raison, le vecteur $\lambda^T = c_B^T B^{-1}$ est souvent appelé le vecteur des multiplicateurs du simplexe.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Interprétation économique}
+	
+	Comme d'ordinaire, dénotons les colonnes de $A$ par $a_1, a_2,\ldots, a_n$, et par $e_1, e_2,\ldots, e_m$, les $m$ vecteurs unités dans $\RR^m$:
+	\[
+	A = \begin{pmatrix}
+		\vdots & \vdots & & \vdots \\
+		a_1 & a_2 & \ldots & a_m \\
+		\vdots & \vdots & & \vdots
+	\end{pmatrix}
+	\qquad
+	e_i = \begin{pmatrix}
+		0 \\
+		\vdots \\
+		1 \\
+		\vdots \\
+		0
+	\end{pmatrix}
+	\begin{matrix}
+		\\
+		\\
+		\rightarrow i^e \mbox{position} \\
+		\\
+		\\
+	\end{matrix}
+	\]
+	
+	\mbox{}
+	
+	\'Etant donné une base $B$, consistant de $m$ colonnes de $A$, n'importe quel autre vecteur peut être construit comme combinaison linéaire de ces vecteurs de base: soit $y \in \RR^m$,
+	\[
+	y = B B^{-1}y.
+	\]
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Interprétation économique}
+	
+	S'il y a un coût unité $c_i$ associé avec chaque vecteur de base $a_i$, le coût d'un vecteur construit $y$ à partir de la base peut être calculé comme la combinaison linéaire correspondante des $c_i's$ associés à la base. L'expression de $y$ à partir de la base est
+	\[
+	B^{-1}y
+	\]
+	et le coût associé
+	\[
+	c_B^T B^{-1}y.
+	\]
+	
+	\mbox{}
+	
+	En particulier, le coût du vecteur unité $e_j$, quand reconstruit à partir de la base $B$, est $\lambda_j$, la $j^e$ composante de
+	\[
+	\lambda^T = c_B^T B^{-1}.
+	\]
+	En effet,
+	\[
+	\lambda_j = \lambda^T e_j = c_B^T B^{-1} e_j.
+	\]
+	
+	Dès lors, les $\lambda_j's$ peuvent être interprétés comme les prix synthétiques des vecteurs unités.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Interprétation économique}
+	
+	Comme
+	\[
+	y = \sum_{j = 1}^m y_j e_j,
+	\]
+	nous avons comme coût pour $y$
+	\[
+	c_B^T B^{-1}y = \sum_{j = 1}^m c_B^T B^{-1} e_j y_j = \sum_{j = 1}^m \lambda_j y_j = \lambda^T y.
+	\]
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Interprétation économique: optimalité}
+	
+	L'optimalité du primal correspond à la situation où chaque vecteur $a_1, a_2,\ldots, a_n$, est ``moins cher'' quand construit à partir de la base que quand acheté directement à son propre prix.
+	
+	\mbox{}
+	
+	Dans ce cas, nous avons
+	\[
+	\lambda^T a_i \leq c_i,\ i = 1,2,\ldots,n,
+	\]
+	ou de manière équivalente
+	\[
+	\lambda^T A \leq c^T,
+	\]
+	ou encore, sous forme colonne,
+	\[
+	A^T\lambda \leq c,
+	\]
+	
+\end{frame}
+
+%\begin{frame}
+%\frametitle{Faisons le point}
+
+%Programmes primal et dual: deux points de vue d'une même réalité.
+
+%\mbox{}
+
+%$m$ contraintes et $n$ variables pour le primal. Simplexe sous forme révisé:
+%\begin{itemize}
+%\item
+%taille des systèmes linéaires: $m \times m$.
+%\item
+%si $n$ grand par rapport à $m$: possiblement beaucoup de bases à explorer.
+%\end{itemize}
+
+%\end{frame}
+
+\begin{frame}
+	\frametitle{Sensibilité}
+	
+	{\it Continuation de l'interprétation des variables duales comme prix}.
+	
+	\mbox{}
+	
+	Considérons le problème standard,
+	\begin{align*}
+		\min_x \ & c^T x \\
+		\mbox{t.q. } & Ax = b \\
+		& x \geq 0
+	\end{align*}
+	avec la base optimale $B$ et la solution correspondante $(x_B, 0)$, où $x_B = B^{-1}b$. Une solution correspondante du dual est
+	\[
+	\lambda^T = c_B^T B^{-1}.
+	\]
+	
+	\mbox{}
+	
+	Sous l'hypothèse de non-dégénérescence, de petits changements dans $b$ ne conduiront pas à un changement de base optimale.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Sensibilité}
+	
+	Considérons un petit changement $\Delta b$. Comme la base optimale n'a pas changé, la nouvelle solution optimale est
+	\[
+	x = (x_B + \Delta x_B, 0),
+	\]
+	où
+	\[
+	\Delta x_B = B^{-1} \Delta b.
+	\]
+	
+	Le changement correspondant pour la fonction objectif est
+	\[
+	\Delta z = c_B^T \Delta x_B = \lambda^T \Delta b.
+	\]
+	
+	\mbox{}
+	
+	Dès lors, $\lambda$ mesure la sensibilité de la fonction objectif à un petit changement dans le terme de droite des contraintes d'égalité: un changement de $b$ à $b+\Delta b$ conduit à un changement de la fonction objectif de $\lambda^T \Delta b$,
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Sensibilité et multiplicateurs du simplexe}
+	
+	Puisque $\lambda_j$ est le prix du vecteur unité $e_j$ quand exprimé à partir de la base $B$, il mesure directement le changement dans le coût à partir d'un changement dans la $j^e$ composante du vecteur $b$. Cela s'observe aussi depuis la relation précédente
+	\[
+	\Delta z = c_B^T \Delta x_B = \lambda^T \Delta b.
+	\]
+	
+	\mbox{}
+	
+	Dès lors, $\lambda_j$ peut être considéré comme le \textsl{\textcolor{red}{prix marginal}} de $b_j$, puisque modifier $b_j$ en $b_j + \Delta b_j$ conduit à un changement de la valeur optimale de $\lambda_j \Delta b_j$: si
+	\[
+	\Delta b = (0.\ldots,0,\Delta b_j,0,\ldots,0),
+	\]
+	alors
+	\[
+	\Delta z = \sum_{k=1}^m \lambda_k \Delta b_k = \lambda_j \Delta b_j.
+	\]
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exemple: production de peinture (B. Fortz)}
+	
+	Une société fabrique de la peinture d'intérieur et d'extérieur à partir de deux
+	produits de base $M1$ et $M2$.
+	
+	\mbox{}
+	
+	Données:
+	\begin{tabular}{cccc}
+		& \multicolumn{2}{c}{Quantité utilisée par tonne}
+		& Quantité disponible \\
+		& Extérieure & Intérieure &  par jour \\
+		\hline
+		M1 & 6 & 4 & 24 \\
+		M2 & 1 & 2 & 6 \\
+		\hline
+		Profit par tonne & 5 & 4
+	\end{tabular}
+	
+	\mbox{}
+	
+	Contraintes supplémentaires:
+	\begin{itemize}
+		\item
+		Demande maximum en peinture d’intérieur: 2 tonnes par jour.
+		\item
+		La production en peinture d'intérieur ne peut dépasser que d’une tonne celle d'extérieur.
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exemple: production de peinture (B. Fortz)}
+	
+	Variables:
+	\begin{itemize}
+		\item
+		$x_1$ = tonnes de peinture d’extérieur produites par jour;
+		\item
+		$x_2$ = tonnes de peinture d’intérieur produites par jour.
+	\end{itemize}
+	
+	\mbox{}
+	
+	Formulation du programme:
+	\begin{align*}
+		\max_x \ & z = 5x_1 + 4x_2 \\
+		\mbox{s.c. } & 6x_1 + 4x_2 \leq 24 & (\lambda_1) \\
+		& x_1 + 2x_2 \leq 6 & (\lambda_2) \\
+		& x_2 \leq 2 & (\lambda_3) \\
+		& -x_1 + x_2 \leq 1 & (\lambda_4) \\
+		& x_1 \geq 0,\ x_2 \geq 0.
+	\end{align*}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Production de peinture: dual}
+	
+	\begin{align*}
+		\min_\lambda \ & w = 24\lambda_1 + 6\lambda_2 + 2\lambda_3 + \lambda_4 \\
+		\mbox{s.c. } & 6\lambda_1 + \lambda_2 - \lambda_4 \geq 5 \\
+		&4\lambda_1 + 2\lambda_2 + \lambda_3 + \lambda_4 \geq 4 \\
+		& \lambda_1, \lambda_2, \lambda_3, \lambda_4 \geq 0.
+	\end{align*}
+	
+	\mbox{}
+	
+	Primal:
+	\[
+	x_1 = 3,\ x_2 = 1.5,\ z = 21
+	\]
+	Dual:
+	\[
+	\lambda_1 = 0.75,\ \lambda_2 = 0.5,\ \lambda_3 = \lambda_4 = 0,\ w = 21.
+	\]
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Production de peinture: interprétation économique}
+	
+	Interprétation de la dualité forte: le profit maximal est atteint si les ressources ont été exploitées complètement, i.e. jusqu’à épuisement de leur valeur.
+	
+	\mbox{}
+	
+	\begin{itemize}
+		\item
+		Le profit augmente de 0.75 par augmentation d'une tonne de M1 et de 0.5 par tonne de M2.
+		\item
+		Les ``ressources'' 3 et 4 sont abondantes; augmenter ces ressources n'apporte aucun profit supplémentaire.
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{\'Ecarts de complémentarité}
+	
+	{\bf Théorème: écarts de complémentarite -- forme asymétrique}\\
+	Soit $x$ et $\lambda$ des solutions pour les programmes primal et dual, le primal étant exprimé sous forme standard. Une condition nécessaire et suffisante pour que $x$ et $\lambda$ soient tous deux solutions optimales est que pour tout $i$
+	\begin{enumerate}
+		\item
+		$x_i > 0 \Rightarrow \lambda^T a_i = c_i$
+		\item
+		$x_i = 0 \Leftarrow \lambda^T a_i < c_i$
+	\end{enumerate}
+	
+	\mbox{}
+	
+	\textcolor{red}{Note:} les conditions 1 et 2 peuvent se réécrire comme
+	$$
+	(\lambda^T a_i - c_i)x_i = 0,
+	$$
+	i.e. $x_i = 0$ ou (non exclusif) $\lambda^T a_i = c_i$. Sous forme vectorielle, comme $x \geq 0$ et $\lambda^T A \leq c^T$, $(\lambda^T A - c^T)x = 0$.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{\'Ecarts de complémentarité: preuve du théorème}
+	
+	Sous les conditions énoncées,
+	\[
+	(\lambda^T A - c^T)x = 0.
+	\]
+	Dès lors,
+	\[
+	\lambda^T b = c^Tx,
+	\]
+	et par le corollaire du théorème de dualité faible, $\lambda$ et $x$ sont solutions optimales de leur problème respectif.
+	
+	\mbox{}
+	
+	De manière réciproque, si les solutions sont optimales, par le théorème de dualité forte,
+	\[
+	\lambda^T b = c^Tx,
+	\]
+	et donc
+	\[
+	(\lambda^T A - c^T) x = 0.
+	\]
+	Comme
+	$x \geq 0,\quad \lambda^T A \leq c$,
+	les conditions tiennent.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{\'Ecarts de complémentarité}
+	
+	{\bf Théorème: écarts de complémentarite -- forme symétrique}\\
+	Soit $x$ et $\lambda$ des solutions pour les programmes primal et dual, le primal étant exprimé avec les contraintes linéaires sous forme $Ax \geq b$. Une condition nécessaire et suffisante pour que $x$ et $\lambda$ soient tous deux solutions optimales est que pour tout $i$
+	\begin{enumerate}
+		\item
+		$x_i > 0 \Rightarrow \lambda^T a_i = c_i$
+		\item
+		$x_i = 0 \Leftarrow \lambda^T a_i < c_i$
+		\item
+		$\lambda_j > 0 \Rightarrow a^j x = b_j$
+		\item
+		$\lambda_j = 0 \Leftarrow a^j x > b_j$
+	\end{enumerate}
+	
+	\begin{proof}
+		Similaire au théorème précédent.
+	\end{proof}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Contraintes de complémentarité}
+	
+	Une \textcolor{blue}{contrainte de complémentarité} impose que deux variables sont complémentaires l'une par rapport à l'autre.
+	En notant ces variables $x$ et $y$, et en les supposant de dimensions $n$, ceci se traduit par
+	$$
+	x_iy_i = 0,\ i = 1,\ldots,n, \quad x \ge 0, \quad y \ge 0.
+	$$
+	La condition ci-dessus est parfois exprimée de manière plus compacte comme
+	$$
+	0 \leq x \perp y \geq 0.
+	$$
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Contraintes de complémentarité et PL}
+	
+	La complémentarité traduit ici qu'une variable primale (duale) est nulle ou que la contrainte duale (primale) correspondante est active.
+	
+	\mbox{}
+	
+	Intuitivement une variable de base dans le primal correspond à une contrainte active au niveau du dual.
+	
+	\mbox{}
+	
+	Sous l'hypothèse de non-dégénérescence pour le primal et le dual, il y a exactement $m$ variables du primal non-nulles à la solution optimale et $m$ contraintes actives pour le dual.
+	\begin{itemize}
+		\item 
+		Hypothèse de non-dégénérescence primale: $m$ composantes de la solution optimale sont strictement positives.
+		\item 
+		Hypothèse de non-dégénérescence duale: $m$ contraintes du dual sont actives.
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Résolution en utilisant les écarts de complémentarité}
+	
+	Considérons le primal
+	\begin{align*}
+		\max_x\ & z = 5x_1 +12x_2 +4x_3\\
+		\mbox{s.c. } & x_1 + 2x_2 + x_3 \leq 10 \\
+		& 2x_1 - x_2 +3x_3 = 8 \\
+		& x_1, x_2, x_3 \geq 0
+	\end{align*}
+	Dual:
+	\begin{align*}
+		\min_y\ & w = 10y_1 + 8y_2 \\
+		\mbox{s.c. } & y_1 + 2y_2 \geq 5 \\
+		& 2y_1 - y_2 \geq 12 \\
+		& y_1 + 3y_2 \geq 4\\
+		& y_1 \geq 0.
+	\end{align*}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Résolution en utilisant les écarts de complémentarité}
+	
+	La solution optimale du primal
+	\[
+	\left(
+	\frac{26}{5}, \frac{12}{5}, 0
+	\right)
+	\]
+	Valeur optimale: $\frac{274}{5}$.
+	
+	\mbox{}
+	
+	Comme $x_1 > 0$, $x_2 > 0$, nous avons le système linéaire correspondant pour le dual
+	\begin{align*}
+		y_1 + 2y_2 = 5\\
+		2y_1 - y_2 = 12.
+	\end{align*}
+	On tire
+	\[
+	5y_1 = 29,\quad y_2 = 2y_1 - 12,
+	\]
+	et donc
+	\[
+	y_1 = \frac{29}{5},\quad y_2 = -\frac{2}{5}.
+	\]
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Complémentarité}
+	
+	Considérons la paire primale-duale:
+	\begin{align*}
+		\min_x\ & c^T x \\
+		\mbox{s.c. } & Ax = b \\
+		& x \geq 0,
+	\end{align*}
+	et
+	\begin{align*}
+		\max_{\lambda} \ & b^T \lambda \\
+		\mbox{s.c. } & A^T \lambda \leq c.
+	\end{align*}
+	
+	\textit{Pour toute solution de base non dégénérée x du primal, il existe une et une seule solution $\lambda$ du dual complémentaire à $x$.}
+	
+	Le résultat tient même si $x$ est non-réalisable (i.e. les contraintes de non-négativité ne sont pas satisfaites).
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Démonstration}
+	
+	Le dual peut se réécrire sous forme standard:
+	\begin{align*}
+		\max_{\lambda} \ & b^T\lambda \\
+		\mbox{s.c. } & A^T \lambda + t = c \\
+		& t \geq 0,
+	\end{align*}
+	ou de manière plus explicite,
+	\begin{align*}
+		\max_{\lambda} \ & b^T\lambda \\
+		\mbox{s.c. } & a_i^T \lambda + t_i = c_i,\ i = 1,\ldots,n \\
+		& t_i \geq 0,\ i = 1,\ldots,n.
+	\end{align*}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Démonstration}
+	
+	Considérons un ensemble de variables de base $B$ et un ensemble de variables hors base $D$, tels que la base correspondante est non dégénérée :
+	\begin{align*}
+		& x_B = B^{-1}b, \quad x_D = 0, \\
+		& \forall\, j\ x_{Bj} \ne 0.
+	\end{align*}
+	
+	Construisons une solution duale complémentaire à la solution primale:
+	\[
+	t_B = 0, \quad B^T\lambda = c_B,
+	\]
+	%Dès lors,
+	%\[
+	%\lambda^T
+	%= c_B^T B^{-1},\ t_B^T = 0.
+	%\]
+	%De plus,
+	et
+	$$
+	t_D^T = c_D^T - \lambda^TD = c_D^T - c_B^TB^{-1}D.
+	$$
+	L'unicité de $\lambda$ vient de l'inversibilité de $B^T$.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Complémentarité}
+	
+	On voit apparaître une réécriture des conditions de complémentarité:
+	\[
+	t_i x_i = 0,\ i = 1,\ldots,n.
+	\]
+	
+	\mbox{}
+	
+	Problème, nous n'avons pas vérifié la condition
+	$$
+	t \geq 0.
+	$$
+	Celle-ci pourrait très bien être violée!
+	
+	\mbox{}
+	
+	Si $t \geq 0$, $c_D^T - c_B^TB^{-1}D \geq 0$, i.e. $x$ satisfait les conditions d'optimalité. Si $x \geq 0$, c'est une solution de base optimale!
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Complémentarité et optimalité}
+	
+	Conséquence: $\lambda$ est admissible (réalisable) si et seulement si $x$ satisfait les conditions d'optimalité (coûts réduits positifs ou nuls).
+	% Dans la démonstration précédente, cela revient à poser $t_B = 0$, et $t_D = (c_D^T - c_B^TB^{-1}D)$.
+	Autrement dit, les conditions d'optimalité sont équivalentes à l'admissibilité.
+	
+	\mbox{}
+	
+	Similairement, une solution $x$ complémentaire à $\lambda$ est admissible si et seulement si $\lambda$ satisfait les conditions d’optimalité pour le dual. Cela se déduit directement du fait que le dual du dual est le primal.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Méthode du simplexe dual}
+	
+	Motivations:
+	\begin{itemize}
+		\item
+		Il arrive souvent qu’une solution de base non admissible (i.e. violant les contraintes de non-négativité), mais satisfaisant les contraintes d'optimalité soit identifiables facilement (par exemple, variables d’écart de contraintes $\leq$ et composantes négatives dans le terme de droite).
+		\item
+		Cette base correspond à une solution admissible du dual, solution identifiable à partir des multiplicateurs du simplexe.
+	\end{itemize}
+	
+	%Autrement dit, on peut obtenir une solution de base du problème linéaire non réalisable, mais associée à des multiplicateurs du simplexe qui sont réalisables pour le problème dual.
+	
+	\mbox{}
+	
+	Dans le tableau du simplexe, cette situation revient à ne pas avoir d'éléments négatifs dans la dernière ligne, puisque
+	\begin{align*}
+		r_{j} \geq 0 
+		& \Leftrightarrow c_{j} - (\lambda^T D)_j \geq 0 \\
+		& \Leftrightarrow c_{j} - \lambda^T a_j \geq 0 \\
+		& \Leftrightarrow \lambda^T a_j \leq c_j \\
+	\end{align*}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Simplexe dual}
+	
+	Cette situation peut se produire tout en ayant une solution de base non réalisable.
+	
+	\mbox{}
+	
+	Ceci arrive par exemple si on résoud un problème, puis on veut en résoudre un nouveau après avoir changé $b$.
+	
+	\mbox{}
+	
+	On va alors travailler sur le problème dual en partant du tableau primal.
+	
+	\mbox{}
+	
+	Idée de la méthode simplexe duale : résoudre (implicitement) le dual par la méthode du simplexe (mais en travaillant sur le tableau primal!).
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Méthode du simplexe dual: principes}
+	
+	En termes du primal:
+	\begin{itemize}
+		\item
+		maintenir l'optimalité de la dernière ligne;
+		\item
+		aller vers la réalisabilité.
+	\end{itemize}
+	
+	\mbox{}
+	
+	En termes du dual:
+	\begin{itemize}
+		\item
+		maintenir la réalisabilité;
+		\item
+		aller vers l'optimalité.
+	\end{itemize}
+	
+	\mbox{}
+	
+	On va partir avec une solution de base satisfaisant les conditions d’optimalité (= base admissible pour le dual) et chercher à la rendre admissible (= dual optimale).
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Méthode du simplexe dual}
+	
+	On considère le problème
+	\begin{align*}
+		\min_x \ & c^Tx \\
+		\mbox{t.q. } & Ax = b\\
+		& x \geq 0.
+	\end{align*}
+	
+	Supposons qu'une base $B$ est connue, et soit
+	\[
+	\lambda^T = c_B^T B^{-1}.
+	\]
+	On suppose $\lambda$ réalisable pour le dual.
+	
+	\mbox{}
+	
+	La solution $x_b = B^{-1}b$ est dite \mbox{dual-réalisable}.
+	
+	\mbox{}
+	
+	Si $x_B \geq 0$, cette solution est aussi primal-réalisable, et est par conséquent optimale.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Méthode du simplexe dual}
+	
+	Comme $\lambda$ est réalisable pour le dual,
+	\[
+	\lambda^T a_j \leq c_j,\ j = 1, 2, \ldots, n.
+	\]
+	
+	\mbox{}
+	
+	Si, comme d'ordinaire, nous supposons que $B$ est constitué des $m$ premières colonnes de $A$, i.e.
+	\[
+	B = \begin{pmatrix}
+		a_1 & a_2 & \ldots & a_m
+	\end{pmatrix},
+	\]
+	nous avons
+	\[
+	\lambda^T a_j = c_B^T B^{-1} a_j = c_B^T e_j = c_j,\ j = 1, 2, \ldots, m.
+	\]
+	où $e_j$ est le $j^e$ vecteur unité.
+	
+	\mbox{}
+	
+	En appliquant l'hypothèse de non-dégénérescence pour le dual, nous avons aussi
+	\[
+	\lambda^T a_j < c_j,\ j = m+1, m+2, \ldots, n.
+	\]
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Méthode du simplexe dual}
+	
+	Un cycle du simplexe, appliqué au dual, reviendra à échanger deux composantes de $\lambda$, de manière à ce qu'une inégalité stricte devienne une égalité, et vice-versa, tout en augmentant la valeur du dual.
+	
+	\mbox{}
+	
+	Les $m$ égalités dans la nouvelle solution détermineront une nouvelle base.
+	
+	\mbox{}
+	
+	Soit $u^i$ la $i^e$ ligne de $B^{-1}$, et
+	\[
+	\overline{\lambda}^T = \lambda^T - \epsilon u^i.
+	\]
+	Nous avons (avec $\epsilon \geq 0$)
+	\[
+	\overline{\lambda}^T a_j = \lambda^T a_j - \epsilon u^i a_j.
+	\]
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Méthode du simplexe dual}
+	
+	Rappelons la notation préalablement introduite
+	\[
+	z_j = c_B^T y_j,\qquad y_j = B^{-1}a_j.
+	\]
+	Dès lors,
+	\[
+	\lambda^T a_j = c_B^T B^{-1} a_j = z_j.
+	\]
+	
+	\mbox{}
+	
+	Comme
+	\begin{align*}
+		u^i a_j &= y_{ij},\\
+		y_j &= e_j,\ j = 1,\ldots,m
+	\end{align*}
+	nous avons
+	\[
+	u^i a_j = \delta_{ij}
+	\]
+	où
+	\[
+	\delta_{ij} =
+	\begin{cases}
+		1 & \mbox{si } i = j,\\
+		0 & \mbox{sinon}.
+	\end{cases}
+	\]
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Méthode du simplexe dual}
+	
+	Ainsi,
+	\begin{align*}
+		\overline{\lambda}^T a_j &= c_j, &\ j = 1,2,\ldots, m,\ i \ne j, \\
+		\overline{\lambda}^T a_i &= c_i - \epsilon, \\
+		\overline{\lambda}^T a_j &= z_j - \epsilon y_{ij}, &\ j = m+1,m+2,\ldots, n.
+	\end{align*}
+	
+	De plus, puisque $x_B = B^{-1}b$,
+	\[
+	\overline{\lambda}^T b = 
+	\lambda^T b - \epsilon u^i b = 
+	\lambda^T b - \epsilon x_{Bi}.
+	\]
+	
+	\mbox{}
+	
+	Comme
+	\[
+	\lambda^T a_j < c_j,\ j = m+1, \ldots, n,
+	\]
+	nous cherchons à augmenter le terme de gauche, ce qui revient à considérer les situations où $y_{ij} < 0$ dans
+	\[
+	\overline{\lambda}^T a_j = z_j - \epsilon y_{ij}, \ j = m+1,m+2,\ldots, n.
+	\]
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Méthode du simplexe dual}
+	
+	Nous cherchons à ramener la valeur à $c_j$, sans la dépasser (sinon on violerait les conditions de réalisabilité du dual), aussi nous prenons
+	\[
+	\epsilon_0 = \min_j \left\lbrace \frac{z_j-c_j}{y_{ij}}\mbox{ t.q. } y_{ij} < 0 \right\rbrace.
+	\]
+	
+	\mbox{}
+	
+	Soit
+	\[
+	k = \arg\min_j \left\lbrace \frac{z_j-c_j}{y_{ij}}\mbox{ t.q. } y_{ij} < 0 \right\rbrace.
+	\]
+	Nous avons
+	\begin{align*}
+		\overline{\lambda}^T a_k &= z_k - \epsilon_0 y_{ik} \\
+		&= z_k - \frac{z_k-c_k}{y_{ik}} y_{ik} \\
+		& = c_k. 
+	\end{align*}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Algorithme du simplexe dual}
+	
+	{\bf Etape 1}
+	\'Etant donnée une solution de base dual-réalisable $x_B$, si $x_B \geq 0$, la solution est optimale: arrêt. Sinon, sélectionner un indice $i$ tel que $x_{Bi} < 0$.
+	
+	\mbox{}
+	
+	{\bf Etape 2}
+	Si tous les $y_{ij} \geq 0$, $j = 1, 2,\ldots,n$, le dual n'a pas de maximum.
+	Sinon, calculer
+	\[
+	\epsilon_0 = \min_j \left\lbrace \frac{z_j-c_j}{y_{ij}}\mbox{ t.q. } y_{ij} < 0 \right\rbrace.
+	\]
+	Soit $k$ l'indice correspondant (unique si l'hypothèse de non-dégénérescence s'applique).
+	
+	\mbox{}
+	
+	{\bf Etape 3}
+	Former une nouvelle base $B$ en remplaçant $a_i$ par $a_k$.
+	En utilisant cette base, déterminer la solution de base dual-réalisable $x_B$ correspondante.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Simplexe dual: exemple}
+	
+	\begin{align*}
+		\min_x \ & 3x_1 + 4x_2 + 5x_3 \\
+		\mbox{soumis à } & x_1 + 2x_2 + 3x_3 \geq 5 \\
+		& 2x_1 + 2x_2 + x_3 \geq 6 \\
+		& x_1, x_2, x_3 \geq 0.
+	\end{align*}
+	
+	\mbox{}
+	
+	En introduisant des variables de surplus, nous obtenons
+	\begin{align*}
+		\min_x \ & 3x_1 + 4x_2 + 5x_3 \\
+		\mbox{soumis à } & x_1 + 2x_2 + 3x_3 - x_4 = 5 \\
+		& 2x_1 + 2x_2 + x_3 -x_5 = 6 \\
+		& x_1, x_2, x_3, x_4, x_5 \geq 0.
+	\end{align*}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Simplexe dual: exemple}
+	
+	Si nous changeons le signe des inégalités, nous obtenons
+	\begin{align*}
+		\min_x \ & 3x_1 + 4x_2 + 5x_3 \\
+		\mbox{soumis à } & -x_1 - 2x_2 - 3x_3 + x_4 = -5 \\
+		& -2x_1 - 2x_2 - x_3 + x_5 = -6 \\
+		& x_1, x_2, x_3, x_4, x_5 \geq 0.
+	\end{align*}
+	conduisant au tableau
+	\[
+	\begin{matrix}
+		x_4 & -1 & -2 & -3 & 1 & 0 & -5 \\
+		x_5 & -2 & -2 & -1 & 0 & 1 & -6 \\
+		& 3 & 4 & 5 & 0 & 0 & 0
+	\end{matrix}
+	\]
+	La base $(a_4, a_5)$ est dual-réalisable comme tous les coûts réduits sont non-négatifs.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Simplexe dual: exemple}
+	
+	Nous devons sélectionner une composante de $x_B$ qui est strictement négative pour la retirer de l'ensemble des variables de base.
+	Prenons par exemple $x_5 = -6$.
+	
+	\mbox{}
+	
+	Nous devons alors calculer les rapports
+	\[
+	\frac{z_j - c_j}{y_{2j}}
+	\]
+	ou, en d'autres termes, les rapports entre l'opposé des coûts réduits et les élements de la seconde ligne.
+	Le plus petit rapport (strictement) positif est obtenu avec l'élément $y_{12}$:
+	\[
+	\begin{matrix}
+		x_4 & -1 & -2 & -3 & 1 & 0 & -5 \\
+		x_5 & \circled{-2} & -2 & -1 & 0 & 1 & -6 \\
+		& 3 & 4 & 5 & 0 & 0 & 0
+	\end{matrix}
+	\]
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Simplexe dual: exemple}
+	
+	Après le pivot, nous avons
+	\[
+	\begin{matrix}
+		x_4 & 0 & \circled{-1} & -\frac{5}{2} & 1 & -\frac{1}{2} & -2 \\
+		x_1 & 1 & 1 & \frac{1}{2} & 0 & -\frac{1}{2} & 3 \\
+		& 0 & 1 & \frac{7}{2} & 0 & \frac{3}{2} & -9
+	\end{matrix}
+	\]
+	puis
+	\[
+	\begin{matrix}
+		x_2 & 0 & 1 & \frac{5}{2} & -1 & \frac{1}{2} & 2 \\
+		x_1 & 1 & 0 & -2 & 1 & -1 & 1 \\
+		& 0 & 0 & 1 & 1 & 1 & -11
+	\end{matrix}
+	\]
+	
+	\mbox{}
+	
+	La solution $(1, 2, 0)$ est optimale.
+	
 \end{frame}
 
 \end{document}
