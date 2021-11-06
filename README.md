@@ -1,1 +1,1 @@
-# LP_Introduction
+# Cours d'introduction à la programmation linéaire. 
