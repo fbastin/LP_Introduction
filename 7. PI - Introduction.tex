@@ -8,7 +8,7 @@
 
 % \setbeamercovered{transparent}
 %\usecolortheme{crane}
-\title[IFT2505]{IFT 2505\\Programmation Linéaire}
+\title[IFT2505]{IFT 2505\\Programmation Linéaire\\Points Intérieurs\\Introduction}
 \author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal}
 \date{}
 
@@ -438,15 +438,18 @@ L'algorithme travaille itérativement, en calcul un pas à chaque itération, ma
 	L'approche consiste à calculer une direction de descente (i.e. qui permet de réduire la valeur de l'objectif) qui n’approche pas trop rapidement
 	de la frontière.
 	%Cette direction de plus forte descente est calcul´ee `a partir d’un probl`eme mis `a l’´echelle qui centre la solution courante et qui est ensuite transform´ee dans l’espace original.
+	
+	\mbox{}
+	
 	Trois étapes:
-	\begin{itemize}
+	\begin{enumerate}
 		\item 
 		calcul de la direction de descente,
 		\item
 		calcul du pas,
 		\item
 		calcul de la transformation affine.
-	\end{itemize}
+	\end{enumerate}
 \end{frame}
 
 \begin{frame}
@@ -497,17 +500,14 @@ L'algorithme travaille itérativement, en calcul un pas à chaque itération, ma
 \begin{frame}
 	\frametitle{Direction de descente}
 	
-	Soit $x_c$ le point courant tel que:
-	\begin{align*}
-		Ax_c &= b \\
-		x_c &> 0.
-	\end{align*}
+	Soit $x_c$ le point courant t.q.
+	$$
+	Ax_c = b, \ x_c > 0.
+	$$
+
 	On cherche
 	$$
-	x^+ = x_c + \alpha \Delta x
-	$$
-	tel que
-	$$
+	x^+ = x_c + \alpha \Delta x \quad \text{ t.q. }\quad 
 	c^Tx^+ \leq c^T x_c,\ Ax^+ = b.
 	$$
 	Le déplacement doit donc vérifier
@@ -557,11 +557,9 @@ L'algorithme travaille itérativement, en calcul un pas à chaque itération, ma
 		P^2 &= P.
 	\end{align*}
 	Notons $P = I - A^T(AA^T)^{-1}A$. Alors
-	\begin{align*}
-		c^T \Delta x &= -c^T P c \\
-		& = -c^T P^2 c \\
-		& = - \| Pc \|^2_2 \leq 0.
-	\end{align*}
+$$
+		c^T \Delta x = -c^T P c = -c^T P^2 c = - \| Pc \|^2_2 \leq 0.
+$$
 	
 \end{frame}
 
@@ -569,7 +567,7 @@ L'algorithme travaille itérativement, en calcul un pas à chaque itération, ma
 	\frametitle{Longueur de pas}
 	
 	Le taux de décroissance est constant dans la direction $\Delta x$.
-	Le pas maximal est limité par les contraintes de non négativité.
+	Le pas maximal est limité par les contraintes de non-négativité.
 	De plus, la transformation affine qui nous permettra de centrer le point n'est pas définie sur la frontière.
 	
 	\mbox{}
@@ -618,7 +616,7 @@ L'algorithme travaille itérativement, en calcul un pas à chaque itération, ma
 \begin{frame}
 	\frametitle{Calcul du nouveau point}
 	
-	Dans l'espace-$\overline{x}$, et étant donné $\overline{x}_c e$, on obtient
+	Dans l'espace-$\overline{x}$, on obtient % et étant donné $\overline{x}_c e$, on obtient
 	\begin{align*}
 		\Delta\overline{x} &= \text{proj}_{\overline{A}}(-\overline{c}) \\
 		& = -(I - \overline{A}^T(\overline{A}\overline{A}^T)^{-1}\overline{A})\overline{c} \\
