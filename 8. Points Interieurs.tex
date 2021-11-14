@@ -253,11 +253,11 @@ Un tel ensemble est la région réalisable elle-même. Un autre est l'ensemble d
 
 \mbox{}
 
-Considérons par exemple le centre analytique associé à un polytope borné $\Omega$ dans $E^m$, représenté par $n$ ($> m$) inégalités linéaires:
+Considérons par exemple le centre analytique associé à un \textcolor{red}{polytope borné} $\Omega$ dans $\RR^m$, représenté par $n$ ($> m$) inégalités linéaires:
 \[
-\Omega = \lbrace \by \in E^m \,:\, \bc^T - \by^T \bA \geq \bzero \rbrace,
+\Omega = \lbrace \by \in \RR^m \,:\, \bc^T - \by^T \bA \geq \bzero \rbrace,
 \]
-où $\bA \in E^{m \times n}$ et $c \in E^n$ sont données, et $A$ est de rang $m$.
+où $\bA \in \RR^{m \times n}$ et $c \in \RR^n$ sont données, et $A$ est de rang $m$.
 
 \end{frame}
 
@@ -266,7 +266,7 @@ où $\bA \in E^{m \times n}$ et $c \in E^n$ sont données, et $A$ est de rang $m
 
 Dénotons l'intérieur de $\Omega$ par
 \[
-\mathring{\Omega} = \lbrace \by \in E^m \,:\, \bc^T - \by^T\bA > 0 \rbrace.
+\mathring{\Omega} = \lbrace \by \in \RR^m \,:\, \bc^T - \by^T\bA > 0 \rbrace.
 \]
 
 \mbox{}
@@ -281,7 +281,7 @@ où $\bs = \bc^T - \by^T\bA$ est un vecteur d'écart.
 
 Dès lors, dans le cas présent, la fonction potentiel est l'opposé de la somme des logarithmes des variables d'écart, ou encore le produit de leur inverse:
 $$
--\sum_{j = 1^n} \log s_j = \log \prod_{j = 1}^n \frac{1}{s_j}
+-\sum_{j = 1}^n \log s_j = \log \prod_{j = 1}^n \frac{1}{s_j}
 $$
 
 \end{frame}
@@ -337,7 +337,7 @@ Notons la multiplication composante par composante comme suit
 \[
 \bx \circ \bs = (x_1s_1, x_2s_2, \ldots, x_ns_n)^T.
 \]
-Le centre analytique est alors défini par les conditions
+Le \textcolor{blue}{centre analytique} est alors défini par les conditions
 \begin{align*}
 \bx \circ \bs &= \bone \\
 \bA\bx &= \bzero \\
@@ -351,7 +351,7 @@ Le centre analytique est alors défini par les conditions
 
 Le centre analytique peut aussi être défini quand l'intérieur est vide ou que des égalités sont présentes, par exemple avec
 \[
-\Omega = \lbrace \by \in E^m \,:\, \bc^T-\by^T\bA \geq 0,\, \bB\by = \bb \rbrace
+\Omega = \lbrace \by \in \RR^m \,:\, \bc^T-\by^T\bA \geq 0,\, \bB\by = \bb \rbrace
 \]
 Dans ce cas, le centre analytique est choisi sur la surface linéaire $\lbrace \by \,:\, \bB\by = \bb \rbrace$ pour maximiser le produit des variables d'écart.
 
@@ -555,7 +555,7 @@ comme
 \begin{frame}
 \frametitle{Chemin central}
 
-Dès lors, le chemin central est une ligne droite progressant du centre analytique du carré (comme $\mu \rightarrow \infty$) vers le centre analytique de la face optimale (comme $\mu \rightarrow 0$).
+Dès lors, le chemin central est une ligne droite progressant du centre analytique du carré (comme $\mu \rightarrow \infty$) vers le \textcolor{blue}{centre analytique de la face optimale} (comme $\mu \rightarrow 0$).
 
 \end{frame}
 
@@ -717,7 +717,7 @@ Si $\mu \rightarrow \infty$, $y$ est non borné, car l'ensemble dual réalisable
 \begin{frame}
 \frametitle{Chemin central primal-dual}
 
-Hypothèse: la région réalisable du problème de programmation linéaire a un intérieur non vide et un ensemble borné de solutions optimales.
+\textcolor{blue}{Hypothèse}: la région réalisable du problème (primal) de programmation linéaire a un intérieur non vide et un ensemble borné de solutions optimales.
 
 \mbox{}
 
@@ -725,7 +725,7 @@ Le dual a un intérieur réalisable non vide, en vertu des conditions (d'optimal
 
 \mbox{}
 
-Le chemin primal-dual est l'ensemble des vecteurs $(x(\mu), y(\mu), s(\mu))$ satisfaisant les conditions
+Le chemin primal-dual est l'ensemble des vecteurs $(x(\mu), y(\mu), s(\mu))$ satisfaisant
 \begin{align*}
 \bx \circ \bs &= \mu \bone \\
 \bA\bx &= \bb \\
@@ -884,12 +884,12 @@ Souvent, une variante de la méthode de Newton est utilisée pour résoudre les 
 
 \begin{description}
 	\item[Etape 1]
-	Choisir $\mu_0$ et un point de départ $(x_0, y_0, s_0)$, tel que
+	Choisir $\mu_0$ et un point de départ réalisable $(x_0, y_0, s_0)$, tel que
 	\begin{align*}
 	Ax_0 &= b \\
 	A^Ty_0 + s_0 &= c^T
 	\end{align*}
-	et $y_0, s_0 \geq 0$, $x_0 > 0$. Poser $k = 0$, et choisir $\epsilon$.
+	et $s_0 \geq 0$, $x_0 > 0$. Poser $k = 0$, et choisir $\epsilon > 0$.
 	\item[Etape 2]
 	Projeter $x_k$ sur le chemin central avec la méthode de Newton: calculer le vecteur $(d_x, d_y, d_s)$ et poser
 	\begin{align*}
@@ -917,7 +917,7 @@ $$
 
 \mbox{}
 
-Il est facile d'exprimer le gradient et le hessien de ce problème:
+Il est facile d'exprimer le gradient et la matrice hessienne du lagrangien:
 \begin{align*}
 \nabla L(x) &= c-\mu X^{-1}\bone - A^Ty \\
 H(x) & = \mu X^{-2}
@@ -1059,7 +1059,7 @@ A & 0
 =
 \begin{pmatrix}
 c - \mu X^{-1}\bone \\ 0
-\end{pmatrix}
+\end{pmatrix}.
 $$
 
 \mbox{}
@@ -1068,9 +1068,9 @@ Reprenons la première ligne du système
 $$
 -H\bd_x + A^T\by = c - \mu X^{-1}\bone
 $$
-et multiplions de part et d'autre par $AX^2$. Nous obtenons
+et multiplions de part et d'autre part $AX^2$. Comme $H = \mu X^{-2}$, nous obtenons
 $$
--\mu A\bd_x + AX^2A^T\by = AX^2c - \mu AX \bone 
+-\mu A\bd_x + AX^2A^T\by = AX^2c - \mu AX \bone.
 $$
 
 %Etant donné un point $x \in \mathring{\mathcal{F}}_P$, la méthode de Newton consistera à chercher des direction $\bd_x$, $\bd_y$ et $\bd_s$ à partir du système
@@ -1082,7 +1082,7 @@ $$
 
 Comme $A\bd_x = 0$, nous obtenons un système linéaire permettant de trouver $\by$:
 $$
-AX^2A^T\by = AX^2c - \mu AX \bone 
+AX^2A^T\by = AX^2c - \mu AX \bone.
 $$
 
 \end{frame}
@@ -1097,7 +1097,7 @@ $$
 avec $\by$ connu. Nous avons dès lors
 \begin{align*}
 \bd_x &= \mu H^{-1}X^{-1}\bone - H^{-1}c + H^{-1}A^T\by \\
-&= x + \frac{1}{\mu}X^2(A^T\by-c)
+&= x + \frac{1}{\mu}X^2(A^T\by-c).
 \end{align*}
 
 \mbox{}
@@ -1160,16 +1160,16 @@ Une autre approche consiste à suivre le chemin central à partir d'une paire in
 \begin{equation}
 \begin{aligned}
 \max_y \  & b^T y \\
-\mbox{s.c. } & A^T y + s = c. \\
-& s \geq 0
+\mbox{s.c. } & A^T y + s = c \\
+& s \geq 0.
 \end{aligned}
 \tag{D}
 \end{equation}
 
 Nous supposons que $\mathring{\mathcal{F}} \ne \emptyset$, ou de manière équivalente
 \begin{align*}
-	\mathring{\mathcal{F}}_P &= \lbrace x \,|\, Ax = b, x > 0 \rbrace \ne \emptyset \\
-	\mathring{\mathcal{F}}_D &= \lbrace (y,s) \,|\, s = c-A^Ty > 0 \rbrace \ne \emptyset \\
+	\mathring{\mathcal{F}}_P &= \lbrace x \,|\, Ax = b, x > 0 \rbrace \ne \emptyset, \\
+	\mathring{\mathcal{F}}_D &= \lbrace (y,s) \,|\, s = c-A^Ty > 0 \rbrace \ne \emptyset. \\
 \end{align*}
 
 \end{frame}
@@ -1710,7 +1710,7 @@ L'algorithme est divisé en deux étapes:
 \begin{frame}
 \frametitle{Étape prédictive}
 
-L'étape prédictive consiste à calcul le pas de Newton classique, en résolvant
+L'étape prédictive consiste à calculer le pas de Newton classique, en résolvant
 $$\begin{pmatrix}
 	0 & A^T & I  \\
 	A & 0 & 0\\
