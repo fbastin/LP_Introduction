@@ -539,23 +539,26 @@ On converge vers le centre analytique de la face optimale
 \]
 plutôt qu'un coin du carré.
 
-\mbox{}
-
-De plus, quand $\mu \rightarrow +\infty$,
-\[
-x(\mu) \rightarrow \left( \frac{1}{2}, \frac{1}{2} \right)
-\]
-comme
-\[
--2\mu + \sqrt{1+4\mu^2} = -2\mu + 2\mu\sqrt{\frac{1}{4\mu^2}+1}.
-\]
-
 \end{frame}
 
 \begin{frame}
 \frametitle{Chemin central}
 
-Dès lors, le chemin central est une ligne droite progressant du centre analytique du carré (comme $\mu \rightarrow \infty$) vers le \textcolor{blue}{centre analytique de la face optimale} (comme $\mu \rightarrow 0$).
+De plus,
+\begin{align*}
+\lim_{\mu \rightarrow +\infty} \frac{1-2\mu + \sqrt{1+4\mu^2}}{2}
+&= \frac{1}{2} - \frac{1}{2} \lim_{\mu \rightarrow +\infty} \left( 2\mu - \sqrt{1+4\mu^2} \right) \\
+&= \frac{1}{2} - \lim_{\mu \rightarrow +\infty} \left( 2\mu - 2\mu\sqrt{\frac{1}{4\mu^2}+1} \right) \\
+&= \frac{1}{2}.
+\end{align*}
+
+Ainsi $
+x(\mu) \overset{\mu \rightarrow +\infty}{\longrightarrow} \left( \frac{1}{2}, \frac{1}{2} \right).
+$
+
+\mbox{}
+
+Le chemin central est une ligne droite progressant du centre analytique du carré (comme $\mu \rightarrow \infty$) vers le \textcolor{blue}{centre analytique de la face optimale} (comme $\mu \rightarrow 0$).
 
 \end{frame}
 
