@@ -675,7 +675,8 @@ On peut réécrire le dual comme
 \begin{align*}
 \max\ & y_1 + y_2 \\
 \mbox{s.à. } & y_1 + s_1 = -1 \\
-& y_2 + s_2 = 0.
+& y_2 + s_2 = 0 \\
+& s_1 \geq 0, s_2 \geq 0.
 \end{align*}
 
 \mbox{}
@@ -779,6 +780,57 @@ Soit $g = c^Tx - y^Tb$.
 
 Comme $y^T b \leq z^*$, $z^* \geq c^Tx - g$, et donc, étant donné $(x, y, s)$, on peut mesurer la qualité de $x$ comme $c^T x - z^* \leq g$.
 \end{frame}
+
+\begin{frame}
+	\frametitle{Approche générale}
+	
+	Si on commence avec une valeur $\mu_0$, à l'itération $k$,
+	\[
+	\mu_{k} = \gamma^k \mu_0,
+	\]
+	
+	\mbox{}
+	
+	Dès, réduire $\mu_k/\mu_0$ sous $\epsilon$ requiert
+	\[
+	k = \left\lceil \frac{\log \epsilon}{\log \gamma} \right\rceil.
+	\]
+	
+	\mbox{}
+	
+	Souvent, une variante de la méthode de Newton est utilisée pour résoudre les sous-problèmes ainsi construits:
+	\begin{align*}
+		\bx \circ \bs &= \mu \bone \\
+		\bA\bx &= \bb \\
+		\bA^T\by + \bs & = \bc
+	\end{align*}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Algorithme général}
+	
+	\begin{description}
+		\item[Etape 1]
+		Choisir $\mu_0$ et un point de départ réalisable $(x_0, y_0, s_0)$, tel que
+		\begin{align*}
+			Ax_0 &= b \\
+			A^Ty_0 + s_0 &= c^T
+		\end{align*}
+		et $s_0 \geq 0$, $x_0 > 0$. Poser $k = 0$, et choisir $\epsilon > 0$.
+		\item[Etape 2]
+		Projeter $x_k$ sur le chemin central avec la méthode de Newton: calculer le vecteur $(d_x, d_y, d_s)$ et poser
+		\begin{align*}
+			x_{k+1} &= x_k + d_x \\
+			y_{k+1} &= y_k + d_y \\
+			s_{k+1} &= s_k + d_s
+		\end{align*}
+		Si $\mu_k < \epsilon$, arrête.
+		Sinon, définir $\mu_{k + 1} = \gamma \mu_k$, poser $k := k+1$, et retourner au début de l'étape 2.
+	\end{description}
+	
+\end{frame}
+
 \begin{frame}
 \frametitle{Stratégies de solution en points intérieurs}
 
@@ -853,56 +905,6 @@ Typiquement, on mettra à jour $\mu$ de l'itération $k$ à l'itération $k+1$ c
 \mu_{k+1} = \gamma \mu_k,
 \]
 pour $0< \gamma < 1$ fixé.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Méthode primale barrière}
-
-Si on commence avec une valeur $\mu_0$, à l'itération $k$,
-\[
-\mu_{k} = \gamma^k \mu_0,
-\]
-
-\mbox{}
-
-Dès, réduire $\mu_k/\mu_0$ sous $\epsilon$ requiert
-\[
-k = \left\lceil \frac{\log \epsilon}{\log \gamma} \right\rceil.
-\]
-
-\mbox{}
-
-Souvent, une variante de la méthode de Newton est utilisée pour résoudre les sous-problèmes ainsi construits:
-\begin{align*}
-\bx \circ \bs &= \mu \bone \\
-\bA\bx &= \bb \\
-\bA^T\by + \bs & = \bc
-\end{align*}
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Algorithme général}
-
-\begin{description}
-	\item[Etape 1]
-	Choisir $\mu_0$ et un point de départ réalisable $(x_0, y_0, s_0)$, tel que
-	\begin{align*}
-	Ax_0 &= b \\
-	A^Ty_0 + s_0 &= c^T
-	\end{align*}
-	et $s_0 \geq 0$, $x_0 > 0$. Poser $k = 0$, et choisir $\epsilon > 0$.
-	\item[Etape 2]
-	Projeter $x_k$ sur le chemin central avec la méthode de Newton: calculer le vecteur $(d_x, d_y, d_s)$ et poser
-	\begin{align*}
-	x_{k+1} &= x_k + d_x \\
-	y_{k+1} &= y_k + d_y \\
-	s_{k+1} &= s_k + d_s
-	\end{align*}
-	Si $\mu_k < \epsilon$, arrête.
-	Sinon, définir $\mu_{k + 1} = \gamma \mu_k$, poser $k := k+1$, et retourner au début de l'étape 2.
-\end{description}
 
 \end{frame}
 
@@ -1189,7 +1191,7 @@ x \geq 0,&\ s \geq 0
 
 \mbox{}
 
-Les méthodes de points intérieurs primales-duales diffèrent des méthodes primales strictes en un point-clé: la direction de recherche est calculé tant pour $x$ que pour $(y,s)$, mais numériquement, ce changement a révolutionné la programmation linéaire, et l'approche est maintenant à la base de nombreux solveurs.
+Les méthodes de points intérieurs primales-duales diffèrent des méthodes primales strictes en un point-clé: la direction de recherche est calculée tant pour $x$ que pour $(y,s)$, mais numériquement, ce changement a révolutionné la programmation linéaire, et l'approche est maintenant à la base de nombreux solveurs.
 
 \end{frame}
 
