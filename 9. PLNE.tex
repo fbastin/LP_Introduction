@@ -198,18 +198,18 @@ Solution: $\left( \frac{3}{2},2\right)$. Que nous arrondissions cette solution �
 Considérons le programme
 \begin{align*}
 \max\ & z = x_1+5x_2\\
-\st & x_1+10x_2 \leq 20, \\
+\st & x_1+10x_2 \leq 21, \\
 & x_2 \leq 2, \\
 & x_1, x_2 \geq 0 \mbox{ et entiers}.
 \end{align*}
 La version relâchée de programme est
 \begin{align*}
 \max\ & z = x_1+5x_2\\
-\st & x_1+10x_2 \leq 20, \\
+\st & x_1+10x_2 \leq 21, \\
 & x_2 \leq 2, \\
 & x_1, x_2 \geq 0,
 \end{align*}
-qui a pour solution optimale $(2, 1.8)$. En arrondissant à $(2,1)$ afin de garantir l'admissibilité, nous obtenons la valeur 7 pour la fonction objectif, loin de la valeur optimale du PLNE, avec pour valeur optimale de 11, en $(1,2)$.
+qui a pour solution optimale $(2, 1.9)$. En arrondissant à $(2,1)$ afin de garantir l'admissibilité, nous obtenons la valeur 7 pour la fonction objectif, loin de la valeur optimale du PLNE, avec pour valeur optimale de 11, en $(1,2)$.
 
 \end{frame}
 
@@ -227,9 +227,9 @@ qui a pour solution optimale $(2, 1.8)$. En arrondissant à $(2,1)$ afin de gara
 \draw (1pt,\y) -- (-1pt,\y) node[anchor=east] {$\y$};
 
 \filldraw[fill=yellow]
-(0,0) -- (0,2) -- (2,1.8) -- (2,0) -- (0,0);
+(0,0) -- (0,2.1) -- (2,1.9) -- (2,0) -- (0,0);
 
-\draw (-1,2.2) -- (4,1.2) node[above,right,sloped] {$z^* = 10 = x_1+5x_2$};
+\draw (-1,2.4) -- (4,1.4) node[above,right,sloped] {$z^* = 11 = x_1+5x_2$};
 
 \foreach \x in {0,1,2,3}
 \foreach \y in {0,1,2,3}
@@ -293,8 +293,13 @@ recommencer à partir d'un sommet pour lequel certaines variables ne sont pas en
 \begin{frame}
 \frametitle{Algorithme de branch \& bound: cas 0--1}
 
-À la racine de l'arbre, aucune variable n'est encore fixée, tandis qu'aux feuilles de l'arbre, toutes les variables ont été fixées.
-Le nombre de feuilles est $2^n$ (pour $n$ variables 0--1).
+\begin{itemize}
+	\item 
+Racine de l'arbre: aucune variable fixée;
+\item
+Feuilles de l'arbre: toutes les variables sont fixées.\\
+Le nombre maximal de feuilles est $2^n$ (pour $n$ variables 0--1).
+\end{itemize}
 
 \mbox{}
 
@@ -376,16 +381,13 @@ sous-problème 2: $Z_2 \leq 16+\frac{1}{5}$.
 
 \mbox{}
 
-Notons que toutes les variables sont binaires et tous les paramètres dans l'objectif sont des valeurs entières.
-Dès lors, la borne supérieure pour le sous-problème 2 est 16.
-Pour le sous-problème 1, la solution obtenue est entière: c'est la meilleure solution courante.
+Toutes les variables sont binaires et tous les paramètres dans l'objectif sont des valeurs entières. Dès lors, la borne supérieure pour le sous-problème 2 est 16.
 
 \mbox{}
 
-Nous savons que la valeur optimale cherchée, Z, sera au moins
-\[
-Z^* = 9: Z \geq Z^*.
-\]
+Pour le sous-problème 1, la solution obtenue est entière: c'est la meilleure solution courante, notée $Z^*$, et la valeur optimale cherchée, $Z$, satisfait $Z \geq Z^* = 9$.
+
+\mbox{}
 
 Quels sous-problèmes pouvons-nous à présent considérer afin de nous approcher de la solution optimale? Tous les sous-problèmes actuellement traités doivent-ils donner naissance à d'autres problèmes?
 
@@ -409,7 +411,7 @@ Pour le sous-problème 2, la solution optimale de la relaxation PL n'est pas ent
 Z^* = 9 \leq Z \leq 16.
 \]
 La branche ($x_1 = 1$) peut encore contenir une solution optimale.
-Mais si nous avions eu $Z_2 \leq Z*$, nous aurions pu conclure que la
+Mais si nous avions eu $Z_2 \leq Z^*$, nous aurions pu conclure que la
 branche ne pouvait améliorer la meilleure solution courante.
 
 \end{frame}
@@ -420,11 +422,11 @@ branche ne pouvait améliorer la meilleure solution courante.
 Un sous-problème est elagué si une des trois conditions suivantes est satisfaite :
 \begin{itemize}
 \item
-test 1: sa borne supérieure (valeur optimale de la relaxation PL) est inférieure ou égale à $Z^*$ (valeur de la meilleure solution courante);
+\textcolor{blue}{test 1}: sa borne supérieure (valeur optimale de la relaxation PL) est inférieure ou égale à $Z^*$ (valeur de la meilleure solution courante);
 \item
-test 2: sa relaxation PL n'a pas de solution réalisable;
+\textcolor{blue}{test 2}: sa relaxation PL n'a pas de solution réalisable;
 \item
-test 3: la solution optimale de sa relaxation PL est entière.
+\textcolor{blue}{test 3}: la solution optimale de sa relaxation PL est entière.
 \end{itemize}
 Lorsque le test 3 est verifié, nous testons si la valeur optimale de la relaxation PL du sous-problème, $Z_i$, est supérieure à $Z^*$.
 Si $Z_i > Z^*$, alors $Z^* := Z_i$, et nous conservons la solution, qui
@@ -441,12 +443,12 @@ devient la meilleure solution courante.
 Initialisation:
 \begin{enumerate}[(a)]
 \item
-poser $Z^* = -\infty$;
+$Z^* := -\infty$;
 \item
 appliquer le calcul de borne et les critères d'élagage à la racine (aucune variable fixée).
 \end{enumerate}
 \item
-Critere d'arrêt : s'il n'y a plus de sous-problemes non élagués, arrêter.
+Arrêt si aucun sous-probleme non élagué.
 \item
 Branchement:
 \begin{enumerate}[(a)]
@@ -458,14 +460,6 @@ retourner en 2.
 \item
 brancher sur la prochaine variable non fixée.
 \end{enumerate}
-\item
-Calcul de borne:
-\begin{enumerate}[(a)]
-\item
-résoudre la relaxation PL de chaque sous-problème;
-\item
-arrondir la valeur optimale si tous les paramètres de l'objectif sont entiers.
-\end{enumerate}
 \end{enumerate}
 
 \end{frame}
@@ -474,19 +468,19 @@ arrondir la valeur optimale si tous les paramètres de l'objectif sont entiers.
 \frametitle{Algorithme branch-and-bound: cas binaire}
 
 \begin{enumerate}
-\setcounter{enumi}{4}
+\setcounter{enumi}{3}
 \item
-Élagage: élaguer un sous-problème si
+Calcul de borne:
 \begin{enumerate}[(a)]
-\item
-la borne superieure est inférieure ou égale à $Z^*$;
-\item
-la relaxation PL n'a pas de solution réalisable;
-\item
-la solution optimale de la relaxation PL est entière: si la borne supérieure est strictement supérieure à $Z^*$, $Z^*$ est mise à jour et la solution de la relaxation PL devient la meilleure solution courante.
+	\item
+	résoudre la relaxation PL de chaque sous-problème;
+	\item
+	arrondir la valeur optimale si tous les paramètres de l'objectif sont entiers.
 \end{enumerate}
 \item
-Retourner en 2.
+Élaguer un sous-problème si le test 1, 2 ou 3 est satisfait. Si le test 3 est vérifié (solution optimale de la relaxation PL est entière) ET la borne supérieure est strictement supérieure à $Z^*$, $Z^*$ est mise à jour et la solution de la relaxation PL devient la meilleure solution courante.
+
+Retour en 2.
 \end{enumerate}
 
 \end{frame}
@@ -494,10 +488,18 @@ Retourner en 2.
 \begin{frame}
 \frametitle{Branchement}
 
-Plusieurs choix possibles du noeud duquel brancher; dans cette version, choix du sous-problème le plus récemment créé.
+Plusieurs choix possibles du noeud duquel brancher.
+
+\mbox{}
+
+\begin{enumerate}
+	\item 
+Choix du sous-problème le plus récemment créé.
 L'avantage est que cette approche facilite la réoptimisation lors du calcul de borne, car il n'y a que peu de changements apportés par rapport au dernier sous-problème traité.
 Le désavantage est que cela peut créer un grand nombre de sous-problèmes.
-Une autre option est la règle de la meilleure borne: choisir le sous-problème ayant la plus grande borne supérieure.
+	\item 
+Règle de la meilleure borne: choisir le sous-problème ayant la plus grande borne supérieure.
+\end{enumerate}
 
 \end{frame}
 
@@ -542,10 +544,9 @@ sous-problème 4: $x_1 = 1$, $x_2 = 1$.
 \end{frame}
 
 \begin{frame}
-\frametitle{Exemple: suite}
+\frametitle{Exemple: sous-problème 3}
 
-Considérons tout d'abord le sous-problème 3 ($x_1 = 1$, $x_2 = 0$).
-Nous obtenons le problème
+$x_1 = 1$, $x_2 = 0$. Sous-problème:
 \begin{align*}
 \max z_3 =\ & 6x_3 + 4x_4 + 9 \\
 \st{} & 5 x_3 + 2x_4 \leq 4 \\
@@ -556,19 +557,19 @@ Nous obtenons le problème
 \end{align*}
 La solution de la relaxation PL est
 \[
-( x_1, x_2, x_3, x_4) = \left(1,0, \frac{4}{5},0 \right).
+( x_1, x_2, x_3, x_4) = \left(1,0, \frac{4}{5},0 \right),
 \]
 et
 \[
-Z = 13+\frac{4}{5}:\ Z_3 \leq 13.
+Z = 13+\frac{4}{5};\ Z_3 \leq 13.
 \]
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Exemple: suite}
+\frametitle{Exemple: sous-problème 4}
 
-Le sous-problème 4 ($x_1 = 1$, $x_2 = 1$) devient
+$x_1 = 1$, $x_2 = 1$. Sous-problème:
 \begin{align*}
 \max z_4 =\ & 6x_3 + 4x_4 + 14 \\
 \st{} & 5 x_3 + 2x_4 \leq 1 \\
@@ -583,7 +584,7 @@ La solution de la relaxation PL est
 \]
 et
 \[
-Z = 16:\ Z_4 \leq 16.
+Z = 16;\ Z_4 \leq 16.
 \]
 
 \end{frame}
@@ -591,18 +592,21 @@ Z = 16:\ Z_4 \leq 16.
 \begin{frame}
 \frametitle{Exemple: suite}
 
-Aucun des tests d'élagage ne s'applique sur ces sous-problèmes.
-Nous devons dès lors choisir un des deux sous-problèmes pour effectuer un branchement, puisque ce sont ceux créés le plus récemment.
-Nous choisissons celui de plus grande borne supérieure, soit le sous-problème 4.
+Aucun des tests d'élagage ne s'applique sur ces deux sous-problèmes.
+Nous en choisissons un pour effectuer un branchement, puisque ce sont ceux créés le plus récemment.
+Nous prenojs celui de plus grande borne supérieure, soit le sous-problème 4.
 
 \mbox{}
 
 Deux possibilités existent: brancher sur la variable fractionnaire, $x_4$, ou choisir la prochaine variable non fixée, $x_3$.
 Nous explorons la deuxième approche: nous branchons sur $x_3$.
 
-\mbox{}
+\end{frame}
 
-Le sous-problème 5, défini avec $x_1 = 1$, $x_2 = 1$, $x_3 = 0$, s'écrit
+\begin{frame}
+\frametitle{Exemple: sous-problème 5}
+
+$x_1 = 1$, $x_2 = 1$, $x_3 = 0$. Sous-problème:
 \begin{align*}
 \max z_5 =\ & 4x_4 + 14 \\
 \st{} & 2x_4 \leq 1 \\
@@ -610,11 +614,6 @@ Le sous-problème 5, défini avec $x_1 = 1$, $x_2 = 1$, $x_3 = 0$, s'écrit
 & x_4 \leq 1 \\
 & x_4 \mbox{ binaire}.
 \end{align*}
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Exemple: suite}
 
 La solution de la relaxation PL est
 \[
@@ -625,7 +624,12 @@ et
 Z = 16:\ Z_5 \leq 16.
 \]
 
-Le sous-problème 6, défini avec $x_1 = 1$, $x_2 = 1$, $x_3 = 1$, s'écrit
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: sous-problème 6}
+
+$x_1 = 1$, $x_2 = 1$, $x_3 = 1$. Sous-problème:
 \begin{align*}
 \max z_5 =\ & 4x_4 + 20 \\
 \st{} & 2x_4 \leq -1 \\
@@ -641,8 +645,8 @@ La relaxation PL n'a pas de solution réalisable: ce sous-problème est élagué
 \frametitle{Exemple: suite}
 
 Le sous-problème 5 ne peut pas être élagué.
-Il est créé le plus récemment parmi les sous-problèmes non élagués (3 et 5), aussi choisissons-nous le pour effectuer un branchement.
-Nous branchons sur $x_4$ et générons les sous-problèmes suivants:
+Il est créé le plus récemment parmi les sous-problèmes non élagués (3 et 5); nous le choisissons pour effectuer un branchement.
+En branchant sur $x_4$, nous générons
 \begin{itemize}
 \item
 sous-problème 7: $x_1 = 1$, $x_2 = 1$, $x_3 = 0$, $x_4 = 0$;
@@ -652,28 +656,33 @@ sous-problème 8: $x_1 = 1$, $x_2 = 1$, $x_3 = 0$, $x_4 = 1$.
 
 \mbox{}
 
-Toutes les variables sont fixées, aussi pouvons-nous directement résoudre ces sous-problèmes. 
+Toutes les variables sont fixées.
+\begin{itemize}
+	\item 
 Le sous-problème 7 a pour solution $(x_1, x_2, x_3, x_4) = (1, 1, 0, 0)$, pour $Z_7 = 14$.
-La solution est entière, aussi nous élaguons le sous-problème en vertu du Test 3.
-Puisque $Z_7 > Z^*$, $Z^* = 14$ et la solution du sous-problème devient la meilleure solution courante.
-Le sous-problème 8 a pour solution $(x_1, x_2, x_3, x_4) = (1, 1, 0, 1)$.
-Cette solution n'est pas réalisable, car la première contrainte $(2x_4 \leq 1)$ est violée.
-Le sous-problème est par conséquent élagué par le Test 2.
+Élagage en vertu du Test 3 (solution entière).
+Puisque $Z_7 > Z^*$, $Z^* = 14$ et $(1, 1, 0, 0)$ devient la meilleure solution courante.
+	\item 
+La solution du sous-problème 8 est $(1, 1, 0, 1)$, non-réalisable réalisable, car la première contrainte $(2x_4 \leq 1)$ est violée. Élagage en vertu du Test 2.
+\end{itemize} 
 
 \end{frame}
 
 \begin{frame}
-\frametitle{Exemple: suite}
+\frametitle{Exemple: sous-problème 3 et fin}
 
 Le sous-problème 3 est le seul non encore élagué.
-Appliquons le Test 1: $Z_3 = 13 \leq 14 = Z*$.
-Le sous-problème est donc elagué.
-Comme il n'y a plus de sous-problèmes non élagués, nous pouvons nous arrêter.
-La solution optimale est:
-\[
-(x_1, x_2, x_3, x_4) = (1,1,0,0),
-\]
-et la valeur optimale est $Z^* = 14$.
+
+\mbox{}
+
+Nous l'élaguons suite à l'application du Test 1: $Z_3 = 13 \leq 14 = Z*$.
+
+\mbox{}
+
+Arrêt: il n'y a plus de sous-problèmes non élagués.
+$$
+x^* = (1,1,0,0),\qquad Z^* = 14.
+$$
 
 \end{frame}
 
@@ -720,16 +729,15 @@ $F(j)$: le sous-problème est élagué par le Test j
 \begin{frame}
 \frametitle{Algorithme de branch \& bound: cas général}
 
-Considérons à présent le cas général d'un modèle de programmation (mixte) en nombres entiers: variables entières générales et variables continues.
-
-\mbox{}
-
-Comme précédemment, nous ignorons dans un premier temps les contraintes d'intégralité (les valeurs des variables entières sont traitées comme variables continues), et résolvons le programme linéaire résultant.
-
-\mbox{}
-
+\begin{itemize}
+	\item 
+\textcolor{red}{Programmation (mixte) en nombres entiers}: variables entières générales et variables continues.
+	\item 
+Nous ignorons dans un premier temps les contraintes d'intégralité (les valeurs des variables entières sont traitées comme variables continues), et résolvons le programme linéaire résultant.
+	\item 
 Si la solution optimale de ce programme satisfait aux contraintes d'intégralité, alors cette solution est aussi solution optimale du programme avec variables entières.
 Sinon, il doit exister au moins une variable $x_j$ dont la valeur $\alpha$ est fractionnaire.
+\end{itemize}
 
 \end{frame}
 
@@ -739,8 +747,14 @@ Sinon, il doit exister au moins une variable $x_j$ dont la valeur $\alpha$ est f
 Soit $d \in \mathbb{R}$. Dénotons $\lfloor d \rfloor$ le plus grand entier tel que $\lfloor d \rfloor \leq d$.
 
 \mbox{}
-La procédure de branchement se généralise alors comme suit: nous séparons alors le problème relaxé en deux sous-problèmes;
-un sous-problème contiendra la contrainte $x_j \leq \lfloor \alpha \rfloor$ et le second la contrainte $x_j \geq \lceil \alpha \rceil  = \lfloor \alpha \rfloor + 1$.
+
+\textcolor{blue}{Procédure de branchement} nous séparons alors le problème relaxé en deux sous-problèmes:
+\begin{itemize}
+	\item 
+un sous-problème contiendra la contrainte $x_j \leq \lfloor \alpha \rfloor$;
+\item
+ajouter au second la contrainte $x_j \geq \lceil \alpha \rceil  = \lfloor \alpha \rfloor + 1$.
+\end{itemize}
 Nous répétons le processus pour chacun des sous-problèmes.
 
 \mbox{}
@@ -787,13 +801,13 @@ Poser $Z^* = -\infty$.
 \item
 Appliquer le calcul de borne et les critères d'élagage à la racine (aucune variable fixée).
 \item
-Critere d'arrêt : s'il n'y a plus de sous-problèmes non élagués, arrêter.
+Si tous les sous-problèmes ont été élagués, arrêt.
 \end{enumerate}
 \item
 Branchement:
 \begin{enumerate}[(a)]
 \item
-Parmi les sous-problèmes non encore élagués, choisir celui qui a été créé le plus récemment (s'il y a égalité, choisir celui de plus grande borne supérieure).
+Choisir le sous-problème non encore élagué créé le plus récemment. Si égalité, choisir celui de plus grande borne supérieure.
 \item
 Appliquer le Test 1: si le sous-problème est élagué, retourner en 2.
 \item
@@ -846,7 +860,7 @@ où (PRL) désigne la relaxation linéaire du problème restreint.
 
 \mbox{}
 
-Nous voulons que si suffisamment de coupes sont ajoutees, en résolvant le problème relaxé, la solution optimale est entière et donc une solution optimale pour \eqref{eq:PLNE}.
+But: si suffisamment de coupes sont ajoutées, en résolvant le problème relaxé, la solution optimale est entière et donc optimale pour \eqref{eq:PLNE}.
 
 \end{frame}
 
@@ -856,14 +870,14 @@ Nous voulons que si suffisamment de coupes sont ajoutees, en résolvant le probl
 Considérons à nouveau le programme
 \begin{align*}
 	\max\ & z = x_1+5x_2\\
-	\st & x_1+10x_2 \leq 20, \\
+	\st & x_1+4x_2 \leq 8,4, \\
 	& x_2 \leq 2, \\
 	& x_1, x_2 \geq 0 \mbox{ et entiers}.
 \end{align*}
 Ajoutons la contrainte $x_1 + 2x_2 \leq 4$:
 \begin{align*}
 	\max\ & z = x_1+5x_2\\
-	\st & x_1+10x_2 \leq 20, \\
+	\st & x_1+4x_2 \leq 8,4, \\
 	& x_2 \leq 2, \\
 	& x_1 + 2x_2 \leq 4, \\
 	& x_1, x_2 \geq 0 \mbox{ et entiers}.
@@ -884,11 +898,14 @@ Ajoutons la contrainte $x_1 + 2x_2 \leq 4$:
 		\foreach \y in {0,1,2}
 		\draw (1pt,\y) -- (-1pt,\y) node[anchor=east] {$\y$};
 		
-		\filldraw[fill=yellow]
-		(0,0) -- (0,2) -- (2,1.8) -- (2,0) -- (0,0);
+\filldraw[fill=yellow]
+(0,0) -- (0,2.1) -- (2,1.6) -- (2,0) -- (0,0);
+
+%		\filldraw[fill=yellow]
+%		(0,0) -- (0,2) -- (2,1.8) -- (2,0) -- (0,0);
 		
 		\filldraw[fill=red]
-		(0,2) -- (2,1) -- (2,1.8) -- (0,2);
+		(0,2.1) -- (0,2) -- (2,1) -- (2,1.6) -- (0,2.1);
 
 		\draw (-1,2.2) -- (4,1.2) node[above,right,sloped] {$z^* = 10 = x_1+5x_2$};
 		\draw [dashed](-1,2.5) -- (4,0) node[above,right,sloped] {$x_1 + 2x_2 = 4$};
@@ -907,10 +924,11 @@ Ajoutons la contrainte $x_1 + 2x_2 \leq 4$:
 \begin{itemize}
 	\item 
 \textcolor{blue}{Principe des méthodes de coupes:}
-Introduire de nouvelles contraintes linéaires au problème pour
+ajouter de nouvelles contraintes linéaires d'inégalité au problème pour
 réduire le domaine réalisable du problème relaxé sans pour
 autant éliminer de points du domaine réalisable du problème
 avec les contraintes de nombre entier sur les variables.
+Une telle contrainte est une \textcolor{red}{coupe valide}.
 	\item 
 La procédure consiste à résoudre une suite de problèmes
 relaxés jusqu’à ce qu’une solution optimale en nombres entiers
@@ -972,15 +990,21 @@ où $y_{i,0} \in \mathbb{R}^+ \setminus \mathbb{N}$ et $J$ est l'ensemble des in
 \begin{frame}
 \frametitle{Construction des coupes}
 
-Comme $x \geq 0$, nous avons
+Du tableau du simplexe,
+\begin{equation}
+x_k + \sum_{j \in J} y_{i,j}x_j = y_{i,0}.
+\label{eq:cut1}
+\end{equation}
+Comme $x \geq 0$, nous avons aussi
 $$
-x_k + \sum_{j \in J} \lfloor y_{i,j} \rfloor x_j \leq x_k + \sum_{j \in J} y_{i,j}x_j = y_{i,0}.
+x_k + \sum_{j \in J} \lfloor y_{i,j} \rfloor x_j \leq y_{i,0}
 $$
-Si nous considérons la contrainte d'intégralité, nous devrions avoir
-$$
+et si $x$ satisfait les contraintes d'intégralité,
+\begin{equation}
 x_k + \sum_{j \in J} \lfloor y_{i,j} \rfloor x_j \leq \lfloor y_{i,0} \rfloor.
-$$
-Cette dernière inégalité doit être satisfaite par toute solution $x$ réalisable de \eqref{eq:PLNE}, comme par rapport à la base $B$, les contraintes linéaires peuvent se réécrire $B^{-1}Ax = B^{-1}b = y$.
+	\label{eq:cut2}
+\end{equation}
+Cette dernière inégalité doit être satisfaite $\forall x \in \cF(\ref{eq:PLNE})$, comme par rapport à la base $B$, les contraintes linéaires peuvent se réécrire $B^{-1}Ax = B^{-1}b = y$.
 %De plus, comme $\cF{\eqref{eq:PLNE}} \subset \cF{\eqref{eq:PL}}$.
 
 \end{frame}
@@ -988,8 +1012,7 @@ Cette dernière inégalité doit être satisfaite par toute solution $x$ réalis
 \begin{frame}
 \frametitle{Construction des coupes}
 
-
-En combinant ces deux inégalités, nous obtenons que toute solution de \eqref{eq:PLNE} doit satisfaire
+En soustrayant \eqref{eq:cut1} de \eqref{eq:cut2}, nous  obtenons que si $x \in \cF(\ref{eq:PLNE})$,
 $$
 \sum_{j \in J} \left( \lfloor y_{i,j} \rfloor - y_{i,j} \right) x_i \leq \lfloor y_{i,0} \rfloor - y_{i,0}.
 $$
