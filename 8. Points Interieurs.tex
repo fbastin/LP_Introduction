@@ -1435,7 +1435,7 @@ $$
 
 En notant	
 $$
-r_p = s + A^Ty - c,\quad r_d = \begin{pmatrix} Ax \\ x-S^{-1}\bone \end{pmatrix},\quad H = S^{-2}
+r_d = s + A^Ty - c,\quad r_p = \begin{pmatrix} Ax \\ x-S^{-1}\bone \end{pmatrix},\quad H = S^{-2}
 $$
 le système devient
 	$$
@@ -1448,7 +1448,7 @@ le système devient
 	=
 	-
 	\begin{pmatrix}
-		r_d \\ r_p
+		r_p \\ r_d
 	\end{pmatrix},
 	$$
 
@@ -1456,8 +1456,8 @@ le système devient
 
 Après réorganisation des équations, nous pouvons obtenir
 \begin{align*}
-	\Delta y &= (AHA^T)^{-1} (Ax - AHr_p )\\
-	\Delta s &= -A^T\Delta y - r_p \\
+	\Delta y &= (AHA^T)^{-1} (Ax - AHr_d )\\
+	\Delta s &= -A^T\Delta y - r_d \\
 	\Delta x &= -H\Delta s - x + S^{-1}\bone
 \end{align*}
 	

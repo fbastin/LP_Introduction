@@ -12,7 +12,7 @@
 \usepackage{xcolor}
 % \setbeamercovered{transparent}
 %\usecolortheme{crane}
-\title[IFT2505]{IFT 2505\\Programmation Linéaire\\Problèmes de transport}
+\title[Transport]{Programmation Linéaire\\Problèmes de transport}
 \author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal}
 \date{}
 
@@ -199,6 +199,38 @@ La somme de l'offre, ainsi que de la demande, est 180.
 \end{frame}
 
 \begin{frame}
+\frametitle{Généralisation}
+
+Il est facile d'étendre la formulation au cas plus réaliste où
+$$
+\sum_{j = 1}^n x_{ij} \leq a_i,\ i = 1,\ldots,m, \quad
+\sum_{i = 1}^m x_{ij} \geq b_j,\ j = 1,\ldots,n,
+$$
+donnant lieu au problème
+\begin{align*}
+	\min_x \ & \sum_{i = 1}^m \sum_{j = 1}^n c_{ij} x_{ij} \\
+	\mbox{s.à. } & \sum_{j = 1}^n x_{ij} \leq a_i, \ i = 1,2,\ldots,m \\
+	& \sum_{i = 1}^m x_{ij} \geq b_j,\ j = 1,2,\ldots,n \\
+	& x_{ij} \geq 0,\ \forall\, i, j.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Généralisation}
+
+Nous pouvons considérons un excédent de production au travers de variables d'écart qui vont désservir une destination virtuelle, à coût nul, permettant de tenir compte de ce surplus, en considérant une demande $b_{n+1} = \sum_{i = 1}^m a_i - \sum_{j = 1}^n b_j$:
+\begin{align*}
+	\min_x \ & \sum_{i = 1}^m \sum_{j = 1}^n c_{ij} x_{ij} \\
+	\mbox{s.à. } & \sum_{j = 1}^n x_{ij} + s_{i,n+1} = a_i, \ i = 1,2,\ldots,m \\
+	& \sum_{i = 1}^m x_{ij} = b_j,\ j = 1,2,\ldots,n \\
+	& \sum_{i = 1}^m s_{i,n+1} = b_{n+1} \\
+	& x_{ij} \geq 0,\ \forall\, i, j,\ \quad s_{i,n+1} \geq 0,\ \forall\, i.
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
 \frametitle{Réalisabilité et optimalité}
 
 Première étape: montrer que le problème est réalisable.
@@ -259,7 +291,7 @@ On pourrait faire la même chose avec n'importe quelle contrainte. Il y a donc u
 
 \mbox{}
 
-On va établir qu'on ne peut trouver qu'une redondance, et donc ramener le problème à un ensemble de $m + n - 1$ vecteurs. Une solution de base réalisable non-dégénérée consistera de $m + n -1$ variables.
+On va établir qu'on ne peut trouver qu'une redondance, et donc ramener le problème à un ensemble de $m + n - 1$ vecteurs. Une solution de base réalisable non-dégénérée consistera de $m + n -1$ variables de base.
 
 \end{frame}
 
@@ -339,7 +371,7 @@ Dès lors, l'ensemble d'équations est linéairement indépendant.
 \begin{frame}
 \frametitle{Découverte d'une solution réalisable de base}
 
-Du théorème précédent, on voit qu'une base pour le problème de transport consiste de $m+n-1$ vecteurs, et qu'un solution réalisable de base non dégénérée consiste de $m+n-1$ variables.
+Du théorème précédent, on voit qu'une base pour le problème de transport consiste de $m+n-1$ vecteurs, et qu'un solution réalisable de base-non dégénérée consiste de $m+n-1$ variables.
 
 \mbox{}
 
@@ -454,6 +486,20 @@ La prochaine entrée sera alors un zéro, indiquant une solution de base dégén
 \end{frame}
 
 \begin{frame}
+\frametitle{Solutions de base}
+
+\begin{itemize}
+\item 
+La règle du coin Nord-Ouest permet de trouver facilement une solution de base réalisable.
+\item
+Comment caractériser les autres solutions de base?
+\item
+Le simplexe peut-il se réinterpréter plus simplement dans ce cadre?
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
 \frametitle{Matrices triangulaires}
 
 {\bf Définition.}
@@ -494,11 +540,11 @@ peut être mise sous la forme d'une matrice triangulaire inférieure au moyen d'
 \begin{frame}
 \frametitle{Théorème de triangularité de base}
 
-{\sl Chaque base du problème de transport est triangulaire.}
+\textcolor{red}{\sl Chaque base du problème de transport est triangulaire.}
 
 \mbox{}
 
-On repart du système de contraintes
+Pour le voir, repartons du système de contraintes
 \[
 \begin{matrix}[l]
 x_{11} + \ldots + x_{1n} & & & & = & a_1 \\
@@ -583,7 +629,22 @@ Considérons la solution réalisable
 10 & 50 & 20 & 80 & 20 & \\
 \end{tabular}
 \end{center}
-Il est facile de voir que la matrice $\bx$ est triangulaire.
+
+Nous allons réexprimer ce système en triangularisation la matrice associée.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Procédure de triangularisation}
+
+\begin{description}
+	\item[\textcolor{blue}{Étape 1.}]
+Trouver une ligne avec exactement une entrée différente de zéro.
+	\item[\textcolor{blue}{Étape 2.}]
+Former une sous-matrice de la matrice utilisée à l'étape 1 en barrant la ligne
+trouvée à l'étape 1 et la colonne correspondant à l'entrée différente de zéro dans cette ligne.
+Revenir à l'étape 1 avec cette sous-matrice.
+\end{description}
 
 \end{frame}
 
@@ -608,7 +669,7 @@ x_{24} + x_{34} + x_{44} &= 80 \\
 \begin{frame}
 \frametitle{Théorème de triangularité de base: illustration}
 
-Sous forme matricielle, en laissant tomber la dernière contrainte,
+Sous forme matricielle, en laissant tomber la dernière contrainte, nous avons
 \[
 \begin{pmatrix}
  1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -648,8 +709,7 @@ x_{45}
 \begin{frame}
 \frametitle{Théorème de triangularité de base: illustration}
 
-Permutons la première et la cinquième lignes.
-Cela donne le système suivant:
+La cinquième ligne a un seul élément non-nul. Nous la permutons avec la première ligne, ce qui donne
 \[
 \begin{pmatrix}
  1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -689,7 +749,8 @@ x_{45}
 \begin{frame}
 \frametitle{Théorème de triangularité de base: illustration}
 
-Permutons ensuite la deuxième et la septième lignes.
+La première ligne est fixée, et nous devons identifier une ligne avec un seul élément non nul dans les colonnes 2 à 8.
+C'est le cas de la septième ligne, que nous permutons avec la première.
 \[
 \begin{pmatrix}
  1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -729,7 +790,7 @@ x_{45}
 \begin{frame}
 \frametitle{Théorème de triangularité de base: illustration}
 
-Permutons maintenant la deuxième et la quatrième colonnes
+Permutons maintenant la deuxième et la quatrième colonnes pour allumer le 1 sur la deuxième colonne. L'ordre des variables s'en trouve aussi modifiée.
 \[
 \begin{pmatrix}
  1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -769,7 +830,7 @@ x_{45}
 \begin{frame}
 \frametitle{Théorème de triangularité de base: illustration}
 
-On continue\ldots
+Nous continuons en permutant la troisième et la sixième colonne.
 \[
 \begin{pmatrix}
  1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -809,6 +870,7 @@ x_{45}
 \begin{frame}
 \frametitle{Théorème de triangularité de base: illustration}
 
+Permutons à présent la cinquième et la quatrième ligne.
 \[
 \begin{pmatrix}
  1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -848,6 +910,7 @@ x_{45}
 \begin{frame}
 \frametitle{Théorème de triangularité de base: illustration}
 
+Permutons à présent la sixième et la cinquième ligne.
 \[
 \begin{pmatrix}
  1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -887,6 +950,7 @@ x_{45}
 \begin{frame}
 \frametitle{Théorème de triangularité de base: illustration}
 
+Nous devons permuter la cinquième et la sixième colonnes.
 \[
 \begin{pmatrix}
  1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -926,6 +990,7 @@ x_{45}
 \begin{frame}
 \frametitle{Théorème de triangularité de base: illustration}
 
+Permutons à présent la sixième et la septième lignes.
 \[
 \begin{pmatrix}
  1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -965,6 +1030,7 @@ x_{45}
 \begin{frame}
 \frametitle{Théorème de triangularité de base: illustration}
 
+Enfin, nous permutons à présent la septième et la dernière lignes.
 \[
 \begin{pmatrix}
  1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
@@ -998,15 +1064,14 @@ x_{45}
 60 \\
 \end{pmatrix}
 \]
-
-Il est facile de voir que l'on bien le même système d'équations qu'au départ.
+Comme nous n'avons fait que des permutations, nous avons le même système d'équations qu'au départ.
 
 \end{frame}
 
 \begin{frame}
 \frametitle{Solutions entières}
 
-Puisque n'importe quelle matrice de base est triangulaire , il suit que le processus de substitution en arrière impliquera simplement des additions et des soustractions de lignes et de colonnes. Aucune multiplication n'est requise.
+Puisque n'importe quelle matrice de base est triangulaire, il suit que le processus de substitution en arrière impliquera simplement des additions et des soustractions de lignes et de colonnes. Aucune multiplication n'est requise.
 
 \mbox{}
 
@@ -1033,7 +1098,7 @@ Etant donnée une base $B$, nous allons développer l'équation
 \[
 \lambda^T B = c_B^T.
 \]
-Si $x_{ij}$ est dans la base, la colonne correspondante de $A$ (et donc de $B$) aura exactement deux entrées égales à +1 (les autres sont nulles).
+Si $x_{ij}$ est dans la base, la colonne correspondante de $A$ (et donc de $B$) aura exactement deux entrées égales à +1 (les autres sont nulles), à la $i^e$ place de la portion supérieure, et la $j^e$ place de la portion inférieure.
 
 \end{frame}
 
@@ -1057,7 +1122,7 @@ Si les coûts $c_{ij}$ d'un problème de transport sont tous entiers, alors (en 
 \end{frame}
 
 \begin{frame}
-\frametitle{Coûts réduits}
+\frametitle{Multiplicateurs du simplexe}
 
 De
 \[
@@ -1065,11 +1130,11 @@ r_D^T = c_D^T - \lambda^T D,
 \]
 nous avons
 \[
-r_{ij} = c_{ij} - u_i - v_j,
-\]
-si $x_{ij}$ est hors-base. Si $x_{ij}$ est une variable de base,
-\[
-r_{ij} = 0.
+r_{ij} =
+\begin{cases}
+c_{ij} - u_i - v_j &  \text{ si $x_{ij}$ est hors base,} \\
+0 & \text{ si $x_{ij}$ est variable de base.}
+\end{cases}
 \]
 On peut facilement calculer les coûts réduits en considérant le tableau
 \begin{center}
@@ -1091,7 +1156,7 @@ $v_1$ & $v_2$ & $v_3$ & \ldots & $v_n$ & \\
 \end{frame}
 
 \begin{frame}
-\frametitle{Coûts réduits}
+\frametitle{Multiplicateurs du simplexe}
 
 \begin{description}
 \item[\'Etape 1]
@@ -1109,7 +1174,7 @@ Si tous les multiplicateurs ont été déterminés, arrêt. Sinon, retour à l'�
 \end{frame}
 
 \begin{frame}
-\frametitle{Coûts réduits: exemple}
+\frametitle{Exemple}
 
 En reprenant l'exemple précédant, et en posant (arbitrairement) $v_5 = 0$
 \begin{center}
@@ -1137,7 +1202,7 @@ On parcourt alors le tableau à la recherche d'un élément dont un seul multipl
 \end{frame}
 
 \begin{frame}
-\frametitle{Coûts réduits: exemple}
+\frametitle{Exemple}
 
 En continuant de la sorte, nous obtenons le tableau
 \begin{center}
@@ -1151,17 +1216,167 @@ En continuant de la sorte, nous obtenons le tableau
 \end{tabular}
 \end{center}
 
-Nous observons que certains coûts réduits sont négatifs, et par conséquant, nous allons devoir échanger une variable de base et une variable hors base.
+%Nous observons que certains coûts réduits sont négatifs, et par conséquent, nous allons devoir échanger une variable de base et une variable hors base.
 
 \end{frame}
 
 \begin{frame}
 \frametitle{Expression des colonnes hors base}
 
-\begin{theorem}
-Soit $B$ une base de $A$ (en ignprant une ligne) et soit $d$ une colonne hors-base de $A$.
+\begin{mltheorem}
+Soit $B$ une base de $A$ (en ignorant une ligne) et soit $d$ une colonne hors-base de $A$.
 Si $y = B^{-1}d$, alors $y_i \in \{ -1, 0, +1 \}$, $i = 1,\ldots,n$.
-\end{theorem}
+\end{mltheorem}
+
+\begin{itemize}
+	\item 
+Lorsqu'une unité d'une nouvelle variable est ajoutée, les variables de base actuelles changeront chacune de $+1$, $-1$, ou $0$.
+	\item 
+Si la nouvelle variable a une valeur $\theta$, les variables de base
+change de +$\theta$, -$\theta$, ou 0. Il suffit donc de déterminer les signes de
+changement.
+	\item 
+Cela revient à redistribuer les flux sur le réseau.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Échange de variables: exemple}
+
+Considérons le tableau où le + indique que nous faisons entrer la variable $x_{53}$.
+$$
+	\begin{array}{|c|c|c|c|c|c}
+		\hline
+		& & 10^0 & & & 10 \\
+		\hline
+		& & 20^- & & 10^+ & 30 \\
+		\hline
+		20^+ & 10^0 & & & 30^- & 60 \\
+		\hline
+		10^0 & & & & & 10 \\
+		\hline
+        10^- & & + & 40^0 & & 50 \\
+		\hline
+		40 & 10 & 30 & 40 & 40 & \\
+	\end{array}
+$$
+En déterminer quelles lignes/colonnes n'ont qu'une entrée dans le signe de changement n'est pas déterminé, nous voyons que l'ordre de considération des variables est $x_{13}$, $x_{23}$, $x_{25}$, $x_{35}$, $x_{32}$, $x_{31}$, $x_{41}$, $x_{51}$, $x_{54}$.
+
+La plus petite variable avec le signe moins est $x_{51} = 10$, aussi $\theta = 10$.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Multiplicateurs du simplexe}
+	
+Nous sommes à présent en mesure de décrire l'algorithme complet.
+
+\begin{description}
+\item[\'Etape 1]
+Calculer une solution réalisable de base initiale à l'aide de la règle du coin nord-ouest ou une autre méthode.
+\item[\'Etape 2]
+Calculer les multiplicateurs du simplexe et les coefficients de coût relatifs. Je tombe
+les coefficients de coût relatifs sont non négatifs, arrêt: la solution est optimale. Autrement,
+passer à l'étape 3.
+\item[\'Etape 3]
+Sélectionner une variable hors base de coût réduit négatif pour entre la base.
+Calculer le cycle de changement et poser la valeur de la variable à la plus petite variable de base avec un moins qui lui est attribuée.
+Mettre à jour la solution. Retour à l'étape 2.
+\end{description}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: coûts réduits}
+
+Repartons de l'exemple de départ. Le tableau des multiplicateurs du simplexe donnait
+\begin{center}
+	\begin{tabular}{ccccc|c}
+		{\bf 3} & {\bf 4} & 6 & 8 & 9 & 5 \\
+		2 & {\bf 2} & {\bf 4} & {\bf 5} & 5 & 3 \\
+		2 & 2 & 2 & {\bf 3} & 2 & 1 \\
+		3 & 3 & 2 & {\bf 4} & {\bf 2} & 2 \\
+		\hline
+		-2 & -1 & 1 & 2 & 0 & 
+	\end{tabular}
+\end{center}
+Les coûts réduits sont obtenus en calculant $r_{ij} = c_{ij} - u_i - v_j$, menant au tableau.
+\begin{center}
+	\begin{tabular}{ccccc|c}
+		{\bf 0} & {\bf 0} & 0 & 1 & 4 & 5 \\
+		1 & {\bf 0} & {\bf 0} & {\bf 0} & 2 & 3 \\
+		4 & 2 & 0 & {\bf 0} & 1 & 1 \\
+		3 & 2 & -1 & {\bf 0} & {\bf 0} & 2 \\
+		\hline
+		-2 & -1 & 1 & 2 & 0 & 
+	\end{tabular}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: échange de variables}
+
+Il y a un seul coût réduit négatif, et donc nous faisons entrer $x_{43}$ dans la base, en utilisant le tableau ci-dessous.
+$$
+\begin{array}{|c|c|c|c|c|c}
+\hline
+10 & 20 & & & & 30 \\
+\hline
+& 30 & 20^- & 30^+ & & 80 \\
+\hline
+& & & 10^0 & & 10 \\
+\hline
+& & + & 40^- & 20^0 & 60 \\
+\hline
+10 & 50 & 20 & 80 & 20 &
+\end{array}
+$$
+
+La plus petite variable de base avec le signe moins est $x_{23} = 20$. Nous échangeons donc $x_{43}$ et $x_{23}$ pour obtenir
+$$
+\begin{array}{|c|c|c|c|c|c}
+	\hline
+	10 & 20 & & & & 30 \\
+	\hline
+	& 30 & & 50 & & 80 \\
+	\hline
+	& & & 10 & & 10 \\
+	\hline
+	& & 20 & 20 & 20 & 60 \\
+	\hline
+	10 & 50 & 20 & 80 & 20 &
+\end{array}
+$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: coûts réduits}
+
+Nous calculons d'abord les multiplicateurs associées à la nouvelle base.
+\begin{center}
+	\begin{tabular}{ccccc|c}
+		{\bf 3} & {\bf 4} & 6 & 8 & 9 & 5 \\
+		2 & {\bf 2} & 4 & {\bf 5} & 5 & 3 \\
+		2 & 2 & 2 & {\bf 3} & 2 & 1 \\
+		3 & 3 & {\bf 2} & {\bf 4} & {\bf 2} & 2 \\
+		\hline
+		-2 & -1 & 0 & 2 & 0 & 
+	\end{tabular}
+\end{center}
+Les coûts réduits sont
+\begin{center}
+	\begin{tabular}{ccccc|c}
+		{\bf 0} & {\bf 0} & 1 & 1 & 4 & 5 \\
+		1 & {\bf 0} & 1 & {\bf 0} & 2 & 3 \\
+		3 & 2 & 1 & {\bf 0} & 2 & 1 \\
+		3 & 2 & {\bf 0} & {\bf 0} & {\bf 0} & 2 \\
+		\hline
+		-2 & -1 & 0 & 2 & 0 & 
+	\end{tabular}
+\end{center}
+Aucun coûts réduits négatif: la solution est optimale.
 
 \end{frame}
 
