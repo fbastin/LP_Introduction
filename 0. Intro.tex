@@ -93,7 +93,7 @@ Notebooks: \url{https://github.com/fbastin/optim};
 \item
 Slides: \url{https://github.com/fbastin/LP_Introduction};
 \item
-Canal discord: \url{https://discord.gg/Ehz38mDqG7}.
+Canal discord: \url{https://discord.gg/pAEyEFXM68}.
 \end{itemize}
 
 \end{frame}
@@ -348,9 +348,9 @@ JuMP: Julia for Mathematical Optimization
 
 \begin{verbatim}
 using JuMP
-using Clp
+using HiGHS
 
-m = Model(with_optimizer(Clp.Optimizer))
+m = Model(HiGHS.Optimizer)
 
 @variable(m, 0 <= x <= 4)
 @variable(m, 0 <= y <= 6)

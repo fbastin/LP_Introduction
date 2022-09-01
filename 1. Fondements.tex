@@ -76,7 +76,7 @@ $$
 $$
 admet pour seule solution $\alpha_i = 0$, $i = 1,\ldots,m$.
 \item
-$B$ est un ensemble générateur de $V$ si $\forall\, y \in V$, $\exists\, \alpha_i$, $i = 1,\ldots,m$ such that
+$B$ est un ensemble générateur de $V$ si $\forall\, y \in V$, $\exists\, \alpha_i$, $i = 1,\ldots,m$ tels que
 $$
 \sum_{i=1}^m \alpha_i u_i = y.
 $$
@@ -89,20 +89,9 @@ de $V$
 \end{frame}
 
 \begin{frame}
-	\frametitle{Rappel: base d'un espace vectoriel}
-	
-	\begin{itemize}
-		\item
-		$B$ est une base, si $B$ est un ensemble
-		linéairement indépendant et générateur
-		de $V$
-	\end{itemize}
-	
-\end{frame}
-
-\begin{frame}
 \frametitle{Théorème fondamental de la programmation linéaire}
 
+{\it
 Soit un PL sous forme standard, avec $\bA$ de dimension $m \times n$ et de rang plein (i.e. rang($\bA$) = m).
 \begin{itemize}
 \item
@@ -110,12 +99,12 @@ S'il y a une solution réalisable, alors il y a une solution de base réalisable
 \item
 S'il y a une solution réalisable optimale, alors il y a une solution de base réalisable optimale.
 \end{itemize}
+}
 
-\mbox{}
+\end{frame}
 
-{\it Preuve.}
-
-\mbox{}
+\begin{frame}
+\frametitle{Théorème fondamental de la programmation linéaire: preuve}
 
 Écrivons
 \[
@@ -139,7 +128,8 @@ Si $\bx$ est réalisable, alors
 \[
 x_1 \ba_1 + x_2 \ba_2 + \ldots + x_n \ba_n = \bb.
 \]
-Supposons qu'il y a exactement $p$ composantes $> 0$. S.p.d.g., supposons qu'il s'agit des $p$ premières composantes: $\bx_1$, \ldots, $\bx_p$. Alors, nous avons
+Supposons qu'il y a exactement $p$ composantes $> 0$, et s.p.d.g., qu'il s'agit des $p$ premières composantes: $\bx_1$, \ldots, $\bx_p$:
+%. Alors, nous avons
 \[
 x_1 \ba_1 + x_2 \ba_2 + \ldots + x_p \ba_p = \bb.
 \]
@@ -148,7 +138,21 @@ x_1 \ba_1 + x_2 \ba_2 + \ldots + x_p \ba_p = \bb.
 
 \underline{Cas 1:} $\ba_1$,\ldots,$\ba_p$ linéairement indépendants.
 
-Dès lors, $p \leq m$. Si $p = m$, la preuve est complète. Supposons donc $p < m$. Comme $\bA$ est de rang plein, on peut choisir $m-p$ vecteurs (colonnes de $\bA$) à partir des $n-p$ vecteurs restants pour former un ensemble de $m$ vecteurs linéairement indépendants. En affectant la valeur 0 aux $m-p$ variables correspondantes, on obtient une solution de base réalisable (dégénérée). 
+Dès lors, $p \leq m$.
+
+Si $p = m$, la preuve est complète.
+
+Supposons donc $p < m$.
+\end{frame}
+
+\begin{frame}
+\frametitle{Théorème fondamental de la PL: réalisabilité}
+
+Comme $\bA$ est de rang plein, on peut choisir $m-p$ vecteurs (colonnes de $\bA$) à partir des $n-p$ vecteurs restants pour former un ensemble de $m$ vecteurs linéairement indépendants.
+
+\mbox{}
+
+En affectant la valeur 0 aux $m-p$ variables correspondantes, on obtient une solution de base réalisable (dégénérée). 
 \end{frame}
 
 \begin{frame}
@@ -156,34 +160,45 @@ Dès lors, $p \leq m$. Si $p = m$, la preuve est complète. Supposons donc $p < 
 
 \underline{Cas 2:} $\ba_1,\ldots,\ba_p$ linéairement dépendants.
 
-Dès lors, pour un certain $\by = (y_1, y_2,\ldots, y_p,0,\ldots,0)$ $(\in \mathcal{R}^n)$, avec au moins un $y_i > 0$,
-\[
-y_1 \ba_1 + y_2 \ba_2 + \ldots y_p \ba_p = \bzero.
-\]
-Dès lors, pour un $\epsilon$ quelconque,
-\[
-(x_1 - \epsilon y_1) \ba_1 + (x_2 - \epsilon y_2) \ba_2 + \ldots (x_p - \epsilon y_p) \ba_p = \bb.
-\]
+Dès lors, $\exists\, \by = (y_1, y_2,\ldots, y_p,0,\ldots,0)$ $(\in \mathcal{R}^n)$, avec au moins un $y_i > 0$,
+\begin{align*}
+&y_1 \ba_1 + y_2 \ba_2 + \ldots y_p \ba_p = \bzero, \\
+& \forall \epsilon, \ (x_1 - \epsilon y_1) \ba_1 + (x_2 - \epsilon y_2) \ba_2 + \ldots (x_p - \epsilon y_p) \ba_p = \bb.
+\end{align*}
 Autrement dit,
 \[
 \bA(\bx-\epsilon \by) = \bb.
 \]
-Pour $\epsilon > 0$, et croissant, les composantes de $\bx - \epsilon \by$ augmentent, diminuent, ou restent constantes, suivant que $y_i$ est négatif, positif ou nul.
+Pour $\epsilon > 0$, et croissant,
+\begin{itemize}
+\item 
+si $y_k < 0$, $(x_k - \epsilon y_k)$ augmente,
+\item 
+si $y_k > 0$, $(x_k - \epsilon y_k)$ diminue,
+\item 
+si $y_k < 0$, $(x_k - \epsilon y_k)$ reste constant.
+\end{itemize}
 \end{frame}
 
 \begin{frame}
 \frametitle{Théorème fondamental de la PL: réalisabilité}
 
 Prenons
-\[
-\epsilon = \min \left\lbrace \frac{x_i}{y_i} \,\bigg|\, y_i > 0 \right\rbrace.
-\]
-Soit $j$ l'indice permettant d'atteindre ce minimum. Alors
-\[
+\begin{align*}
+\epsilon &= \min_{k \in (1,2,\ldots,p)} \left\lbrace \frac{x_k}{y_k} \,\bigg|\, y_k > 0 \right\rbrace (>0), \\
+j &\in \arg \min_{k \in (1,2,\ldots,p)} \left\lbrace \frac{x_k}{y_k} \,\bigg|\, y_k > 0 \right\rbrace.
+\end{align*}
+
+Alors
+$$
 x_j - \epsilon y_j = 0,
-\]
-et donc $\bx - \epsilon\by$ a au plus $p-1$ variables positives.
+$$
+et $\bx - \epsilon\by$ a au plus $p-1$ variables positives.
+
+\mbox{}
+
 En répétant ce processus si nécessaire, on peut éliminer des variables positives jusqu'à obtenir une solution réalisable avec des colonnes correspondantes qui sont linéairement indépendantes. Le cas 1 s'applique alors.
+
 \end{frame}
 
 \begin{frame}
@@ -217,7 +232,7 @@ Dès lors, $\bc^T\by = 0$. En effet, si $\bc^T\by \ne 0$, un $\epsilon$ suffisam
 
 \mbox{}
 
-On peut alors appliquer le procédé du cas 2 sur la réalisabilité, pour diminuer le nombre de composantes non-nulles de la solution, tout en maintenant l'optimalité, puis en se ramenant au cas 1.
+On peut alors appliquer le procédé du cas 2 sur la réalisabilité, pour diminuer le nombre de composantes non-nulles de la solution, tout en maintenant l'optimalité, puis en se ramener au cas 1.
 
 \end{frame}
 
@@ -386,11 +401,11 @@ Elles correspondent aux sommets du polytope réalisable.
 
 \begin{itemize}
 	\item
-	Un ensemble $C$ dans $E^n$ est dit convexe si pour tout $\bx_1$, $\bx_2 \in C$, et pour n'importe quel réel $\alpha$ tel que $0 \leq \alpha \leq 1$, le point $\alpha x_1 + (1-\alpha) x_2 \in C$.
+	Un ensemble $C$ dans $E^n$ est dit {\it convexe} si pour tout $\bx_1$, $\bx_2 \in C$, et pour n'importe quel réel $\alpha$ tel que $0 \leq \alpha \leq 1$, le point $\alpha x_1 + (1-\alpha) x_2 \in C$.
 	\item
-Le point $z = \alpha x_1 + (1-\alpha) x_2$, $\alpha \in [0, 1]$, est dit être une combinaison convexe de $x_1$ et $x_2$.
+Le point $z = \alpha x_1 + (1-\alpha) x_2$, $\alpha \in [0, 1]$, est dit être une {\it combinaison convexe} de $x_1$ et $x_2$.
 	\item
-La combinaison convexe est dite stricte si $\alpha \in (0, 1)$.
+La combinaison convexe est dite {\it stricte} si $\alpha \in (0, 1)$.
 	\item
 L'ensemble des combinaisons convexes de $x_1$ et $x_2$ est le segment de droite qui relie $x_1$ et $x_2$.
 \end{itemize}
