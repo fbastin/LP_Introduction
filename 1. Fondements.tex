@@ -220,15 +220,17 @@ similaire à la réalisabilité, à ceci près que nous devons montrer que pour 
 \begin{frame}
 \frametitle{Théorème fondamental de la PL: optimalité}
 
-La fonction objectif prend alors comme valeur
-\[
-\bc^T \bx - \epsilon \bc^T\by.
-\]
-Pour $\epsilon$ suffisamment proche de 0, qu'il soit positif ou négatif, $\bx - \epsilon \by$ est réalisable (on ne change pas le signe des composantes).
+Prenons à nouveau $\by$ t.q. $A\by = 0$ et $\exists\, i \in \{1,\ldots,p\}$ t.q. $y_i > 0$.
+Pour $\epsilon$ suffisamment proche de 0, positif ou négatif, $\bx - \epsilon \by \geq 0$ (réalisable).
 
 \mbox{}
 
-Dès lors, $\bc^T\by = 0$. En effet, si $\bc^T\by \ne 0$, un $\epsilon$ suffisamment petit et de signe adéquat conduirait à réduire la valeur de la fonction objectif, tout en maintenant la réalisabilité. Par conséquent, $\bx$ ne serait pas optimal.
+Supposons $\bc^T\by \ne 0$, et $\epsilon > 0$ si $\bc^T\by > 0$, $\epsilon < 0$ sinon. Alors
+$$
+\bc^T(\bx - \epsilon \by) = \bc^T \bx - \epsilon \bc^T\by < \bc^T \bx,
+$$
+donc $\bx$ n'est pas optimal.
+Dès lors, $\bc^T\by = 0$.
 
 \mbox{}
 
@@ -544,11 +546,10 @@ avec $x_i > 0$, $i = 1,\ldots,k$.
 
 \mbox{}
 
-Pour montrer que $\bx$ est une solution de base, nous devons montrer que $\ba_1, \ba_2,\ldots, \ba_k$ sont linéairement indépendants. Supposons par l'absurde que ce n'est pas le cas. Alors, il existe $\by = ( y_1, y_2,\ldots,y_k,0\ldots,0)$ tel que
+Pour montrer que $\bx$ est une solution de base, nous devons montrer que $\ba_1, \ba_2,\ldots, \ba_k$ sont linéairement indépendants. Supposons par l'absurde que ce n'est pas le cas. Alors, $\exists\, \by = ( y_1, y_2,\ldots,y_k,0\ldots,0) \ne 0$ t.q.
 \[
-y_1 \ba_1 + y_2 \ba_2 + \ldots + y_k \ba_k = 0,
+y_1 \ba_1 + y_2 \ba_2 + \ldots + y_k \ba_k = 0.
 \]
-avec au moins une des composantes de $y$ non nulle.
 
 \end{frame}
 
