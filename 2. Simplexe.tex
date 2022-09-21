@@ -1005,7 +1005,7 @@ $$
 	
 	On peut regarder $z$ comme une variable additionnelle, et ajouter l'équation
 	\[
-	c_1x_1 + c_2x_2 + \ldots + c_nx_n - z = -z_0
+	c_1x_1 + c_2x_2 + \ldots + c_nx_n - z = 0
 	\]
 	
 	\mbox{}
@@ -1015,35 +1015,38 @@ $$
 	\mbox{}
 	
 	Il n'est dès lors pas utile d'ajouter une colonne correspond à $z$ puisqu'elle serait toujours $(0, 0, \ldots, 0, 1)$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Dernière ligne du tableau}
+
+En annulant les coûts réduits associés aux variables de base, nous obtenons l'équation équivalente
+$$
+0x_1 + 0x_2 + \ldots + 0x_m + r_{m+1}x_{m+1} + r_{m+2}x_{m+2} + \ldots + r_nx_n - z = z_0.
+$$	
 	
-	\mbox{}
+\mbox{}
 	
-	Suite aux opérations de pivot, nous obtenons l'équation
-	\[
-	r_{m+1}x_{m+1} + r_{m+2}x_{m+2} + \ldots + r_nx_n - z = z_0.
-	\]
-	
-	\mbox{}
-	
-	La dernière ligne est donc traitée comme les autres.
+La dernière ligne est donc traitée comme les autres: nous annulons les entrées correspondant aux colonnes des variables de base.
 	
 \end{frame}
 
 \begin{frame}
 \frametitle{Objectif et contraintes}
 
-Dénotons par $\br$ le vecteur des coûts réduits. En considérant $z$ comme une variable, au mettre titre que les composantes de $\bx$, nous pouvons écrire le système étendu de contraintes
+En considérant $z$ comme une variable, au mettre titre que les composantes de $\bx$, nous pouvons écrire le système étendu de contraintes
 $$
 \begin{matrix}
 A\bx & + & 0 & = & \bb \\
-\br^T \bx & + & (-1)z & = &  -z_0 
+\bc^T \bx & + & (-1)z & = &  0 
 \end{matrix}
 $$
 Plutôt que de considérer $z$, nous pouvons prendre $-z$ et écrire
 $$
 \begin{matrix}
 	A\bx & + & 0 & = & \bb \\
-	\br^T \bx & + & 1(-z) & = &  -z_0
+	\bc^T \bx & + & 1(-z) & = &  0
 \end{matrix}
 $$
 
@@ -1056,7 +1059,7 @@ Sous forme matricielle, le système devient
 $$
 \begin{pmatrix}
 	A & 0 \\
-	\br^T & 1 
+	\bc^T & 1 
 \end{pmatrix}
 \begin{pmatrix}
 	\bx \\
@@ -1065,9 +1068,29 @@ $$
 =
 \begin{pmatrix}
 	\bb \\
-	 -z_0
+	0
 \end{pmatrix}
 $$
+
+S.p.d.g., comme précédemment, nous supposons que nous pouvons prendre les $m$ premières colonnes de $A$ comme base, i.e. $ A = \begin{pmatrix}
+	B & D
+\end{pmatrix}.$ Le système peut alors se réécrire
+$$
+\begin{pmatrix}
+	I & B^{-1}D & 0 \\
+	0 & \br^T & 1 
+\end{pmatrix}
+\begin{pmatrix}
+	\bx \\
+	-z 
+\end{pmatrix}
+=
+\begin{pmatrix}
+	B^{-1}\bb \\
+	 -z_0
+\end{pmatrix},
+$$
+où $\br$ est le vecteur des coûts réduits associés aux variables hors base.
 
 \end{frame}
 
