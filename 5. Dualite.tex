@@ -68,7 +68,8 @@ Le programme suivant est appelé {\bf dual}:
 \end{align*}
 $A \in \RR^{m \times n}$, $c, x, \in \RR^n$, $\lambda, b \in \RR^m$.
 
-Note: les contraintes duales peuvent aussi s'écrire $\lambda^T A \leq c^T$ (en appliquant l'opérateur de transposition de part et d'autre de l'inégalité).
+Note: les contraintes duales peuvent aussi s'écrire $\lambda^T A \leq c^T$.
+% (en appliquant l'opérateur de transposition de part et d'autre de l'inégalité).
 
 \end{frame}
 
@@ -293,7 +294,7 @@ $m$ nutriments
 $a_{ij}$: unités de nutriments $i$ dans le produit $j$.
 \end{itemize}
 
-Primal: on veut minimiser sa consommation tout en satisfaisant les besoins minimums
+\textcolor{red}{Primal}: on veut minimiser sa consommation tout en satisfaisant les besoins minimums
 \begin{align*}
 \min_x \ & c^T x \\
 \mbox{t.q. } & Ax \geq b \\
@@ -305,18 +306,21 @@ Primal: on veut minimiser sa consommation tout en satisfaisant les besoins minim
 \begin{frame}
 \frametitle{Exemple: le problème de régime alimentaire}
 
-Dual:
+\textcolor{red}{Dual}:
 \begin{align*}
 \max_{\lambda} \ & \lambda^T b \\
 \mbox{t.q. } & \lambda^T A \leq c^T \\
 & \lambda \geq 0
 \end{align*}
 
-$\lambda$ pourrait par exemple représenter le prix de compléments alimentaires; on veut maximiser le revenu de la vente de tels compléments.
-
-\mbox{}
-
-La contrainte traduit qu'on doit rester compétitif: le prix des compléments doivent rester inférieurs au coût des aliments originaux.
+\begin{itemize}
+\item 
+$\lambda$: prix de compléments alimentaires (un par nutriment).
+\item
+On veut maximiser le revenu de la vente de tels compléments.
+\item 
+Contrainte: on doit rester compétitif; le prix combiné des compléments doit rester inférieur au coût des aliments originaux.
+\end{itemize}
 
 \end{frame}
 
