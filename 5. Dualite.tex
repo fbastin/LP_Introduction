@@ -846,15 +846,18 @@ Nous avons donc $w = 0$, et de là, il existe un certain couple $(t_0, x_0)$ tel
 \begin{itemize}
 \item
 Si $t_0 > 0$, alors
-$x = x_0/t_0$ est réalisable pour le primal comme $Ax = b$ et $x \geq 0$, étant donné que $x_0 \geq 0$.
-Ainsi $r/t_0 = z^* - c^Tx_0/t_0 \leq 0$, comme $z^* \leq c^Tx$. Autrement dit, $r \leq 0$, alors qu'on supposait $r = 1$.
+$x = x_0/t_0$ est réalisable pour le primal comme $Ax = b$, $x \geq 0$. %, étant donné que $x_0 \geq 0$.
+Comme $z^* \leq c^Tx$, $r = t_0z^* - t_0c^Tx_0/t_0 \leq 0$, alors qu'on supposait $r = 1$.
 \item
 Si $t_0 = 0$, alors $w = Ax_0 = 0$, avec $x_0 \geq 0$.
 D'autre part, $1 = r = t_0z^* - c^Tx_0 = -c^Tx_0$, et donc $c^T x_0 = -1$.
 
-Si $x$ est réalisable pour le primal, alors $x+\alpha x_0$ est realisable pour tout $\alpha \geq 0$, comme $A(x+\alpha x_0) = Ax + \alpha A x_0 = Ax = b$, et $x+\alpha x_0 \geq 0$.
+Si $x$ est réalisable pour le primal, alors $\forall \alpha \geq 0$, $x+\alpha x_0$ est realisable comme $A(x+\alpha x_0) = Ax + \alpha A x_0 = b$, et $x+\alpha x_0 \geq 0$.
 
-De plus, $c^T(x+\alpha x_0) = c^Tx - \alpha$ peut être diminué à l'infini, en augmentant $\alpha$. Ceci contredit l'existence d'un minimum fini.
+De plus, $c^T(x+\alpha x_0) = c^Tx - \alpha \rightarrow -\infty$ quand $\alpha \rightarrow \infty$.
+Ceci contredit l'existence d'un minimum fini.
+\item
+Donc, $(1,0) \notin C$.
 \end{itemize}
 
 \end{proof}
@@ -865,21 +868,19 @@ De plus, $c^T(x+\alpha x_0) = c^Tx - \alpha$ peut être diminué à l'infini, en
 \frametitle{Dualité forte}
 
 \begin{proof}
-Donc, $(1,0) \notin C$.
-
-\mbox{}
 
 Comme $C$ est un ensemble convexe fermé, cela implique qu'il existe un hyperplan séparant $(1,0)$ et $C$. Autrement dit, $\exists [s, \lambda] \in \RR^{m+1}$, $[s, \lambda] \ne 0$, et une constante $k$ t.q.
 \begin{align*}
 s = (s, \lambda)^T (1,0) &< \inf \lbrace (s, \lambda)^T(r,w) \mbox{ t.q. } (r,w) \in C \rbrace \\
 & = \inf \lbrace sr + \lambda^Tw \mbox{ t.q. } (r,w) \in C \rbrace = k
 \end{align*}
-Comme $C$ est un cône, $k \geq 0$. En effet, si $k < 0$, $\exists (r,w) \in C$ t.q. $sr + \lambda^T w = \kappa < 0$.
-De plus, pour tout $\alpha \geq 0$, $\alpha (r,w) \in C$. Comme $s \alpha r + \lambda^T  \alpha w = \alpha\kappa$, pour $\alpha$ assez grand, $\alpha (r,w)$ violerait l'inégalité de l'hyperplan.
+Comme , $k \geq 0$. En effet,
+
+Si $k < 0$, $\exists (r,w) \in C$ t.q. $sr + \lambda^T w = \kappa < 0$, et $\forall \alpha \geq 0$, $\alpha (r,w) \in C$ car $C$ est un cône. Mais $\alpha (s r + \lambda^T  w) = \alpha\kappa < s$, pour $\alpha$ assez grand. Donc $k \geq 0$.
 
 \mbox{}
 
-Mais $(0,0) \in C$, donc $k \leq 0$, et de là, $k = 0$, et $s < 0$.
+Or $(0,0) \in C$, donc $k \leq 0$, et de là, $k = 0$, et $s < 0$.
 \end{proof}
 
 \end{frame}
@@ -905,7 +906,7 @@ Aussi, sans perte de généralités, $s = -1$
 \frametitle{Dualité forte}
 
 \begin{proof}
-Comme $\inf \lbrace s r + \lambda^T w \mbox{ t.q. } (r,w) \in C \rbrace = 0$, si $s = -1$, nous avons $\exists \lambda \in \RR^m$ t.q.
+Comme $\inf \lbrace s r + \lambda^T w \mbox{ t.q. } (r,w) \in C \rbrace = 0$, si $s = -1$, $\exists \lambda \in \RR^m$ t.q.
 \[
 -r + \lambda^Tw \geq 0,\ \forall (r,w) \in C.
 \]
@@ -1201,7 +1202,7 @@ Non réalisable & impossible & possible & possible \\
 	
 	\'Etant donné une base $B$, consistant de $m$ colonnes de $A$, n'importe quel autre vecteur peut être construit comme combinaison linéaire de ces vecteurs de base: soit $y \in \RR^m$,
 	\[
-	y = B B^{-1}y.
+	y = B \left(B^{-1}y\right).
 	\]
 	
 \end{frame}
@@ -1209,27 +1210,28 @@ Non réalisable & impossible & possible & possible \\
 \begin{frame}
 	\frametitle{Interprétation économique}
 	
-	S'il y a un coût unité $c_i$ associé avec chaque vecteur de base $a_i$, le coût d'un vecteur construit $y$ à partir de la base peut être calculé comme la combinaison linéaire correspondante des $c_i's$ associés à la base. L'expression de $y$ à partir de la base est
+	%, le coût d'un vecteur construit $y$ à partir de la base peut être calculé comme la combinaison linéaire correspondante des $c_i's$ associés à la base.
+
+\begin{itemize}
+	\item 
+	L'expression de $y$ à partir de la base est donc
 	\[
-	B^{-1}y
+	B^{-1}y.
 	\]
-	et le coût associé
+	S'il y a un coût unité $c_i$ associé avec chaque vecteur de base $a_i$, le coût associé à $y$ est
 	\[
 	c_B^T B^{-1}y.
 	\]
 	
-	\mbox{}
-	
-	En particulier, le coût du vecteur unité $e_j$, quand reconstruit à partir de la base $B$, est $\lambda_j$, la $j^e$ composante de
-	\[
-	\lambda^T = c_B^T B^{-1}.
-	\]
-	En effet,
-	\[
-	\lambda_j = \lambda^T e_j = c_B^T B^{-1} e_j.
-	\]
-	
+	\item 
+	Le coût du vecteur unité $e_j$ est
+	$$
+	c_B^T B^{-1} e_j = \lambda^T e_j = \lambda_j.
+	$$
+
+	\item 
 	Dès lors, les $\lambda_j's$ peuvent être interprétés comme les prix synthétiques des vecteurs unités.
+\end{itemize}	
 	
 \end{frame}
 
@@ -1504,7 +1506,7 @@ Non réalisable & impossible & possible & possible \\
 \begin{frame}
 	\frametitle{\'Ecarts de complémentarité}
 	
-	{\bf Théorème: écarts de complémentarite -- forme symétrique}\\
+	{\bf Théorème: écarts de complémentarité -- forme symétrique}\\
 	Soit $x$ et $\lambda$ des solutions pour les programmes primal et dual, le primal étant exprimé avec les contraintes linéaires sous forme $Ax \geq b$. Une condition nécessaire et suffisante pour que $x$ et $\lambda$ soient tous deux solutions optimales est que pour tout $i$
 	\begin{enumerate}
 		\item
@@ -1702,7 +1704,7 @@ Non réalisable & impossible & possible & possible \\
 	
 	Conséquence: $\lambda$ est admissible (réalisable) si et seulement si $x$ satisfait les conditions d'optimalité (coûts réduits positifs ou nuls).
 	% Dans la démonstration précédente, cela revient à poser $t_B = 0$, et $t_D = (c_D^T - c_B^TB^{-1}D)$.
-	Autrement dit, les conditions d'optimalité sont équivalentes à l'admissibilité.
+	Autrement dit, les conditions d'optimalité primale sont équivalentes à l'admissibilité duale.
 	
 	\mbox{}
 	
