@@ -22,6 +22,8 @@
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
     \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
 
+\include{macros}
+
 \def\ba{\boldsymbol{a}}
 \def\bb{\boldsymbol{b}}
 \def\bc{\boldsymbol{c}}
@@ -548,9 +550,16 @@ De plus,
 \begin{align*}
 \lim_{\mu \rightarrow +\infty} \frac{1-2\mu + \sqrt{1+4\mu^2}}{2}
 &= \frac{1}{2} - \frac{1}{2} \lim_{\mu \rightarrow +\infty} \left( 2\mu - \sqrt{1+4\mu^2} \right) \\
-&= \frac{1}{2} - \lim_{\mu \rightarrow +\infty} \left( 2\mu - 2\mu\sqrt{\frac{1}{4\mu^2}+1} \right) \\
-&= \frac{1}{2}.
+&= \frac{1}{2} - \frac{1}{2} \lim_{\mu \rightarrow +\infty} \frac{\left( 2\mu - \sqrt{1+4\mu^2} \right)\left( 2\mu + \sqrt{1+4\mu^2} \right)}{\left( 2\mu + \sqrt{1+4\mu^2} \right)} \\
+&= \frac{1}{2} - \frac{1}{2} \lim_{\mu \rightarrow +\infty} \frac{4\mu^2 - 1 -4\mu^2}{\left( 2\mu + \sqrt{1+4\mu^2} \right)} \\
+&= \frac{1}{2} + \frac{1}{2} \lim_{\mu \rightarrow +\infty} \frac{1}{\left( 2\mu + \sqrt{1+4\mu^2} \right)} \\
+& = \frac{1}{2}.
 \end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Chemin central}
 
 Ainsi $
 x(\mu) \overset{\mu \rightarrow +\infty}{\longrightarrow} \left( \frac{1}{2}, \frac{1}{2} \right).
@@ -586,7 +595,7 @@ Le problème barrière associé est
 \begin{frame}
 \frametitle{Chemin dual central}
 
-On suppose que $\mathring{\mathcal{F}}_P = \lbrace (y,s): y^TA + s^T = c^T,\ s > 0 \rbrace$ est non vide, et l'ensemble des solutions optimales du dual est borné.
+On suppose que $\mathring{\mathcal{F}}_D = \lbrace (y,s): y^TA + s^T = c^T,\ s > 0 \rbrace$ est non vide, et l'ensemble des solutions optimales du dual est borné.
 
 \mbox{}
 
@@ -723,9 +732,9 @@ Si $\mu \rightarrow \infty$, $y$ est non borné, car l'ensemble dual réalisable
 
 \textcolor{blue}{Hypothèse}: la région réalisable du problème (primal) de programmation linéaire a un intérieur non vide et un ensemble borné de solutions optimales.
 
-\mbox{}
-
-Le dual a un intérieur réalisable non vide, en vertu des conditions (d'optimalité) sur le lagrangien.
+%\mbox{}
+% Est-ce vraiment le cas? La preuve ne semble pas évidente, et si c'est le cas, pourquoi a-t-on les hypothèses au slide suivant?
+% Le dual a un intérieur réalisable non vide, en vertu des conditions (d'optimalité) sur le lagrangien.
 
 \mbox{}
 
@@ -1226,7 +1235,7 @@ Appliquons la méthode de Newton pour résoudre ce système.
 
 \mbox{}
 
-Notons $J(Ax) = A$. En effet, la $i^e$ composante de $Ax$ vaut
+Remarquons que $J(Ax) = A$. En effet, la $i^e$ composante de $Ax$ vaut
 $$
 (Ax)_i = \sum_{j = 1}^n a_{ij} x_j.
 $$
@@ -1356,6 +1365,10 @@ Incrémenter $k$ de 1, et retourner à l'étape 1.
 
 \begin{frame}
 	\frametitle{Calcul du centre analytique}
+
+Nous avons besoin d'un point de départ réalisable!
+
+\mbox{}
 	
 	Rappelons que le centre analytique peut se calculer en considérons les conditions
 	\begin{align*}
@@ -1532,7 +1545,7 @@ Après réorganisation des équations, nous pouvons obtenir
 \begin{frame}
 \frametitle{Un exemple d'algorithme}
 
-Source: Sanjay Mehrotra, ``On the Implementation of a Primal-Dual Interior Point Method'', SIAM Journal on Optimization 2(4), pp. 575--601.
+%Source: Sanjay Mehrotra, ``On the Implementation of a Primal-Dual Interior Point Method'', SIAM Journal on Optimization 2(4), pp. 575--601.
 
 \mbox{}
 
@@ -1540,7 +1553,7 @@ Source: Sanjay Mehrotra, ``On the Implementation of a Primal-Dual Interior Point
 
 \mbox{}
 
-La méthode nécessite un point de départ satisfaisant les contraintes de non-négativité, mais pouvons violer les autres contraintes.
+La méthode nécessite un point de départ satisfaisant les contraintes de non-négativité, mais nous pouvons violer les autres contraintes.
 	
 \end{frame}
 
@@ -1550,20 +1563,43 @@ La méthode nécessite un point de départ satisfaisant les contraintes de non-n
 Nous commençons par calculer
 \begin{align*}
 \overline{x} &= A^{T}(AA^{T})^{-1}b \\
-\overline{\lambda} &= (AA^{T})^{-1}c \\
-\overline{s} &= c - A^{T}\overline{\lambda}
+\overline{\lambda} &= (AA^{T})^{-1}Ac \\
+\overline{s} &= c - A^T\overline{\lambda}
 \end{align*}
-puis
+
+Ainsi,
+$$
+A\overline{x} = b
+$$
+et
+$$
+\overline{s} = (I-A^T(AA^{T})^{-1}A)c
+$$
+
+	
+\end{frame}
+
+\begin{frame}
+\frametitle{Point de départ}
+
+Calculons
 \begin{align*}
 \delta_x &= \max \{-1.5\min\{\overline{x}_i\}, 0 \} \\
 \delta_s &= \max \{ -1.5\min\{\overline{s}_i\}, 0 \}
 \end{align*}
-Finalement, nous calculons
+
+Dès lors,
+$$
+	\overline{x} + \delta_x \bone \geq 0, \quad \overline{s} + \delta_s \bone \geq 0
+$$
+et le point est réalisable, mais pas à l'intérieur de $\mathcal{F}_P$ et $\mathcal{F}_D$.
+
+Prenons
 \begin{align*}
 \overline{\delta_x} &= \delta_x + 0.5 \frac{(\overline{x}+\delta_x\bone)^T(\overline{s}+\delta_s\bone)}{\sum_{i=1}^n(\overline{s}_i+\delta_s)} \\
 \overline{\delta_s} &= \delta_s + 0.5 \frac{(\overline{x}+\delta_x\bone)^T(\overline{s}+\delta_s\bone)}{\sum_{i=1}^n(\overline{x}_i+\delta_x)}
 \end{align*}
-	
+
 \end{frame}
 
 \begin{frame}
@@ -1578,14 +1614,59 @@ s_0 &= \overline{s} + \overline{\delta_s} \bone
 
 \mbox{}
 
+Si $(\overline{x} + \delta_x \bone)^T(\overline{s} + \delta_s \bone) = 0$, la solution est optimale.
+Sinon, $\overline{\delta_x} > 0$, $\overline{\delta_s} > 0$, et on part d'une solution intérieure.
+
+\mbox{}
+
 Les constantes $1.5$ et $0.5$ sont arbitraires. La même heuristique fonctionne en remplaçant $1.5$ par $k > 1$ et $0.5$ par $\ell > 0, \ell \in \mathbb{R}$.
-	
+
 \end{frame}
 
 \begin{frame}
-\frametitle{Système KKT}
+\frametitle{Point de départ: note}
 
-Rappelons les conditions KKT perturbées:
+Si $A \in \RR^{m \times n}$ et $rang(A) = m$, $AA^T \in \RR^{m \times m}$ et $rang(AA^T) = m$.
+
+\mbox{}
+
+En effet, le \textit{théorème du rang} nous dit
+$$
+rang(A) + \dim \left( \calN(A) \right) = m,
+$$
+où $\calN(A) = \{ x \,|\, Ax = 0 \}$ est le \textit{noyau} de $A$. Or $rang(A) = rang(A^T)$ et $\calN(AA^T) = \calN(A^T)$. En effet, nous avons tout d'abord
+$$
+A^Tx = 0 \Rightarrow AA^Tx = 0,
+$$
+et donc $\calN(A^T) \subseteq \calN(AA^T)$. De plus, prenons $x \in \calN(AA^T)$ et notons $y = A^Tx \in \calN(A)$. Dès lors,
+$$
+0 = x^TAy = y^Ty \Rightarrow y = 0.
+$$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Point de départ: note}
+
+Il en suit
+$$
+x \in \calN(AA^T) \Rightarrow x \in \calN(A^T),
+$$
+ou $\calN(AA^T) \subseteq \calN(A^T)$.
+
+\mbox{}
+
+Ainsi, $\calN(AA^T) = \calN(A^T)$ et
+\begin{align*}
+rang(AA^T) &= m - \dim\calN(AA^T) \\ &= m - \dim\calN(A^T) \\ &= m - (m - rang(A^T)) \\ & = rang(A^T).
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Conditions d'optimalité}
+
+Conditions d'optimalité du chemin primal-dual central:
 \begin{align*}
 Ax &= b \\
 A^T\lambda + s &= c \\
@@ -1735,8 +1816,8 @@ puis en limitant le longueur de pas pour satisfaire les contraintes de non-néga
 
 Calculons d'abord
 \begin{align*}
-\alpha_p^p &= \min \left\{1, \min_{\Delta x_i^p>0} \frac{x_i}{\Delta x_i^p} \right\} \\
-\alpha_d^p &= \min \left\{1, \min_{\Delta s_i^p>0} \frac{s_i}{\Delta s_i^p} \right\}
+\alpha_p^p &= \min \left\{1, \min_{\Delta (x_p)_i > 0} \frac{x_i}{\Delta (x_p)_i } \right\} \\
+\alpha_d^p &= \min \left\{1, \min_{\Delta (s_p)_i > 0} \frac{s_i}{\Delta (s_p)_i } \right\}
 \end{align*}
 
 \end{frame}
