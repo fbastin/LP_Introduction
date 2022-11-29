@@ -22,8 +22,6 @@
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
     \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
 
-\include{macros}
-
 \def\ba{\boldsymbol{a}}
 \def\bb{\boldsymbol{b}}
 \def\bc{\boldsymbol{c}}
@@ -51,9 +49,9 @@
 \def\cF{\mathcal{F}}
 \def\cR{\mathcal{R}}
 
-\def\RR{\mathcal{R}}
-
 \usepackage[french]{babel}
+
+\input{macros}
 
 \begin{document}
 \frame{\titlepage}
@@ -1630,9 +1628,9 @@ Si $A \in \RR^{m \times n}$ et $rang(A) = m$, $AA^T \in \RR^{m \times m}$ et $ra
 
 \mbox{}
 
-En effet, le \textit{théorème du rang} nous dit
+En effet, le \textit{théorème du rang} nous dit que si $B \in \RR^{m \times n}$, alors
 $$
-rang(A) + \dim \left( \calN(A) \right) = m,
+rang(B) + \dim \left( \calN(B) \right) = n,
 $$
 où $\calN(A) = \{ x \,|\, Ax = 0 \}$ est le \textit{noyau} de $A$. Or $rang(A) = rang(A^T)$ et $\calN(AA^T) = \calN(A^T)$. En effet, nous avons tout d'abord
 $$

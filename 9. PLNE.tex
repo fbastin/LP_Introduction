@@ -44,11 +44,11 @@
 
 \def\cF{\mathcal{F}}
 \def\cR{\mathcal{R}}
-\def\RR{\cR}
-\def\NN{\mathcal{N}}
 
 \def\st{\mbox{t.q. }}
 \def\si{\mbox{ si }}
+
+\input{macros}
 
 \begin{document}
 
@@ -57,13 +57,14 @@
 \begin{frame}
 \frametitle{Présentation générale}
 
+\begin{itemize}
+\item 
 Certaines quantités ne peuvent s'écrire sous forme de nombres réels, issus d'un domaine continu. Au contraire, certaines décisions sont par nature discrètes, et doivent se représenter à l'aide de nombres entiers.
 Considérons par exemple une entreprise de transport, qui décide de renouveller sa flotte de camions.
 Le nombre de camions à acheter est un nombre naturel.
-
-\mbox{}
-
-Dans le cas linéaire, nous parlerons de {\em programmation linéaire en nombres entiers (PLNE)}
+\item 
+Cas linéaire: \textcolor{red}{programmation linéaire en nombres entiers (PLNE)}
+\end{itemize}
 
 %\mbox{}
 
@@ -98,16 +99,16 @@ Considérons tout d'abord le cas où toutes les variables sont entières.
 \begin{aligned}
 \min\ & c^Tx \\
 \mbox{s.à } & Ax = b \\
-& x_i \in \mathbb{N},\ i = 1,\ldots,n,
+& x_i \in \NN,\ i = 1,\ldots,n,
 \end{aligned}
 \tag{P}
 \label{eq:PLNE}
 \end{equation}
-où $\mathbb{N}$ est l'ensemble des entiers naturels.
+où $\NN$ est l'ensemble des entiers naturels.
 
 \mbox{}
 
-Notons $\cF = \{ x \,|\, Ax = b, x \in \mathbb{N}^n \}$,
+Notons $\cF = \{ x \,|\, Ax = b, x \in \NN^n \}$,
 l'ensemble réalisable de \eqref{eq:PLNE}.
 
 \end{frame}
@@ -242,14 +243,19 @@ qui a pour solution optimale $(2, 1.9)$. En arrondissant à $(2,1)$ afin de gara
 \begin{frame}
 \frametitle{Approche par énumération}
 
-Un modèle en nombres entiers borné (par exemple, un modèle avec uniquement des variables 0--1) possède un nombre fini de solutions.
+\begin{itemize}
+	\item 
+Un modèle en nombres entiers borné (p.e. avec uniquement des variables 0--1) possède un nombre fini de solutions.
+	\item 
 Nous pourrions envisager de toutes les énumérer, mais le nombre de solutions explose rapidement. Pour $n = 20$ variables 0--1, il y a plus d'un million de solutions possibles.
 Pour $n=30$, c'est plus d'un milliard.
-Vite déraisonnable de procéder à une énumération complète des solutions.
+	\item 
+Énumération complète des solutions: vite déraisonnable .
+\end{itemize}
 
-\mbox{}
-
-Alternative: énumération partielle.
+Alternative: \textcolor{red}{énumération partielle}
+\begin{itemize}
+	\item 
 Cette technique est connue sous le vocable de {\sl branch-and-bound} (B\&B).
 Il s'agit d'une approche {\sl diviser-pour-régner}:
 \begin{itemize}
@@ -258,18 +264,20 @@ décomposition du problème en sous-problèmes plus simples;
 \item
 combinaison de la résolution de ces sous-problèmes pour obtenir la solution du problème original.
 \end{itemize}
+\end{itemize}
 
 \end{frame}
 
 \begin{frame}
 \frametitle{Algorithme de branch-and-bound}
 
+\begin{itemize}
+	\item 
 Construction d'un arbre de solutions, où chaque sous-problème correspond à un sommet.
-
-\mbox{}
-
+\item 
 Nous résolvons la relaxation linéaire de chaque sous-problème.
 L'information tirée de la relaxation linéaire nous permettra (peut-être) d'éliminer toutes les solutions pouvant être obtenues à partir de ce sommet.
+\end{itemize}
 
 \end{frame}
 
@@ -507,7 +515,7 @@ Règle de la meilleure borne: choisir le sous-problème ayant la plus grande bor
 \frametitle{Branchement}
 
 Dans cette version, la règle de branchement consiste à choisir la prochaine variable non fixée. Il est souvent plus intéressant de choisir une variable à valeur fractionnaire.
-En branchant sur une telle variable, il est certain que les deux sous-problèmes crées mènent à des solutions différentes de la solution courante.
+En branchant sur une telle variable, il est certain que les deux sous-problèmes créés mènent à des solutions différentes de la solution courante.
 De nombreux autres critères existent de facon à orienter la recherche vers un élagage rapide.
 
 \end{frame}
@@ -533,7 +541,7 @@ $F(3)$ indique que le sous-probleme a été élagué ({\sl fathomed}) en raison 
 
 Sélection: nous choisissons le sous-problème 2, le seul qui n'a pas encore été élagué.
 Nous branchons sur la prochaine variable, soit $x_2$.
-Deux nouveaux sous-problèmes sont crées:
+Deux nouveaux sous-problèmes sont créés:
 \begin{itemize}
 \item
 sous-problème 3: $x_1 = 1$, $x_2 = 0$;
@@ -594,7 +602,7 @@ Z = 16;\ Z_4 \leq 16.
 
 Aucun des tests d'élagage ne s'applique sur ces deux sous-problèmes.
 Nous en choisissons un pour effectuer un branchement, puisque ce sont ceux créés le plus récemment.
-Nous prenojs celui de plus grande borne supérieure, soit le sous-problème 4.
+Nous prenons celui de plus grande borne supérieure, soit le sous-problème 4.
 
 \mbox{}
 
@@ -778,7 +786,7 @@ la valeur de l'objectif correspondant à la solution optimale du problème relax
 \item
 le domaine admissible d'un sous-problème devient vide;
 \item
-la solution devient entière;
+la solution devient entière.
 \end{enumerate}
 Dans chacun de ces trois cas on dit que le sommet est sondé, et il est inutile de pousser plus loin dans cette direction.
 
