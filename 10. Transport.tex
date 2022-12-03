@@ -269,7 +269,7 @@ On a formé deux combinaisons linéaires distinctes des contraintes, pour former
 
 \mbox{}
 
-Considérons la première contraintes:
+Considérons la première contrainte:
 \[
 \sum_{j = 1}^n x_{1j} = a_1
 \Leftrightarrow
@@ -338,7 +338,8 @@ Supposons par l'absurde qu'il existe une combinaison linéaire des équations re
 Notons les coefficients d'une telle combinaison $\alpha_i$, $i = 1,2,\ldots,m$, et $\beta_j$, $j = 1,2,\ldots,n-1$:
 \[
 \sum_{i = 1}^m \alpha_i \left( \sum_{j = 1}^n x_{ij} - a_i \right) +
-\sum_{j = 1}^{n-1} \beta_j \left( \sum_{i = 1}^m x_{ij} - b_j \right) = 0\left( \sum_{i = 1}^m \sum_{j = 1}^n x_{ij} \right).
+\sum_{j = 1}^{n-1} \beta_j \left( \sum_{i = 1}^m x_{ij} - b_j \right) = 0.
+%\left( \sum_{i = 1}^m \sum_{j = 1}^n x_{ij} \right).
 \]
 
 \mbox{}
@@ -508,9 +509,7 @@ peut être mise sous la forme d'une matrice triangulaire inférieure au moyen d'
 
 \mbox{}
 
-\begin{center}
-\begin{minipage}{.4\linewidth}
-\[
+$$
 \begin{pmatrix}
 1 & 2 & 0 & 1 & 0 & 2 \\
 4 & 1 & 0 & 5 & 0 & 0 \\
@@ -519,10 +518,7 @@ peut être mise sous la forme d'une matrice triangulaire inférieure au moyen d'
 2 & 3 & 2 & 0 & 0 & 3 \\
 0 & 2 & 0 & 1 & 0 & 0
 \end{pmatrix}
-\]
-\end{minipage}
-\begin{minipage}{.4\linewidth}
-\[
+\rightarrow
 \begin{pmatrix}
 4 & 0 & 0 & 0 & 0 & 0 \\
 1 & 2 & 0 & 0 & 0 & 0 \\
@@ -531,9 +527,7 @@ peut être mise sous la forme d'une matrice triangulaire inférieure au moyen d'
 0 & 3 & 2 & 3 & 2 & 0 \\
 2 & 1 & 2 & 3 & 7 & 1
 \end{pmatrix}
-\]
-\end{minipage}
-\end{center}
+$$
 
 \end{frame}
 
@@ -1261,7 +1255,7 @@ $$
 		40 & 10 & 30 & 40 & 40 & \\
 	\end{array}
 $$
-En déterminer quelles lignes/colonnes n'ont qu'une entrée dans le signe de changement n'est pas déterminé, nous voyons que l'ordre de considération des variables est $x_{13}$, $x_{23}$, $x_{25}$, $x_{35}$, $x_{32}$, $x_{31}$, $x_{41}$, $x_{51}$, $x_{54}$.
+En déterminant quelles lignes/colonnes n'ont qu'une entrée dont le signe de changement n'est pas déterminé, nous voyons que l'ordre de considération des variables est $x_{13}$, $x_{23}$, $x_{25}$, $x_{35}$, $x_{32}$, $x_{31}$, $x_{41}$, $x_{51}$, $x_{54}$.
 
 La plus petite variable avec le signe moins est $x_{51} = 10$, aussi $\theta = 10$.
 \end{frame}
@@ -1275,8 +1269,8 @@ Nous sommes à présent en mesure de décrire l'algorithme complet.
 \item[\'Etape 1]
 Calculer une solution réalisable de base initiale à l'aide de la règle du coin nord-ouest ou une autre méthode.
 \item[\'Etape 2]
-Calculer les multiplicateurs du simplexe et les coefficients de coût relatifs. Je tombe
-les coefficients de coût relatifs sont non négatifs, arrêt: la solution est optimale. Autrement,
+Calculer les multiplicateurs du simplexe et les coefficients de coût relatifs.
+Si les coefficients de coût relatifs sont non négatifs, arrêt: la solution est optimale. Autrement,
 passer à l'étape 3.
 \item[\'Etape 3]
 Sélectionner une variable hors base de coût réduit négatif pour entre la base.
@@ -1332,6 +1326,13 @@ $$
 10 & 50 & 20 & 80 & 20 &
 \end{array}
 $$
+
+Note: on peut s'arrêter dès qu'un cycle est déterminé.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple: échange de variables}
 
 La plus petite variable de base avec le signe moins est $x_{23} = 20$. Nous échangeons donc $x_{43}$ et $x_{23}$ pour obtenir
 $$
