@@ -58,9 +58,9 @@ Sans perte de généralité, supposons les $m$ premières colonnes de $\bA$ ind�
 
 \mbox{}
 
-{\it Solution de base}: $\bx = (\bx_b \ 0)$, avec $\bB\bx_b = \bb$.\\
-{\it Solution de base dégénérée}: si $\bx_b$ contient des composantes nulles. \\
-{\it Solution de base réalisable}: solution de base telle que $\bA\bx = \bb$ et $\bx \geq 0$.
+{\it \textcolor{blue}{Solution de base}}: $\bx = (\bx_b \ 0)$, avec $\bB\bx_b = \bb$.\\
+{\it \textcolor{blue}{Solution de base dégénérée}}: si $\bx_b$ contient des composantes nulles. \\
+{\it \textcolor{blue}{Solution de base réalisable}}: solution de base telle que $\bA\bx = \bb$ et $\bx \geq 0$.
 \end{frame}
 
 \begin{frame}
@@ -70,20 +70,19 @@ Considérons un ensemble $B = \lbrace u_1, u_2,\ldots, u_m \rbrace$ d'un sous-es
 
 \begin{itemize}
 \item 
-Les éléments de $B$ sont linéairement indépendants si
+Les éléments de $B$ sont \textcolor{red}{linéairement indépendants} si
 $$
 \sum_{i=1}^m \alpha_i u_i = 0
 $$
 admet pour seule solution $\alpha_i = 0$, $i = 1,\ldots,m$.
 \item
-$B$ est un ensemble générateur de $V$ si $\forall\, y \in V$, $\exists\, \alpha_i$, $i = 1,\ldots,m$ tels que
+$B$ est un \textcolor{red}{ensemble générateur} de $V$ si $\forall\, y \in V$, $\exists\, \alpha_i$, $i = 1,\ldots,m$ tels que
 $$
 \sum_{i=1}^m \alpha_i u_i = y.
 $$
 \item
-$B$ est une base, si $B$ est un ensemble
-linéairement indépendant et générateur
-de $V$
+$B$ est une \textcolor{red}{base}, si $B$ est un ensemble linéairement indépendant et générateur
+de $V$.
 \end{itemize}
 
 \end{frame}

@@ -4,8 +4,10 @@
 \usepackage{xcolor}
 % \setbeamercovered{transparent}
 %\usecolortheme{crane}
-\title[IFT2505]{IFT 2505\\Programmation Linéaire\\Introduction}
-\author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal}
+
+\title[Programmation Linéaire]{Programmation Linéaire\\Introduction}
+
+\author[Fabian Bastin]{Fabian Bastin \\ \url{fabian.bastin@umontreal.ca} \\ Université de Montréal -- CIRRELT -- IVADO -- Fin-ML}
 \date{}
 
 \usepackage[french]{babel}
@@ -25,6 +27,12 @@
 \newtheorem{exe}{Exemple}
 
 \begin{document}
+
+\titlegraphic{\vspace{-0.5cm}
+	\includegraphics[scale=0.2]{imgs/udem.png}
+	\hspace{2cm}
+	\includegraphics[scale=0.07]{imgs/Fin-MLLogo.png}
+}
 \frame{\titlepage}
 
 % ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -38,9 +46,9 @@ Bases de la programmation mathématique:
 \item
 objectif, contraintes;
 \item
-solution(s) réalisable(s).
+solution(s) réalisable(s);
 \item
-solution(s) optimale(s), valeur optimale;
+solution(s) optimale(s), valeur optimale.
 \end{itemize}
 \item
 Comprendre les principes de base de la programmation linéaire (PL), et de ses méthodes de résolution. La méthode du simplexe sera étudiée avec un niveau élevé de détails.
@@ -61,7 +69,7 @@ Aspects numériques de la PL (utilisation de Julia).
 
 \begin{itemize}
 	\item
-	Luenberger et Ye, Linear and Nonlinear Programming, 4e édition, Springer, 2016, \url{https://link.springer.com/book/10.1007\%2F978-3-319-18842-3}
+	Luenberger et Ye, Linear and Nonlinear Programming, 5e édition, Springer, 2021, \url{https://link.springer.com/book/10.1007/978-3-030-85450-8}
 	\item
 	Chan, Batson, Dang, Applied Integer Programming: Modeling and Solution, Wiley, 2011,
 	\url{https://onlinelibrary.wiley.com/doi/book/10.1002/9781118166000}
@@ -74,16 +82,15 @@ Aspects numériques de la PL (utilisation de Julia).
 
 Évaluations:
 \begin{itemize}
-	\item 5 devoirs, 10\% chaque;
-	\item Examen intra: 20\%, une page de notes autorisée;
-	\item Examen final: 30\%, deux pages de notes autorisées.
+	\item 4 devoirs, 10\% chaque;
+	\item Examen intra: 25\%, une page de notes autorisée;
+	\item Examen final: 35\%, deux pages de notes autorisées.
 \end{itemize}
 {\bf Le règlement sur le plagiat sera de stricte application!}
 
 \mbox{}
 
-Démonstrateur:\\
- Jean Laprés-Chartrand (\url{jl_chartrand@hotmail.com})\\
+Démonstrateur: Jean Laprés-Chartrand (\url{jl_chartrand@hotmail.com})\\
 
 \mbox{}
 
@@ -93,7 +100,7 @@ Notebooks: \url{https://github.com/fbastin/optim};
 \item
 Slides: \url{https://github.com/fbastin/LP_Introduction};
 \item
-Canal discord: \url{https://discord.gg/pAEyEFXM68}.
+Canal discord: \url{https://discord.gg/huAsyTeADW}.
 \end{itemize}
 
 \end{frame}
@@ -270,11 +277,11 @@ Le fonction objectif est le profit total, qui vaut $3x_1 +5x_2$, en l'exprimant 
 \begin{exe}[Wyndor Glass]
 En résumé, nous avons le problème d'optimisation suivant:
 \begin{align*}
-\max_x\ & z = 3x_1 + 5x_2 \\
-\mbox{t.q. } & x_1\qquad & \leq 4 & \mbox{ (usine 1)} \\
-& 2x_2 & \leq 12 & \mbox{ (usine 2)} \\
-& 3x_1 + 2x_2 & \leq 18 & \mbox{ (usine 3)} \\
-& x_1 \geq 0,\ x_2 \geq 0 & \mbox{ (non-négativité)}
+\max_x\ & z = 3x_1 + 5x_2 & & \\
+\mbox{t.q. } & x_1 & \leq 4 & \qquad \mbox{ (usine 1)} \\
+& 2x_2 & \leq 12 & \qquad \mbox{ (usine 2)} \\
+& 3x_1 + 2x_2 & \leq 18 & \qquad \mbox{ (usine 3)} \\
+& x_1 \geq 0,\ x_2 \geq 0 & & \qquad \mbox{ (non-négativité)}
 \end{align*}
 
 Dans l'exemple
