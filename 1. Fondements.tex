@@ -37,6 +37,13 @@
 
 % ------------------------------------------------------------------------------------------------------------------------------------------------------\begin{frame}
 \begin{frame}
+
+
+\titlegraphic{\vspace{-0.5cm}
+	\includegraphics[scale=0.2]{imgs/udem.png}
+	\hspace{2cm}
+	\includegraphics[scale=0.07]{imgs/Fin-MLLogo.png}
+}
 \frametitle{Solutions de base}
 
 \begin{align*}
@@ -159,11 +166,14 @@ En affectant la valeur 0 aux $m-p$ variables correspondantes, on obtient une sol
 
 \underline{Cas 2:} $\ba_1,\ldots,\ba_p$ linéairement dépendants.
 
-Dès lors, $\exists\, \by = (y_1, y_2,\ldots, y_p,0,\ldots,0)$ $(\in \mathcal{R}^n)$, avec au moins un $y_i > 0$,
-\begin{align*}
-&y_1 \ba_1 + y_2 \ba_2 + \ldots y_p \ba_p = \bzero, \\
-& \forall \epsilon, \ (x_1 - \epsilon y_1) \ba_1 + (x_2 - \epsilon y_2) \ba_2 + \ldots (x_p - \epsilon y_p) \ba_p = \bb.
-\end{align*}
+Dès lors, $\exists\, \by = (y_1, y_2,\ldots, y_p,0,\ldots,0)$ $(\in \mathcal{R}^n)$, avec au moins un $y_i > 0$, tel que
+$$
+y_1 \ba_1 + y_2 \ba_2 + \ldots y_p \ba_p = \bzero,
+$$
+de sorte que $\forall \epsilon$,
+$$
+(x_1 - \epsilon y_1) \ba_1 + (x_2 - \epsilon y_2) \ba_2 + \ldots (x_p - \epsilon y_p) \ba_p = \bb.
+$$
 Autrement dit,
 \[
 \bA(\bx-\epsilon \by) = \bb.
@@ -233,7 +243,7 @@ Dès lors, $\bc^T\by = 0$.
 
 \mbox{}
 
-On peut alors appliquer le procédé du cas 2 sur la réalisabilité, pour diminuer le nombre de composantes non-nulles de la solution, tout en maintenant l'optimalité, puis en se ramener au cas 1.
+On peut alors appliquer le procédé du cas 2 sur la réalisabilité, pour diminuer le nombre de composantes non-nulles de la solution, tout en maintenant l'optimalité, puis se ramener au cas 1.
 
 \end{frame}
 
@@ -579,7 +589,7 @@ Dès lors, $\bx$ peut être exprimé comme combinaison convexe de deux points di
 
 \mbox{}
 
-Ceci implique qu'on doit avoir $\ba_1,\ldots,\ba_k$ linéairement indépendants, et de là, $k \leq m$. $\bx$ est dès lors solution de base.
+Ceci implique qu'on doit avoir $\ba_1,\ldots,\ba_k$ linéairement indépendants, et de là, $k \leq m$. $\bx$ est dès lors une solution de base.
 \end{frame}
 
 \begin{frame}

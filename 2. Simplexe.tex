@@ -1008,13 +1008,26 @@ $$
 	c_1x_1 + c_2x_2 + \ldots + c_nx_n - z = 0
 	\]
 	
-	\mbox{}
-	
-	Une solution de base du système augmenté aura $m+1$ variables de base, et nous exigeons que $z$ soit l'une d'elles.
-	
-	\mbox{}
-	
-	Il n'est dès lors pas utile d'ajouter une colonne correspond à $z$ puisqu'elle serait toujours $(0, 0, \ldots, 0, 1)$.
+%	\mbox{}
+
+Ceci mène au %En considérant $z$ comme une variable, au mettre titre que les composantes de $\bx$, nous pouvons écrire le
+système étendu de contraintes
+$$
+\begin{matrix}
+	A\bx & + & 0 & = & \bb \\
+	\bc^T \bx & + & (-1)z & = &  0 
+\end{matrix}
+$$
+Plutôt que de considérer $z$, nous pouvons prendre $-z$ et écrire
+$$
+\begin{matrix}
+	A\bx & + & 0 & = & \bb \\
+	\bc^T \bx & + & 1(-z) & = &  0
+\end{matrix}
+$$
+
+Une solution de base du système augmenté aura $m+1$ variables de base, et nous exigeons que $-z$ soit l'une d'elles.
+Il n'est dès lors pas utile d'ajouter une colonne correspond à $-z$ puisqu'elle serait toujours $(0, 0, \ldots, 0, 1)$.
 
 \end{frame}
 
@@ -1029,26 +1042,6 @@ $$
 \mbox{}
 	
 La dernière ligne est donc traitée comme les autres: nous annulons les entrées correspondant aux colonnes des variables de base.
-	
-\end{frame}
-
-\begin{frame}
-\frametitle{Objectif et contraintes}
-
-En considérant $z$ comme une variable, au mettre titre que les composantes de $\bx$, nous pouvons écrire le système étendu de contraintes
-$$
-\begin{matrix}
-A\bx & + & 0 & = & \bb \\
-\bc^T \bx & + & (-1)z & = &  0 
-\end{matrix}
-$$
-Plutôt que de considérer $z$, nous pouvons prendre $-z$ et écrire
-$$
-\begin{matrix}
-	A\bx & + & 0 & = & \bb \\
-	\bc^T \bx & + & 1(-z) & = &  0
-\end{matrix}
-$$
 
 \end{frame}
 
@@ -1120,7 +1113,7 @@ $$
 \begin{frame}
 \frametitle{Tableau du simplexe}
 
-L'avant dernière colonne étant constante, il est d'usage de l'ignorer, ce qui donne le tableau
+L'avant-dernière colonne étant constante, il est d'usage de l'ignorer, ce qui donne le tableau
 $$
 \begin{matrix}
 	\ba_1 & \ba_2 & \cdots & \ba_m & \ba_{m+1} &
@@ -1182,12 +1175,12 @@ Former un tableau correspondant à une solution de base réalisable. Les coeffic
 \mbox{}
 
 \textbf{Etape 2.}
-Si tous les coûts réduits sont positifs ou nuls, arrêt. La solution de base réalisable actuelle est optimale.
+Si tous les coûts réduits sont positifs ou nuls, arrêt. La solution de base réalisable actuelle est optimale. Sinon, prendre $q \in \arg\min_i \{ r_i\ \,|\, r_i < 0 \}$.
 
 \mbox{}
 
 \textbf{Etape 3.}
-Calculer les rapports $y_{i0}/y_{iq}$, $i = 1, 2, \ldots, m$. S'il pas de $y_{iq} > 0$, arrêt: le problème est non borné. Sinon, sélectionner $p$ comme l'index $i$ correspondant au rapport minimum avec $y_{iq} > 0$.
+Calculer $y_{i0}/y_{iq}$, $i = 1, 2, \ldots, m$. Arrêt si $\nexists y_{iq} > 0$: problème non borné. Sinon, prendre $p \in \arg\min_i \{ y_{i0}/y_{iq} \,|\, y_{iq} > 0 \}$. %comme l'index $i$ correspondant au rapport minimum avec $y_{iq} > 0$.
 
 \mbox{}
 
@@ -1195,7 +1188,7 @@ Calculer les rapports $y_{i0}/y_{iq}$, $i = 1, 2, \ldots, m$. S'il pas de $y_{iq
 
 \mbox{}
 
-L'algorithme s'arrête si l'optimalité est atteinte ou s'il s'avère que le problème est non borné. Le nombre d'étapes est fini comme il n'existe qu'un nombre fini de bases réalisables.
+Nombre fini d'itérations car nombre fini de bases réalisables; arrêt si optimalité atteinte ou s'il s'avère que le problème est non borné.
 
 \end{frame}
 
@@ -1211,7 +1204,7 @@ On considère le problème
 & x_1 \geq 0,\ x_2 \geq 0,\ x_3 \geq 0.
 \end{align*}
 
-La mise sous forme standard permet directement d'obtenir un système canonique (le cas général sera étudié plus tard).
+La forme standard donne un système sous forme canonique:
 %On introduit les variables d'écart $s_1$, $s_2$ et $s_3$ pour obtenir
 \begin{align*}
 - \min_x\ & -3x_1 - x_2 - 3x_3 \\
@@ -1238,10 +1231,10 @@ Sous forme tableau, cela donne
 \]
 
 On remarque que le dernière ligne reprend simplement l'opposé des coefficients de l'objectif (du problème de maximisation). En effet
-\[
+$$
 r_j = c_j - z_j = c_j,
-\]
-avec, $c_B^Ty_j = 0$, et $c_B = 0$.
+$$
+avec $c_B^Ty_j = 0$, et $c_B = 0$.
 
 \end{frame}
 
@@ -1479,18 +1472,18 @@ Potentiel problème de cycles, car il n'y a pas forcément réduction de la fonc
 		\item
 		{\color{red}Critère d'entrée}
 		
-		La variable d'entrée $x_s$ est celle ayant le plus petit indice parmi les variables hors base ayant un coût réduit négatif, i.e.
+		La variable d'entrée $x_q$ est celle ayant le plus petit indice parmi les variables hors base ayant un coût réduit négatif, i.e.
 		$$
-		s = \min_{j = 1,\ldots,n} \{ j \,|\, r_j < 0 \}
+		q = \min_{j = 1,\ldots,n} \{ j \,|\, r_j < 0 \}
 		$$
 		\item
 		{\color{red}Critère de sortie}:
 		
-		La variable de sortie $x_{j_r}$ ($x_{j_r}$ dénotant la variable de base dans la $r^e$  ligne du tableau) est celle ayant le plus petit indice parmi les variables candidates à sortir de la base, i.e.
+		La variable de sortie $x_{j_p}$ ($x_{j_p}$ dénotant la variable de base dans la $p^e$  ligne du tableau) est celle ayant le plus petit indice parmi les variables candidates à sortir de la base, i.e.
 		$$
-		j_r = \min_{l = 1,\ldots,m} \left\{ j_l \,|\, y_{ls} > 0,\ 
-		\frac{y_{l0}}{y_{ls}} = \min_{i = 1,\ldots,m}
-		\left\{ \frac{y_{i0}}{y_{is}} \,\bigg|\, y_{is} > 0 \right\}
+		j_p = \min_{ p = 1,\ldots,m } \left\{ j_p \,\bigg|\, y_{pq} > 0,\ 
+		\frac{y_{p0}}{y_{pq}} = \min_{i = 1,\ldots,m}
+		\left\{ \frac{y_{i0}}{y_{iq}} \,\bigg|\, y_{iq} > 0 \right\}
 		\right\}
 		$$
 		
@@ -1498,18 +1491,18 @@ Potentiel problème de cycles, car il n'y a pas forcément réduction de la fonc
 	
 \end{frame}
 
-\begin{frame}
-	\frametitle{Note}
+%\begin{frame}
+%	\frametitle{Note}
 	
-	Lorsque
-	%$$
-	%\frac{y_{l0}}{y_{ls}} = \min_{i = 1,\ldots,m}
-	%\left\{ \frac{y_{i0}}{y_{is}} \,\bigg|\, y_{is} > 0 \right\}
-	%$$
-	est atteint pour plusieurs indices $l$, alors la variable de base $x_{j_r}$ choisie selon le critère précédent pour devenir variable de sortie devient égale à 0.
-	Par contre les autres variables $x_{j_l}$ où ce minimum est atteint restent dans la base deviennent aussi égales à 0.
+%	Lorsque
+%	$$
+%	\frac{y_{p0}}{y_{ps}} = \min_{i = 1,\ldots,m}
+%	\left\{ \frac{y_{i0}}{y_{is}} \,\bigg|\, y_{is} > 0 \right\}
+%	$$
+%	est atteint pour plusieurs indices $p$, alors la variable de base $x_{j_p}$ choisie selon le critère précédent pour devenir variable de sortie devient égale à 0.
+%	Par contre les autres variables $x_{j_l}$ où ce minimum est atteint restent dans la base deviennent aussi égales à 0.
 	
-\end{frame}
+%\end{frame}
 
 \begin{frame}
 	\frametitle{Retour à l'exemple}
@@ -1528,34 +1521,9 @@ Potentiel problème de cycles, car il n'y a pas forcément réduction de la fonc
 	\begin{matrix}
 		\ba_1 & \ba_2 & \ba_3 & \ba_4 & \ba_5 &\ba_6 &\ba_7 & \bb \\
 		1 & -240 & -\frac{4}{25} & 36 & 4 & 0 & 0 & 0 \\
-		0 & 30 & \frac{3}{50} & -15 & -2 & 1 & 0 & 0 \\
-		0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 \\
-		0 & -30 & -\frac{7}{50} & 33 & 3 & 0 & 0 & 0
-	\end{matrix}
-	\]
-	
-\end{frame}
-
-\begin{frame}
-	\frametitle{Exemple}
-	
-	\[
-	\begin{matrix}
-		\ba_1 & \ba_2 & \ba_3 & \ba_4 & \ba_5 &\ba_6 &\ba_7 & \bb \\
-		1 & -240 & -\frac{4}{25} & 36 & 4 & 0 & 0 & 0 \\
 		0 & \circled{30} & \frac{3}{50} & -15 & -2 & 1 & 0 & 0 \\
 		0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 \\
 		0 & -30 & -\frac{7}{50} & 33 & 3 & 0 & 0 & 0
-	\end{matrix}
-	\]
-	
-	\[
-	\begin{matrix}
-		\ba_1 & \ba_2 & \ba_3 & \ba_4 & \ba_5 &\ba_6 &\ba_7 & \bb \\
-		1 & 0 & \frac{8}{25} & -84 & -12 & 8 & 0 & 0 \\
-		0 & 1 & \frac{1}{500} & -\frac{1}{2} & -\frac{1}{15} & \frac{1}{30} & 0 & 0 \\
-		0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 \\
-		0 & 0 & -\frac{2}{25} & 18 & 1 & 1 & 0 & 0
 	\end{matrix}
 	\]
 	
@@ -1578,34 +1546,9 @@ Potentiel problème de cycles, car il n'y a pas forcément réduction de la fonc
 	\begin{matrix}
 		\ba_1 & \ba_2 & \ba_3 & \ba_4 & \ba_5 &\ba_6 &\ba_7 & \bb \\
 		\frac{25}{8} & 0 & 1 & -\frac{525}{2} & -\frac{75}{2} & 25 & 0 & 0 \\
-		-\frac{1}{160} & 1 & 0 & \frac{1}{40} & \frac{1}{120} & -\frac{1}{60} & 0 & 0 \\
-		-\frac{25}{8} & 0 & 0 & \frac{525}{2} & \frac{75}{2} & -25 & 1 & 1 \\
-		\frac{1}{4} & 0 & 0 & -3 & -2 & 3 & 0 & 0
-	\end{matrix}
-	\]
-	
-\end{frame}
-
-\begin{frame}
-	\frametitle{Exemple}
-	
-	\[
-	\begin{matrix}
-		\ba_1 & \ba_2 & \ba_3 & \ba_4 & \ba_5 &\ba_6 &\ba_7 & \bb \\
-		\frac{25}{8} & 0 & 1 & -\frac{525}{2} & -\frac{75}{2} & 25 & 0 & 0 \\
 		-\frac{1}{160} & 1 & 0 & \circled{$\frac{1}{40}$} & \frac{1}{120} & -\frac{1}{60} & 0 & 0 \\
 		-\frac{25}{8} & 0 & 0 & \frac{525}{2} & \frac{75}{2} & -25 & 1 & 1 \\
 		\frac{1}{4} & 0 & 0 & -3 & -2 & 3 & 0 & 0
-	\end{matrix}
-	\]
-	
-	\[
-	\begin{matrix}
-		\ba_1 & \ba_2 & \ba_3 & \ba_4 & \ba_5 &\ba_6 &\ba_7 & \bb \\
-		-\frac{125}{2} & 10500 & 1 & 0 & 50 & -150 & 0 & 0 \\
-		-\frac{1}{4} & 40 & 0 & 1 & \frac{1}{3} & -\frac{2}{3} & 0 & 0 \\
-		\frac{125}{2} & -10500 & 0 & 0 & -50 & 150 & 1 & 1 \\
-		-\frac{1}{2} & 120 & 0 & 0 & -1 & 1 & 0 & 0
 	\end{matrix}
 	\]
 	
@@ -1628,7 +1571,7 @@ Potentiel problème de cycles, car il n'y a pas forcément réduction de la fonc
 	\begin{matrix}
 		\ba_1 & \ba_2 & \ba_3 & \ba_4 & \ba_5 &\ba_6 &\ba_7 & \bb \\
 		0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 \\
-		0 & -2 & 0 & 1 & \frac{2}{15} & -\frac{1}{5} & \frac{1}{250} & \frac{1}{250} \\
+		0 & -2 & 0 & 1 & \circled{$\frac{2}{15}$} & -\frac{1}{5} & \frac{1}{250} & \frac{1}{250} \\
 		1 & -168 & 0 & 0 & -\frac{100}{125} & \frac{300}{125} & \frac{2}{125} & \frac{2}{125} \\
 		0 & 36 & 0 & 0 & -\frac{175}{125} & \frac{275}{125} & \frac{1}{125} & \frac{1}{125}
 	\end{matrix}
@@ -1637,17 +1580,7 @@ Potentiel problème de cycles, car il n'y a pas forcément réduction de la fonc
 \end{frame}
 
 \begin{frame}
-	\frametitle{Exemple}
-	
-	\[
-	\begin{matrix}
-		\ba_1 & \ba_2 & \ba_3 & \ba_4 & \ba_5 &\ba_6 &\ba_7 & \bb \\
-		0 & 0 & 1 & 0 & 0 & 0 & 1 & 1 \\
-		0 & -2 & 0 & 1 & \circled{$\frac{2}{15}$} & -\frac{1}{5} & \frac{1}{250} & \frac{1}{250} \\
-		1 & -168 & 0 & 0 & -\frac{100}{125} & \frac{300}{125} & \frac{2}{125} & \frac{2}{125} \\
-		0 & 36 & 0 & 0 & -\frac{175}{125} & \frac{275}{125} & \frac{1}{125} & \frac{1}{125}
-	\end{matrix}
-	\]
+\frametitle{Exemple}
 	
 	\[
 	\begin{matrix}
