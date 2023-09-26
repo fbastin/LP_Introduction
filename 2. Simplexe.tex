@@ -247,7 +247,6 @@ D
 \begin{pmatrix}
 x_{m+1} \\ \vdots \\ x_n
 \end{pmatrix} =
-=
 \begin{pmatrix}
 y_{10} \\ \vdots \\ y_{m0}
 \end{pmatrix}
@@ -958,7 +957,7 @@ Il est clair que nous voudrions rendre $x'_{m+1}$ aussi grand que possible. En a
 
 \mbox{}
 
-Dès lors, $x'_{m+1}$ peut être augmentée jusqu'à ce que $x_i' = 0$, $i \leq m$, auquel cas nous obtenons obtenons une nouvelle solution de base réalisable. Sinon, si aucune composonte $x_i'$ n'est décroissante, $x_{m+1}'$ peut être augmenté à l'infini, indiquant un ensemble réalisable non borné et une fonction objectif sans borne inférieure.
+Dès lors, $x'_{m+1}$ peut être augmentée jusqu'à ce que $x_i' = 0$, $i \leq m$, auquel cas nous obtenons obtenons une nouvelle solution de base réalisable. Sinon, si aucune composante $x_i'$ n'est décroissante, $x_{m+1}'$ peut être augmenté à l'infini, indiquant un ensemble réalisable non borné et une fonction objectif sans borne inférieure.
 \end{frame}
 
 \begin{frame}
@@ -1622,7 +1621,7 @@ Potentiel problème de cycles, car il n'y a pas forcément réduction de la fonc
 		& x, y \geq 0
 	\end{align*}
 	
-	En choisissant comme variables de base $x_1$, $x_2$, $s_1$ et $s_2$, nous obtenons comme solution de base réalisable $(8, 6, 6, 5, 0, 0)$.
+	En choisissant comme variables de base $x$, $y$, $s_1$ et $s_2$, nous obtenons comme solution de base réalisable $(8, 6, 6, 5, 0, 0)$.
 	
 \end{frame}
 
@@ -1640,26 +1639,9 @@ Potentiel problème de cycles, car il n'y a pas forcément réduction de la fonc
 		& x, y \geq 0
 	\end{align*}
 	
+	On peut choisir les mêmes variables de base que précédemment, en y ajoutant $s_3$, $s_4$ ou $s_5$.
+	La solution de base réalisable est à chaque fois $(8, 6, 6, 5, 0, 0, 0)$. 
 \end{frame}
-
-\begin{frame}
-	\frametitle{Exemple: mise sous forme standard}
-	
-	Ajoutons la contrainte $6x-5y \leq 18$:
-	\begin{align*}
-		\min\ & -3x -2y \\
-		\text{sujet à } & x + 2y + s_1 = 26 \\
-		& -x + y + s_2 = 3 \\
-		& x - y + s_3 = 2 \\
-		& 2x - y + s_4 = 10 \\
-		& 6x-5y + s_5 = 18 \\
-		& x, y \geq 0
-	\end{align*}
-	
-	En choisissant comme variables de base $x_1$, $x_2$, $s_1$, $s_2$ et $s_3$, nous obtenons comme solution de base réalisable $(8, 6, 6, 5, 0, 0, 0)$.
-	
-\end{frame}
-
 
 \begin{frame}
 	
