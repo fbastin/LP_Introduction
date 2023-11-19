@@ -18,7 +18,8 @@
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
     \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
 
-\def\ba{\boldsymbol{a}}
+\input{macros}
+
 \def\bb{\boldsymbol{b}}
 \def\bc{\boldsymbol{c}}
 \def\be{\boldsymbol{e}}
@@ -41,7 +42,7 @@
 
 \def\cR{\mathcal{R}}
 
-\usepackage[frenchb]{babel}
+\usepackage[french]{babel}
 
 \begin{document}
 \frame{\titlepage}
@@ -50,20 +51,20 @@
 \begin{frame}
 \frametitle{Simplexe primal-dual}
 
-Motivations:
+{\bf Motivations}:
 \begin{itemize}
 \item
-Exploiter d'avantage la complémentarité entre le primal et le dual.
+Exploiter davantage la complémentarité entre le primal et le dual.
 \item
 Comme pour le simplexe dual, on part d'une solution dual-réalisable.
 \item
-Primal restreint: on va forcer la condition de complémentarité
+\textcolor{red}{Primal restreint}: on va forcer la condition de complémentarité
 \[
 x_i > 0 \Rightarrow \lambda^T a_i = c_i,
 \]
 en faisant entrer dans la base primale les $x_i$ correspondant aux contraintes duales actives.
 \item
-Dual restreint: on optimise le dual. Si celui-ci est réalisable, augmenter (strictement) la valeur de l'objectif dual va conduire à transformer au moins une contrainte duale inactive en contrainte duale active.
+\textcolor{red}{Dual restreint}: on optimise le dual. Si celui-ci est réalisable, augmenter (strictement) la valeur de l'objectif dual va conduire à transformer au moins une contrainte duale inactive en contrainte duale active.
 \end{itemize}
 
 \end{frame}
@@ -94,17 +95,25 @@ Il s'agit de la variante du simplexe la plus efficace pour les problèmes de flo
 \begin{frame}
 \frametitle{Simplexe primal-dual}
 
-Considérons à nouveau le primal
-\begin{align*}
+Considérons à nouveau le primal (sous forme standard)
+\begin{equation}
+\tag{P}
+\begin{aligned}
 \min_x \ & c^Tx \\
-\mbox{t.q. } & Ax = b\\
-& x \geq 0.
-\end{align*}
+\mbox{t.q. } & Ax = b \qquad (\lambda) \\
+& x \geq 0
+\end{aligned}
+\label{eq:P}
+\end{equation}
 et son dual
-\begin{align*}
+\begin{equation}
+\tag{D}
+\begin{aligned}
 \max_{\lambda} \ & \lambda^T b \\
-\mbox{t.q. } & \lambda^T A \leq c^T
-\end{align*}
+\mbox{t.q. } & \lambda^T A \leq c^T.
+\end{aligned}
+\label{eq:D}
+\end{equation}
 
 \mbox{}
 
@@ -123,19 +132,26 @@ Vu que $\lambda$ est supposé réalisable, cela implique
 \frametitle{Simplexe primal-dual}
 
 Correspondant à $\lambda$ et $P$, nous définissons le problème {\sl primal restreint associé}
-\begin{align*}
+\begin{equation}
+\tag{PR}
+\label{eq:PR}
+\begin{aligned}
 \min_{x,\ y} \ & \bone^Ty \\
-\mbox{t.q. } & Ax + y = b\\
-& x \geq 0,\ x_i = 0 \mbox{ pour } i \notin P\\
+\mbox{t.q. } & Ax + y = b  \qquad (u)\\
+& x \geq 0,\\
+& x_i = 0 \mbox{ pour } i \notin P\\
 & y \geq 0
-\end{align*}
+\end{aligned}
+\end{equation}
 où $\bone$ designe the vecteur $(1, 1, \ldots, 1)$.
-Nous pouvons réécrire le problème comme
-\begin{align*}
+\eqref{eq:PR} se réécrit comme
+$$
+\begin{aligned}
 \min_{y \geq 0,\ x_i \in P} \ & \bone^Ty \\
-\mbox{t.q. } & \sum_{i \in P} a_ix_i + y = b\\
-& x_i \geq 0,\  i \in P
-\end{align*}
+\mbox{t.q. } & \sum_{i \in P} a_ix_i + y = b \\
+& x_i \geq 0,\  i \in P.
+\end{aligned}
+$$
 
 \end{frame}
 
@@ -143,27 +159,30 @@ Nous pouvons réécrire le problème comme
 \frametitle{Simplexe primal-dual}
 
 Le dual associé est appelé {\sl dual restreint associé}
-\begin{align*}
+\begin{equation}
+	\tag{DR}
+	\label{eq:DR}
+\begin{aligned}
 \max_u\ & u^T b\\
 \mbox{t.q. } & u^T a_i \leq 0,\ i \in P\\
 & u \leq \bone.
-\end{align*}
+\end{aligned}
+\end{equation}
 
 \end{frame}
 
 \begin{frame}
 \frametitle{Théorème d'optimalité primale-duale}
 
-{\sl Supposons que $\lambda$ est réalisable pour le dual et que $(x,y)$ est réalisable pour le primal restreint associé, avec $y = 0$ (de sorte que $(x,y)$ est une solution optimale). Alors, $x$ et $\lambda$ sont optimaux pour les programmes primal et dual originaux respectifs.}
+{\sl Supposons que $\lambda$ est réalisable pour le dual \eqref{eq:D} et que $(x,y)$ est réalisable pour le primal restreint associé \eqref{eq:PR}, avec $y = 0$ (de sorte que $(x,y)$ est une solution optimale pour \eqref{eq:PR}). Alors, $x$ et $\lambda$ sont optimaux pour les programmes primal \eqref{eq:P} et dual \eqref{eq:D} originaux respectifs.}
 
 \begin{proof}
-$x$ est clairement réalisable pour le primal: $Ax = b$.
-Nous avons aussi, par définition de $P$,
-$\lambda^T a_i = c_i,\mbox{ si } x_i \ne 0$,
-de sorte que
-\[
+$x$ est clairement réalisable pour \eqref{eq:P}: $Ax = b$.
+Par définition de $P$, $\lambda^T a_i = c_i,\mbox{ si } x_i \ne 0$,
+aussi
+$$
 c^T x = \lambda^T Ax.
-\]
+$$
 En combinant ces deux observations, nous avons
 \[
 c^T x = \lambda^T b,
@@ -176,40 +195,71 @@ impliquant l'optimalité de $x$ et $\lambda$.
 \begin{frame}
 \frametitle{Algorithme primal-dual}
 
-{\bf Etape 1}
-Étant donnée une solution réalisable $\lambda_0$ pour le dual, déterminer le primal restreint associé.
+{\bf Étape 1}
+Étant donné $\lambda_0$ réalisable pour \eqref{eq:D}, déterminer le primal restreint \eqref{eq:PR} associé.
 
 \mbox{}
 
-{\bf Etape 2}
-Optimiser le primal restreint associé.
-Si la valeur optimale de ce primal restreint associé est nulle (impliquant $y = 0$), la solution correspondante est optimale pour le primal original, en vertu du théorème d'optimalité primale-duale; arrêt.
+{\bf Étape 2}
+Optimiser \eqref{eq:PR}.
+Si la valeur optimale de \eqref{eq:PR} est nulle (impliquant $y = 0$), $x$ est optimal pour \eqref{eq:P} (théorème d'optimalité primale-duale); arrêt.
 
 
 \mbox{}
 
-{\bf Etape 3}
-Si la valeur optimale du primal restreint associé est strictement positive
-(i.e. if $y \ne 0$), la solution optimale de ce primal restreint associé n'est pas réalisable pour le primal, et on cherche à améliorer la solution réalisable du dual avant de déterminer un nouveau primal restreint associé.
+{\bf Étape 3}
+Si la valeur optimale de \eqref{eq:PR} est strictement positive
+(i.e. if $y \ne 0$), $x$ n'est pas réalisable pour le primal \eqref{eq:P}, et on cherche à améliorer la solution réalisable $\lambda$ du dual \eqref{eq:D} avant de déterminer un nouveau primal restreint \eqref{eq:PR} associé.
 
+Obtenir du tableau du simplexe de  \eqref{eq:PR} la solution $u_0$ du dual restreint  \eqref{eq:DR}.
+Si $\nexists j$ pour lequel $u_0^T a_j > 0$, \eqref{eq:P} n'a pas de solution réalisable; arrêt.
 \end{frame}
 
 \begin{frame}
 \frametitle{Algorithme primal-dual}
 
 {\bf Etape 3 (suite)}
-Obtenir du tableau du simplexe du primal restreint la solution $u_0$ du dual restreint associé.
-S'il n'y a pas de $j$ pour lequel $u_0^T a_j > 0$, le primal n'a pas de solution réalisable; arrêt.
-Sinon, construire le nouveau vecteur dual réalisable
+Sinon, calculer
+$$
+\epsilon_0 = \min_j \left\lbrace \frac{c_j - \lambda_0^Ta_j}{u_0^T a_j} \,\bigg|\, u_0^Ta_j > 0\right\rbrace,
+$$
+et poser
 \[
-\lambda = \lambda_0 + \epsilon_0 u_0,
+\lambda_0 := \lambda_0 + \epsilon_0 u_0.
 \]
-où
-\[
-\epsilon_0 = \min_j \left\lbrace \frac{c_j - \lambda_0^Ta_j}{u_0^T a_j} \,\bigg|\, u_0^Ta_j > 0\right\rbrace.
-\]
-Retour à l'étape 1, en utilisant ce $\lambda$.
+$\lambda_0$ est réalisable pour $\eqref{eq:D}$.
+Retour à l'étape 1.
 
+\end{frame}
+
+\begin{frame}
+	\frametitle{Algorithme primal-dual: calcul de $u^Ta_i$}
+	
+	Soit $i \in \{1,\ldots,n\}$.
+	Le coefficient de $x_i$ dans \eqref{eq:PR} est égal à zero, aussi le coût à l'optimalité de $\eqref{eq:PR}$ vaut
+	$$
+	0 - u^Ta_i.
+	$$
+	
+	\ 
+	
+	Dès lors, les valeurs de $u^Ta_i$, peuvent être directement identifiées en prenant l'opposé des valeurs dans la ligne des coûts réduits du tableau final du primal restreint, pour les colonnes associées aux $x_i$ correspondants.
+	
+	\
+	
+	Pour les variables de base $x_j$ ($> 0$), nous avons $j \in P$, et les coûts réduits sont nuls:
+	$$
+	0 = 0 - u^Ta_j.
+	$$
+	Dès lors, $u^T a_j = 0$.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Algorithme primal-dual: calcul de $u^Ta_i$}
+	
+	On peut aboutir à la même observation en invoquant les écarts de complémentarité: comme $x_j > 0$, la contrainte duale associée, $u^T a_j \leq 0$ est active, i.e. $u^T a_j = 0$.
+	
 \end{frame}
 
 \begin{frame}
@@ -259,38 +309,6 @@ Tableau du simplexe pour le primal restreint associé:
 c_i - \lambda^Ta_i \rightarrow & 2 & 1 & 4
 \end{matrix}
 \]
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Algorithme primal-dual: calcul de $u^Ta_i$}
-
-Pour $i \notin P$, $x_i$ est fixé à 0 et est hors base.
-Nous pouvons calculer son coût réduit à l'optimalité du primal restreint comme
-\[
-0 - u^Ta_i.
-\]
-En effet, l'objectif du primal restreint étant $\bone^Ty$, les coefficients dans l'objectif associés aux $x_i$ sont tous nuls.
-Dès lors, les valeurs de $u^Ta_i$, $i \notin P$, peuvent être directement identifiées en prenant l'opposé des valeurs dans la ligne des coûts réduits du tableau final du primal restreint, pour les colonnes associées aux $x_i$ correspondants.
-
-\end{frame}
-
-\begin{frame}
-\frametitle{Algorithme primal-dual: calcul de $u^Ta_i$}
-
-Pour les variables de base $x_j$ ($> 0$), nous avons $j \in P$, et les coûts réduits sont nuls.
-
-\mbox{}
-
-À nouveau, le coefficient de $x_j$ dans l'objectif restreint étant nul, et son coût réduit se calcule comme
-\[
-0 - u^Ta_j.
-\]
-On en tire $u^T a_j = 0$.
-
-\mbox{}
-
-On peut aboutir à la même observation en invoquant les écarts de complémentarité: comme $x_j > 0$, la contrainte duale associée, $u^T a_j \leq 0$ est active, i.e. $u^T a_j = 0$.
 
 \end{frame}
 
@@ -448,7 +466,7 @@ x_1 = 2,\ x_2 = 1,\ x_3 = 0.
 \begin{frame}
 \frametitle{Algorithme primal-dual: preuve}
 
-Dans l'étape 3, il est indiqué que $u_0^T a_j \leq 0$ pour tout $j$ implique que le primal n'a pas de solution réalisable.
+Dans l'étape 3, il est indiqué que $u_0^T a_j \leq 0$ pour tout $j$ implique que le primal \eqref{eq:P} n'a pas de solution réalisable.
 
 \mbox{}
 

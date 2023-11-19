@@ -208,31 +208,39 @@ Pour $n = 50$, cela donne $2^{50} - 1 \approx 10^{15}$. Si on était capable de 
 
 \end{frame}
 
-%\begin{frame}
-%\frametitle{Un peu d'histoire}
+\begin{frame}
+\frametitle{Un peu d'histoire}
 
-% Pris de https://www.stat.cmu.edu/~ryantibs/convexopt-S15/lectures/16-primal-dual.pdf
-%\begin{itemize}
-%\item 
-%Dantzig (1940s): the simplex method. Still one of the most popular algorithms for linear programming.
-%\item
-%Klee and Minty (1960s): LP with $n$ variables and $2^n$ constraints that the simplex method needs to perform $2^n$ iterations to solve.
-%\item 
-%Khachiyan (1979): first polynomial-time algorithm for LP based on the ellipsoid method of Nemirovski and Yudin (1976). Theoretically strong but computationally weak.
-%\item
-%Karmarkar (1984): first interior-point polynomial-time algorithm for LP.
-%\item 
-%Renegar (1988): Newton-based interior-point algorithm for LP. Best known theoretical complexity to date.
+Adapté de Javier Peña, \url{https://www.stat.cmu.edu/~ryantibs/convexopt-S15/lectures/16-primal-dual.pdf}
+\begin{itemize}
+\item 
+Dantzig (1940s): la méthode du simplexe.
+% Still one of the most popular algorithms for linear programming.
+\item
+Klee et Minty (1960s).
+%: LP with $n$ variables and $2^n$ constraints that the simplex method needs to perform $2^n$ iterations to solve.
+\item 
+Khachiyan (1979): premier algorithm en temps polynomial pour la programmation linéaire.
+%first polynomial-time algorithm for LP based on the ellipsoid method of Nemirovski and Yudin (1976). Theoretically strong but computationally weak.
+\item
+Karmarkar (1984): premier algorithme en temp polynomial pour la programmation linéaire.
+%first interior-point polynomial-time algorithm for LP.
+\item 
+Renegar (1988): algorithme de points intérieurs pour la programmation linéaire basé sur Newton. Meilleure complexité théorique connue à ce jour.
+% Newton-based interior-point algorithm for LP. Best known theoretical complexity to date.
 %\item
 %Modern state-of-the-art LP solvers typically use both simplex and interior-point methods.
-%\end{itemize}
+\end{itemize}
 
-%\end{frame}
+Référence principale: Robert J. Vanderbei, \textit{Linear
+Programming: Foundations and Extensions}, 5e édition, Springer, 2020, \url{https://link.springer.com/book/10.1007/978-3-030-39415-8}
+
+\end{frame}
 
 \begin{frame}
 \frametitle{Méthodes de points intérieurs: complémentarité}
 
-(Vanderbei) Pourquoi les problèmes linéaires sont-ils difficiles? En raison de la complémentarité!
+Pourquoi les problèmes linéaires sont-ils difficiles? En raison de la complémentarité!
 
 \mbox{}
 
@@ -327,7 +335,7 @@ Soucis: le système n'est pas linéaire. La non-linéarité des conditions de co
 \begin{frame}
 \frametitle{Conditions d'optimalité: $\mu$-complémentarité}
 
-En plus d'ignorer les contraintes de non-négativité, on va relâcher les contraintes de complémentarité en utilisant un paramètre $\mu > 0$:
+En plus d'ignorer les contraintes de non-négativité, on va modifier les contraintes de complémentarité en utilisant un paramètre $\mu > 0$:
 \begin{align*}
 Ax - u &= b \\
 A^T \lambda + t &= c \\
@@ -449,6 +457,8 @@ L'algorithme travaille itérativement, en calcul un pas à chaque itération, ma
 		La complexité polynomiale n’est pas connue pour l'approche primale (ou duale).
 		\item
 		Analyse de convergence complexe.
+		\item 
+		Publié pour la première en 1967 par I. I. Dikin, mais ignoré jusqu'au milieu des années 1980.
 	\end{itemize}
 	
 \end{frame}
@@ -575,7 +585,7 @@ L'algorithme travaille itérativement, en calcul un pas à chaque itération, ma
 	\begin{align*}
 		AP &= 0 \\
 		P &= P^T \\
-		P^2 &= P.
+		P^2 &= P\qquad \text{(matrice idempotente)}.
 	\end{align*}
 	Notons $P = I - A^T(AA^T)^{-1}A$. Alors
 $$
@@ -609,10 +619,10 @@ $$
 \begin{frame}
 	\frametitle{Transformation affine}
 	
+\begin{itemize}
+	\item 
 	Il s'agit de faire une mise à l'échelle afin que le nouveau point $x^+$ soit loin de la frontière définie par $x \geq 0$.
-	
-	\mbox{}
-	
+	\item 
 	Un point idéal serait le vecteur unitaire $e$. Ainsi, on cherche une transformation
 	affine qui transforme $x^+$ en $e$.
 	La matrice de transformation est simplement l'inverse de la matrice diagonale dont les
@@ -622,15 +632,14 @@ $$
 	$$
 	X^{-1}x = \overline{x}.
 	$$
-	
-	\mbox{}
-	
+	\item 
 	Dans l'espace transformé, le programme devient
 	\begin{align*}
 		\min_{\overline{x}} \ & c^TX\overline{x} = \overline{c}^T\overline{x} \\
 		\mbox{t.q. } & AX\overline{x} = \overline{A}\overline{x} = b\\
 		& \overline{x} \geq 0.
 	\end{align*}
+\end{itemize}
 	
 \end{frame}
 
@@ -788,6 +797,12 @@ $$
 		x_c &:= x^+.
 	\end{align*}
 	
+\end{frame}
+
+\begin{frame}
+\frametitle{Initialisation}
+
+Voir Vanderbei, Chapitre 21, Section 5.
 \end{frame}
 
 \end{document}
