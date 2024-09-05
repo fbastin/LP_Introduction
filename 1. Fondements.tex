@@ -38,7 +38,7 @@
 
 \begin{align*}
 \min_{\bsx}\ & \bsc^T \bsx \\
-\mbox{s.c. } & \bsA \bsx = \bsB, \\
+\mbox{s.c. } & \bsA \bsx = \bsb, \\
  & \bsx \geq 0.
 \end{align*}
 
@@ -57,7 +57,7 @@ Sans perte de généralité, supposons les $m$ premières colonnes de $\bsA$ ind
 
 {\it \textcolor{blue}{Solution de base}}: $\bsx = (\bsx_b \ 0)$, avec $\bsB\bsx_b = \bsb$.\\
 {\it \textcolor{blue}{Solution de base dégénérée}}: si $\bsx_b$ contient des composantes nulles. \\
-{\it \textcolor{blue}{Solution de base réalisable}}: solution de base telle que $\bsA\bsx = \bsB$ et $\bsx \geq 0$.
+{\it \textcolor{blue}{Solution de base réalisable}}: solution de base telle que $\bsA\bsx = \bsb$ et $\bsx \geq 0$.
 \end{frame}
 
 \begin{frame}
@@ -426,7 +426,7 @@ L'ensemble des combinaisons convexes de $\bsx_1$ et $\bsx_2$ est le segment de d
 	\item
 	Si $C$ et $D$ sont deux ensembles convexes, l'ensemble
 	\[
-	C + D = \lbrace \bsx \,|\, \bsx = \bsc + \bsD,\ \bsc \in C,\ \bsD \in D \rbrace,
+	C + D = \lbrace \bsx \,|\, \bsx = \bsc + \bsd,\ \bsc \in C,\ \bsd \in D \rbrace,
 	\]
 	est convexe.
 	\item
