@@ -346,23 +346,36 @@ $$
 \cdots & \frac{y_{pq}}{y_{pq}} & \ldots & \frac{y_{pn}}{y_{pq}} & \frac{y_{p0}}{y_{pq}}
 \end{matrix}
 $$
+Le coefficient de $x_q$ vient de passer à 1 dans cette équation.
 
 \mbox{}
 
-Le coefficient de $x_q$ vient de passer à 1 dans cette équation.
+En d'autres termes, la $p^e$ ligne devient
+$$
+ y'_{pj} = \frac{y_{pj}}{y_{pq}}.
+$$
+
+\mbox{}
+
 Il reste à supprimer cette variable des autres équations, en mettant à 0 le coefficient de $x_q$ dans les autres lignes du système.
 
-\mbox{}
+\end{frame}
 
-Il suffit de prendre les nouveaux coefficients suivant pour conserver un système canonique
-\[
-\begin{cases}
-y'_{ij} = y_{ij} 
- - \frac{y_{pj}}{y_{pq}} y_{iq}, \quad i \ne p, \\
- y'_{pj} = \frac{y_{pj}}{y_{pq}}.
- \end{cases}
-\]
-Ainsi, $y'_{iq} = 0$ pour $i \ne p$.
+\begin{frame}
+\frametitle{Pivot}
+
+\begin{itemize}
+\item
+Pour mettre à 0 les coefficients dans les autres lignes, on va enlever le multiple adéquat de la $p^e$ ligne.
+\item
+Ainsi, pour $i \ne p$, on prend
+$$
+y'_{ij} = y_{ij} - \frac{y_{pj}}{y_{pq}} y_{iq}.
+$$
+\item
+En particulier, nous avons alors $y'_{iq} = 0$ pour $i \ne p$.
+\end{itemize}
+
 \end{frame}
 
 \begin{frame}
