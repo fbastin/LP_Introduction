@@ -29,9 +29,10 @@
 \def\bzero{\boldsymbol{0}}
 
 \def\cR{\boldsymbol{R}}
-\def\RR{\mathbb{R}}
 
 \setbeamertemplate{footline}[frame number]
+
+\include{macros}
 
 \begin{document}
 \frame{\titlepage}
@@ -688,7 +689,7 @@ Nous avons donc défini une procédure d'échange de bases ou de détection d'un
 \end{frame}
 
 \begin{frame}
-\frametitle{Echange de bases: forme tableau}
+\frametitle{Échange de bases: forme tableau}
 
 Reprenons le système
 \begin{align*}
@@ -712,7 +713,7 @@ Supposons de plus que $y_{i0} \geq 0$, $i = 1,\ldots, m$, de sorte à avoir une 
 \end{frame}
 
 \begin{frame}
-\frametitle{Echange de bases: forme tableau}
+\frametitle{Échange de bases: forme tableau}
 
 On veut faire entrer le vecteur $\ba_q$ ($q > m$), tout en maintenant la réalisabilité.
 
@@ -750,7 +751,7 @@ Base: $\ba_1$, $\ba_2$, $\ba_3$, donnant la solution de base réalisable
 \[
 x = (4, 3, 1, 0, 0, 0)^T
 \]
-Supposons avoir décider de faire rentrer $a_4$ dans la base.
+Supposons avoir décidé de faire rentrer $a_4$ dans la base.
 Afin de déterminer quel élément est le pivot approprié, nous calculons les trois rapports:
 \begin{align*}
 4/2 &= 2 \\
@@ -831,7 +832,11 @@ x_2 &= y_{20} - \sum_{j=m+1}^n y_{2j}x_j \\
 & \vdots \\
 x_m &= y_{m0} - \sum_{j=m+1}^n y_{mj}x_j \\
 \end{align*}
+
+Cette écriture correspond à un \textcolor{red}{dictionnaire}: les variables de base sont définies par rapport aux variables hors base.
+
 \end{frame}
+
 
 \begin{frame}
 \frametitle{Déterminer une solution réalisable optimale}
@@ -925,8 +930,8 @@ En ajoutant $\sum_{j = {m+1}}^{n} c_jx_j$ de part et d'autre, nous obtenons comm
 
 \begin{itemize}
 \item
-\'Etant donnée une solution de base réalisable avec une valeur correspondante de la fonction objectif égale à $z_0$, supposons qu'il existe au moins un $j$ tel que $c_j - z_j < 0$.
-Il existe alors une solution réalisable donnant une valeur $z < z_0$.
+Soit une solution de base réalisable $\bsx$ avec $\bsc^T\bsx = z_0$.
+Si $\exists$ au moins un $j$ tel que $c_j - z_j < 0$, alors $\exists$ une solution réalisable donnant une valeur $z < z_0$.
 \item
 Si la colonne $\ba_j$ peut être échangée avec une colonne de la base originale, cela donnera une nouvelle solution de base réalisable, avec la valeur $z < z_0$.
 \item
@@ -942,7 +947,7 @@ Soit $(x_1, x_2,\ldots, x_m, 0,\ldots,0)$ une solution de base réalisable, avec
 \[
 (x_1', x_2', \ldots, x_m', x_{m+1}', 0, \ldots, 0),
 \]
-avec $x_{m+1}' > 0$.
+avec $x_{m+1}' > 0$ (cf. dictionnaire).
 
 \mbox{}
 
