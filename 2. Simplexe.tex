@@ -1084,7 +1084,38 @@ $$
 
 S.p.d.g., comme précédemment, nous supposons que nous pouvons prendre les $m$ premières colonnes de $A$ comme base, i.e. $ A = \begin{pmatrix}
 	B & D
-\end{pmatrix}.$ Le système peut alors se réécrire
+\end{pmatrix}.$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Objectif et contraintes}
+
+On a
+$$
+\begin{pmatrix}
+	B^{-1} & 0 \\
+	-\bc^TB^{-1} & 1 
+\end{pmatrix}
+\begin{pmatrix}
+	A & 0 \\
+	\bc^T & 1 
+\end{pmatrix}
+\begin{pmatrix}
+	\bx \\
+	-z 
+\end{pmatrix}
+=
+\begin{pmatrix}
+	B^{-1} & 0 \\
+	-\bc^TB^{-1} & 1 
+\end{pmatrix}
+\begin{pmatrix}
+	\bb \\
+	0
+\end{pmatrix}
+$$
+et de là
 $$
 \begin{pmatrix}
 	I & B^{-1}D & 0 \\
