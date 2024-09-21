@@ -1177,7 +1177,7 @@ Non réalisable & impossible & possible & possible \\
 	\[
 	A = \begin{pmatrix}
 		\vdots & \vdots & & \vdots \\
-		a_1 & a_2 & \ldots & a_m \\
+		a_1 & a_2 & \ldots & a_n \\
 		\vdots & \vdots & & \vdots
 	\end{pmatrix}
 	\qquad
@@ -1625,7 +1625,7 @@ Non réalisable & impossible & possible & possible \\
 		\mbox{s.c. } & A^T \lambda \leq c.
 	\end{align*}
 	
-	\textit{Pour toute solution de base non dégénérée x du primal, il existe une et une seule solution $\lambda$ du dual complémentaire à $x$.}
+	\textcolor{red}{\textit{Pour toute solution de base non dégénérée x du primal, il existe une et une seule solution $\lambda$ du dual complémentaire à $x$.}}
 	
 	Le résultat tient même si $x$ est non-réalisable (i.e. les contraintes de non-négativité ne sont pas satisfaites).
 	
@@ -1717,7 +1717,7 @@ Non réalisable & impossible & possible & possible \\
 	Motivations:
 	\begin{itemize}
 		\item
-		Il arrive souvent qu’une solution de base non admissible (i.e. violant les contraintes de non-négativité), mais satisfaisant les contraintes d'optimalité soit identifiables facilement (par exemple, variables d’écart de contraintes $\leq$ et composantes négatives dans le terme de droite).
+		Il arrive souvent qu’une solution de base non admissible (i.e. violant les contraintes de non-négativité), mais satisfaisant les contraintes d'optimalité soit identifiable facilement (par exemple, variables d’écart de contraintes $\leq$ et composantes négatives dans le terme de droite).
 		\item
 		Cette base correspond à une solution admissible du dual, solution identifiable à partir des multiplicateurs du simplexe.
 	\end{itemize}
@@ -1882,7 +1882,7 @@ Non réalisable & impossible & possible & possible \\
 	\end{align*}
 	nous avons
 	\[
-	u^i a_j = \delta_{ij}
+	u^i a_j = \delta_{ij},\ j = 1,\ldots,m,
 	\]
 	où
 	\[
@@ -1939,7 +1939,7 @@ Non réalisable & impossible & possible & possible \\
 	\[
 	k = \arg\min_j \left\lbrace \frac{z_j-c_j}{y_{ij}}\mbox{ t.q. } y_{ij} < 0 \right\rbrace.
 	\]
-	Nous avons
+	Alors,
 	\begin{align*}
 		\overline{\lambda}^T a_k &= z_k - \epsilon_0 y_{ik} \\
 		&= z_k - \frac{z_k-c_k}{y_{ik}} y_{ik} \\
