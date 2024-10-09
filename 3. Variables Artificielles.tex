@@ -102,11 +102,10 @@ $\by = (y_1, y_2,\ldots, y_m)$ est un vecteur de variables artificielles.
 \item 
 Le programme artificiel est déjà sous forme canonique, avec comme solution de base $\by = \bb$.
 \item 
-Si le programme initial est réalisable, une solution optimale du programme artificiel est $\by = 0$.
-En effet, nous avons alors qu'il existe un $\bx \geq 0$ tel que $\bA\bx = \bb$.
-\item
-Sinon, si le programme initial n'est pas réalisable, aucun $\bx \geq 0$ ne satisfait le système linéaire $\bA \bx = \bb$.
-La valeur optimale du programme artificiel est $> 0$.
+La solution optimale du programme artificiel est $\by = 0$ ssi $\exists\, \bx \geq 0 \mbox{ t.q. } \bA\bx = \bb$ (le programme initial est réalisable), .
+%\item
+%Sinon, si le programme initial n'est pas réalisable, aucun $\bx \geq 0$ ne satisfait le système linéaire $\bA \bx = \bb$.
+%La valeur optimale du programme artificiel est $> 0$.
 \item 
 Si le problème est réalisable et si dans la solution finale certaines composantes de $\by$ sont toujours dans la base, nous avons une solution de base dégénérée. Si $A$ est de rang plein, on peut échanger chacun des $y_i$ avec une variable hors-base.
 %Si la solution est non-dégénérée, aucune composante de $\by$ n'est encore dans la base.
