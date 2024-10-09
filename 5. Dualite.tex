@@ -840,9 +840,10 @@ fermé: $(0,0) \in C$.
 
 \begin{proof}
 
-Mais $(1,0) \notin C$. Par l'absurde, supposons $(1,0) \in C$.
+%Mais $(1,0) \notin C$. Par l'absurde, 
+Supposons $(1,0) \in C$.
 
-Nous avons donc $w = 0$, et de là, il existe un certain couple $(t_0, x_0)$ tel que $t_0b - Ax_0$ = 0. Deux cas sont envisageables:
+En particulier, $w = 0$, et $\exists\, (t_0, x_0)$ t.q. $t_0b - Ax_0 = 0$, $t_0 \geq 0$. % Deux cas sont envisageables:
 \begin{itemize}
 \item
 Si $t_0 > 0$, alors
@@ -852,13 +853,13 @@ Comme $z^* \leq c^Tx$, $r = t_0z^* - t_0c^Tx_0/t_0 \leq 0$, alors qu'on supposai
 Si $t_0 = 0$, alors $w = Ax_0 = 0$, avec $x_0 \geq 0$.
 D'autre part, $1 = r = t_0z^* - c^Tx_0 = -c^Tx_0$, et donc $c^T x_0 = -1$.
 
-Si $x$ est réalisable pour le primal, alors $\forall \alpha \geq 0$, $x+\alpha x_0$ est realisable comme $A(x+\alpha x_0) = Ax + \alpha A x_0 = b$, et $x+\alpha x_0 \geq 0$.
+Si $x$ est réalisable pour le primal, alors $\forall \alpha \geq 0$, $x+\alpha x_0$ est realisable car $A(x+\alpha x_0) = %Ax + \alpha A x_0 = 
+b$, et $x+\alpha x_0 \geq 0$.
 
 De plus, $c^T(x+\alpha x_0) = c^Tx - \alpha \rightarrow -\infty$ quand $\alpha \rightarrow \infty$.
 Ceci contredit l'existence d'un minimum fini.
-\item
-Donc, $(1,0) \notin C$.
 \end{itemize}
+Ainsi, $(1,0) \notin C$.
 
 \end{proof}
 
@@ -913,11 +914,12 @@ De manière équivalente, par définition de $C$,
 \[
 (c^T-\lambda^TA)x - tz^* + t\lambda^T b \geq 0,\ \forall x, t \geq 0.
 \]
-
-\mbox{}
-
-$t = 0$ donne $\lambda^T A \leq c^T$, i.e. $\lambda$ est réalisable pour le dual.\\
+\begin{itemize}
+	\item 
+$t = 0$ donne $\lambda^T A \leq c^T$, i.e. $\lambda$ est réalisable pour le dual.
+	\item 
 $x = 0$ et $t = 1$ donne $\lambda^T b \geq z^*$. Par le lemme 1 et son corollaire, $\lambda$ est optimal pour le dual.
+\end{itemize}
 
 \mbox{}
 
