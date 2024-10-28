@@ -1,4 +1,6 @@
-\documentclass[usepdftitle=false]{beamer}
+\documentclass[aspectratio=169, usepdftitle=false]{beamer}
+
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 
 \usetheme{Singapore}
@@ -1448,7 +1450,7 @@ Non réalisable & impossible & possible & possible \\
 		\item
 		Le profit augmente de 0.75 par augmentation d'une tonne de M1 et de 0.5 par tonne de M2.
 		\item
-		Les ``ressources'' 3 et 4 sont abondantes; augmenter ces ressources n'apporte aucun profit supplémentaire.
+		Les <<ressources>> 3 et 4 sont abondantes; augmenter ces ressources n'apporte aucun profit supplémentaire.
 	\end{itemize}
 	
 \end{frame}
@@ -1657,7 +1659,7 @@ Non réalisable & impossible & possible & possible \\
 	Considérons un ensemble de variables de base $B$ et un ensemble de variables hors base $D$, tels que la base correspondante est non dégénérée :
 	\begin{align*}
 		& x_B = B^{-1}b, \quad x_D = 0, \\
-		& \forall\, j\ x_{Bj} \ne 0.
+		& \forall j\ x_{Bj} \ne 0.
 	\end{align*}
 	
 	Construisons une solution duale complémentaire à la solution primale:
@@ -1844,7 +1846,7 @@ Non réalisable & impossible & possible & possible \\
 \begin{frame}
 	\frametitle{Méthode du simplexe dual}
 	
-	Un cycle du simplexe, appliqué au dual, reviendra à échanger deux composantes de $\lambda$, de manière à ce qu'une inégalité stricte devienne une égalité, et vice-versa, tout en augmentant la valeur du dual.
+	Une itération du simplexe, appliquée au dual, reviendra à échanger deux composantes de $\lambda$, de manière à ce qu'une inégalité stricte devienne une égalité, et vice-versa, tout en augmentant la valeur du dual.
 	
 	\mbox{}
 	
