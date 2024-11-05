@@ -1,4 +1,4 @@
-\documentclass[t,usepdftitle=false]{beamer}
+\documentclass[t, aspectratio=169, usepdftitle=false]{beamer}
 
 \usepackage[utf8]{inputenc}
 
@@ -121,7 +121,7 @@ et son dual
 \[
 P = \lbrace i \,|\, \lambda^T a_i = c_i \rbrace.
 \]
-Vu que $\lambda$ est supposé réalisable, cela implique
+Ainsi,
 \[
 \lambda^T a_i < c_i,\ i \notin P.
 \]
@@ -158,7 +158,7 @@ $$
 \begin{frame}
 \frametitle{Simplexe primal-dual}
 
-Le dual associé est appelé {\sl dual restreint associé}
+Le dual associé est appelé {\sl dual restreint associé}:
 \begin{equation}
 	\tag{DR}
 	\label{eq:DR}
@@ -181,12 +181,8 @@ $x$ est clairement réalisable pour \eqref{eq:P}: $Ax = b$.
 Par définition de $P$, $\lambda^T a_i = c_i,\mbox{ si } x_i \ne 0$,
 aussi
 $$
-c^T x = \lambda^T Ax.
+c^T x = \lambda^T Ax = \lambda^T b,
 $$
-En combinant ces deux observations, nous avons
-\[
-c^T x = \lambda^T b,
-\]
 impliquant l'optimalité de $x$ et $\lambda$.
 \end{proof}
 
@@ -236,7 +232,7 @@ Retour à l'étape 1.
 	\frametitle{Algorithme primal-dual: calcul de $u^Ta_i$}
 	
 	Soit $i \in \{1,\ldots,n\}$.
-	Le coefficient de $x_i$ dans \eqref{eq:PR} est égal à zero, aussi le coût à l'optimalité de $\eqref{eq:PR}$ vaut
+	Le coefficient de $x_i$ dans \eqref{eq:PR} est égal à zero, aussi le coût réduit à l'optimalité de $\eqref{eq:PR}$ vaut
 	$$
 	0 - u^Ta_i.
 	$$
@@ -251,7 +247,7 @@ Retour à l'étape 1.
 	$$
 	0 = 0 - u^Ta_j.
 	$$
-	Dès lors, $u^T a_j = 0$.
+	Dès lors, $u^T a_j = 0,\ j \in P$.
 	
 \end{frame}
 
@@ -343,7 +339,7 @@ Les quantités $-u_0^Ta_i$, $i = 1, 2, 3$, sont égales aux trois premiers élé
 
 \mbox{}
 
-Pour trouver $\epsilon$, nous prenons dès lors le minimum des rapport
+Pour trouver $\epsilon$, nous prenons dès lors le minimum des rapports
 \[
 \frac{2}{3}, \frac{1}{2}, \frac{4}{5}.
 \]
