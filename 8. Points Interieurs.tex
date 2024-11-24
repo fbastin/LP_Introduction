@@ -22,33 +22,6 @@
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
     \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
 
-\def\ba{\boldsymbol{a}}
-\def\bb{\boldsymbol{b}}
-\def\bc{\boldsymbol{c}}
-\def\bd{\boldsymbol{d}}
-\def\be{\boldsymbol{e}}
-\def\br{\boldsymbol{r}}
-\def\bs{\boldsymbol{s}}
-\def\bu{\boldsymbol{u}}
-\def\bx{\boldsymbol{x}}
-\def\by{\boldsymbol{y}}
-\def\bz{\boldsymbol{z}}
-\def\bA{\boldsymbol{A}}
-\def\bB{\boldsymbol{B}}
-\def\bD{\boldsymbol{D}}
-\def\bH{\boldsymbol{H}}
-\def\bI{\boldsymbol{I}}
-\def\bL{\boldsymbol{L}}
-\def\bM{\boldsymbol{M}}
-\def\bU{\boldsymbol{U}}
-\def\bX{\boldsymbol{X}}
-\def\bzero{\boldsymbol{0}}
-\def\bone{\boldsymbol{1}}
-\def\blambda{\boldsymbol{\lambda}}
-
-\def\cF{\mathcal{F}}
-\def\cR{\mathcal{R}}
-
 \usepackage[french]{babel}
 
 \input{macros}
@@ -139,7 +112,7 @@ L'idée de base est de résoudre une succession de problèmes barrières pour de
 
 Considérons un ensemble $\mathcal{S}$ dans un sous-ensemble $\mathcal{X}$ de $E^n$, défini comme
 \[
-\mathcal{S} = \lbrace \bx \in \mathcal{X}\,:\, g_j(\bx) \geq 0,\ j = 1,2,\ldots,m \rbrace,
+\mathcal{S} = \lbrace \bsx \in \mathcal{X}\,:\, g_j(\bsx) \geq 0,\ j = 1,2,\ldots,m \rbrace,
 \]
 et supposons que les fonctions $g_j$ sont continues.
 
@@ -147,14 +120,14 @@ et supposons que les fonctions $g_j$ sont continues.
 
 Nous supposons aussi que $\mathcal{S}$ a un intérieur non-vide:
 \[
-\mathring{\mathcal{S}} = \lbrace \bx \in \mathcal{X} \,:\, g_j(\bx) > 0,\ \forall\, j \rbrace \ne \emptyset.
+\mathring{\mathcal{S}} = \lbrace \bsx \in \mathcal{X} \,:\, g_j(\bsx) > 0,\ \forall\, j \rbrace \ne \emptyset.
 \]
 
 \mbox{}
 
 Définissons aussi sur $\mathring{\mathcal{S}}$ la {\em fonction potentiel}
 \[
-\psi(\bx) = -\sum_{j = 1}^m \log g_j(\bx).
+\psi(\bsx) = -\sum_{j = 1}^m \log g_j(\bsx).
 \]
 
 \end{frame}
@@ -168,10 +141,10 @@ Le {\em centre analytique} de $\mathcal{S}$ est le vecteur (ou l'ensemble de vec
 
 En d'autres termes, c'est le vecteur (ou l'ensemble de vecteurs) qui résout
 \[
-\min_{\bx} \psi(\bx) =
-\min_{\bx}
+\min_{\bsx} \psi(\bsx) =
+\min_{\bsx}
 \left\lbrace
--\sum_{j = 1}^m \log g_j(\bx) \,:\, \bx \in \mathcal{X},\ g_j(\bx) > 0\ \forall\, j
+-\sum_{j = 1}^m \log g_j(\bsx) \,:\, \bsx \in \mathcal{X},\ g_j(\bsx) > 0\ \forall\, j
 \right\rbrace.
 \]
 
@@ -190,7 +163,7 @@ le cube unité dans $E^n$.
 
 Cherchons à minimser la fonction potentiel correspondante
 \[
-\psi(\bx) = -\sum_{i = 1}^n \log x_i - \sum_{i = 1}^n \log (1-x_i).
+\psi(\bsx) = -\sum_{i = 1}^n \log x_i - \sum_{i = 1}^n \log (1-x_i).
 \]
 
 \end{frame}
@@ -198,7 +171,7 @@ Cherchons à minimser la fonction potentiel correspondante
 \begin{frame}
 \frametitle{Exemple: un cube}
 
-Pour ce faire, annulons le gradient de $\psi(\bx)$
+Pour ce faire, annulons le gradient de $\psi(\bsx)$
 \[
 \nabla_x \psi(x) =
 \begin{pmatrix}
@@ -255,9 +228,9 @@ Un tel ensemble est la région réalisable elle-même. Un autre est l'ensemble d
 
 Considérons par exemple le centre analytique associé à un \textcolor{red}{polytope borné} $\Omega$ dans $\RR^m$, représenté par $n$ ($> m$) inégalités linéaires:
 \[
-\Omega = \lbrace \by \in \RR^m \,:\, \bc^T - \by^T \bA \geq \bzero \rbrace,
+\Omega = \lbrace \bsy \in \RR^m \,:\, \bsc^T - \bsy^T \bsA \geq \bszero \rbrace,
 \]
-où $\bA \in \RR^{m \times n}$ et $c \in \RR^n$ sont données, et $\bA$ est de rang $m$.
+où $\bsA \in \RR^{m \times n}$ et $c \in \RR^n$ sont données, et $\bsA$ est de rang $m$.
 
 \end{frame}
 
@@ -266,16 +239,16 @@ où $\bA \in \RR^{m \times n}$ et $c \in \RR^n$ sont données, et $\bA$ est de r
 
 Dénotons l'intérieur de $\Omega$ par
 \[
-\mathring{\Omega} = \lbrace \by \in \RR^m \,:\, \bc^T - \by^T\bA > 0 \rbrace.
+\mathring{\Omega} = \lbrace \bsy \in \RR^m \,:\, \bsc^T - \bsy^T\bsA > 0 \rbrace.
 \]
 
 \mbox{}
 
 La fonction potentiel pour cet ensemble est
 \[
-\psi_{\Omega} (\by) = - \sum_{j = 1}^n \log (c_j - \by^T\ba_j) = -\sum_{j = 1}^n \log s_j,
+\psi_{\Omega} (\bsy) = - \sum_{j = 1}^n \log (c_j - \bsy^T\bsa_j) = -\sum_{j = 1}^n \log s_j,
 \]
-où $\bs = \bc^T - \by^T\bA$ est un vecteur d'écart.
+où $\bss = \bsc^T - \bsy^T\bsA$ est un vecteur d'écart.
 
 \mbox{}
 
@@ -289,7 +262,7 @@ $$
 \begin{frame}
 \frametitle{Centre analytique}
 
-Le centre analytique de $\Omega$ est le point de $\Omega$ qui minimise la fonction potentiel. Ce point, dénoté $\by^a$ est associé à $\bs^a = \bc - \bA\by^a$. La paire $(\by^a, \bs^a)$ est définie de manière unique, vu que la fonction potentiel est strictement convexe sur un ensemble convexe borné.
+Le centre analytique de $\Omega$ est le point de $\Omega$ qui minimise la fonction potentiel. Ce point, dénoté $\bsy^a$ est associé à $\bss^a = \bsc - \bsA\bsy^a$. La paire $(\bsy^a, \bss^a)$ est définie de manière unique, vu que la fonction potentiel est strictement convexe sur un ensemble convexe borné.
 
 \mbox{}
 
@@ -299,11 +272,11 @@ Notons aussi que minimiser la fonction potentiel revient ici à maximiser le pro
 
 Comme,
 $$
-\frac{d}{dy_i} (c_j-\by^T\ba_j) = -a_{ij},
+\frac{d}{dy_i} (c_j-\bsy^T\bsa_j) = -a_{ij},
 $$
 nous avons
 $$
-\frac{d}{dy_i} \psi(\by) = \sum_{j = 1}^n \frac{a_{ij}}{c_j - \by^T\ba_j}.
+\frac{d}{dy_i} \psi(\bsy) = \sum_{j = 1}^n \frac{a_{ij}}{c_j - \bsy^T\bsa_j}.
 $$
 
 \end{frame}
@@ -311,9 +284,9 @@ $$
 \begin{frame}
 \frametitle{Centre analytique}
 
-Annuler le gradient de $\psi(\by)$ par rapport à $\by$ donne
+Annuler le gradient de $\psi(\bsy)$ par rapport à $\bsy$ donne
 \[
-\sum_{j = 1}^n \frac{a_{ij}}{c_j - \by^T\ba_j} = 0,\ \forall\, i,
+\sum_{j = 1}^n \frac{a_{ij}}{c_j - \bsy^T\bsa_j} = 0,\ \forall\, i,
 \]
 ou encore
 \[
@@ -325,7 +298,7 @@ $$
 $$
 soit
 $$
-\bA\bx = \bzero.
+\bsA\bsx = \bszero.
 $$
 
 \end{frame}
@@ -335,13 +308,13 @@ $$
 
 Notons la multiplication composante par composante comme suit
 \[
-\bx \circ \bs = (x_1s_1, x_2s_2, \ldots, x_ns_n)^T.
+\bsx \circ \bss = (x_1s_1, x_2s_2, \ldots, x_ns_n)^T.
 \]
 Le \textcolor{blue}{centre analytique} est alors défini par les conditions
 \begin{align*}
-\bx \circ \bs &= \bone \\
-\bA\bx &= \bzero \\
-\bA^T\by + \bs & = \bc.
+\bsx \circ \bss &= \bsone \\
+\bsA\bsx &= \bszero \\
+\bsA^T\bsy + \bss & = \bsc.
 \end{align*}
 
 \end{frame}
@@ -351,21 +324,21 @@ Le \textcolor{blue}{centre analytique} est alors défini par les conditions
 
 Le centre analytique peut aussi être défini quand l'intérieur est vide ou que des égalités sont présentes, par exemple avec
 \[
-\Omega = \lbrace \by \in \RR^m \,:\, \bc^T-\by^T\bA \geq 0,\, \bB\by = \bb \rbrace
+\Omega = \lbrace \bsy \in \RR^m \,:\, \bsc^T-\bsy^T\bsA \geq 0,\, \bsB\bsy = \bsb \rbrace
 \]
-Dans ce cas, le centre analytique est choisi sur la surface linéaire $\lbrace \by \,:\, \bB\by = \bb \rbrace$ pour maximiser le produit des variables d'écart.
+Dans ce cas, le centre analytique est choisi sur la surface linéaire $\lbrace \bsy \,:\, \bsB\bsy = \bsb \rbrace$ pour maximiser le produit des variables d'écart.
 
 \mbox{}
 
 Dans ce contexte, l'intérieur de $\Omega$ réfère à l'intérieur de l'orthant positif des variables d'écart:
 \[
-R^n_+ := \lbrace \bs \,:\, \bs \geq 0 \rbrace.
+R^n_+ := \lbrace \bss \,:\, \bss \geq 0 \rbrace.
 \]
 Cette définition d'intérieur dépend seulement de la région des variables d'écart.
 
 \mbox{}
 
-Meme s'il y a seulement un point dans $\Omega$ avec $\bs = \bc - \bA^T\by$ pour un certain $\by$ où $\bB\by = \bb$ avec $\bs > 0$, nous continuerons à dire que $\mathring{\Omega}$ est non vide.
+Meme s'il y a seulement un point dans $\Omega$ avec $\bss = \bsc - \bsA^T\bsy$ pour un certain $\bsy$ où $\bsB\bsy = \bsb$ avec $\bss > 0$, nous continuerons à dire que $\mathring{\Omega}$ est non vide.
 
 \end{frame}
 
@@ -397,7 +370,7 @@ On cherche à minimiser cette fonction en annulant son gradient.
 \Leftrightarrow\ &
 c_j - \frac{\mu}{x_j} - y^Ta_j = 0,\ j = 1,\ldots,n\\
 \Leftrightarrow\ &
-\mu X^{-1}\bone + A^Ty = c,
+\mu X^{-1}\bsone + A^Ty = c,
 \end{align*}
 où $X = \text{diag}(x)$.
 
@@ -405,9 +378,9 @@ où $X = \text{diag}(x)$.
 
 En notant $s_j = \mu/x_j$, l'ensemble des conditions d'optimalité (primales, duales, minimisation du lagrangien) s'écrit:
 \begin{align*}
-\bx \circ \bs &= \mu \bone \\
-\bA\bx &= \bb \\
-\bA^T\by + \bs & = \bc.
+\bsx \circ \bss &= \mu \bsone \\
+\bsA\bsx &= \bsb \\
+\bsA^T\bsy + \bss & = \bsc.
 \end{align*}
 
 \end{frame}
@@ -524,7 +497,10 @@ x_1 = \frac{1-2\mu \pm \sqrt{1+4\mu^2}}{2}
 \begin{frame}
 \frametitle{Chemin central}
 
-Pour $\mu$ grand, on doit choisir la racine correspondant à '+'.
+Pour $\mu$ grand, on doit choisir la racine correspondant à `+', car avec `-', on a
+$$
+1-2\mu-\sqrt{1+4\mu^2} < 1-2\mu-\sqrt{4\mu^2} = 1-4\mu
+$$
 
 D'autre part,
 \[
@@ -621,9 +597,9 @@ Dès lors,
 
 On obtient les conditions d'optimalité
 \begin{align*}
-\bx \circ \bs &= \mu \bone \\
-\bA\bx &= \bb \\
-\bA^T\by + \bs & = \bc.
+\bsx \circ \bss &= \mu \bsone \\
+\bsA\bsx &= \bsb \\
+\bsA^T\bsy + \bss & = \bsc.
 \end{align*}
 
 \mbox{}
@@ -645,7 +621,7 @@ avec $z < z^*$, la valeur optimale du dual.
 \end{frame}
 
 \begin{frame}
-\frametitle{Chemin dual central: conditions d'optimlaité}
+\frametitle{Chemin dual central: conditions d'optimalité}
 
 Le centre analytique $(y(z), s(z))$ de $\Omega$ coïncide avec le chemin central dual comme $z$ tend vers $z^*$.
 
@@ -738,9 +714,9 @@ Si $\mu \rightarrow \infty$, $y$ est non borné, car l'ensemble dual réalisable
 
 Le chemin primal-dual est l'ensemble des vecteurs $(x(\mu), y(\mu), s(\mu))$ satisfaisant
 \begin{align*}
-\bx \circ \bs &= \mu \bone \\
-\bA\bx &= \bb \\
-\bA^T\by + \bs & = \bc \\
+\bsx \circ \bss &= \mu \bsone \\
+\bsA\bsx &= \bsb \\
+\bsA^T\bsy + \bss & = \bsc \\
 x \geq 0,\ & s \geq 0 \\
 0 \leq \mu & < \infty.
 \end{align*}
@@ -807,9 +783,9 @@ Comme $y^T b \leq z^*$, $z^* \geq c^Tx - g$, et donc, étant donné $(x, y, s)$,
 	
 	Souvent, une variante de la méthode de Newton est utilisée pour résoudre les sous-problèmes ainsi construits:
 	\begin{align*}
-		\bx \circ \bs &= \mu \bone \\
-		\bA\bx &= \bb \\
-		\bA^T\by + \bs & = \bc
+		\bsx \circ \bss &= \mu \bsone \\
+		\bsA\bsx &= \bsb \\
+		\bsA^T\bsy + \bss & = \bsc
 	\end{align*}
 	
 \end{frame}
@@ -931,7 +907,7 @@ $$
 
 Il est facile d'exprimer le gradient et la matrice hessienne du lagrangien:
 \begin{align*}
-\nabla L(x) &= c-\mu X^{-1}\bone - A^Ty \\
+\nabla L(x) &= c-\mu X^{-1}\bsone - A^Ty \\
 H(x) & = \mu X^{-2}
 \end{align*}
 
@@ -942,19 +918,19 @@ H(x) & = \mu X^{-2}
 	
 	Considérons le système d'équations non linéaires
 	$$
-	F(\bx) = 0
+	F(\bsx) = 0
 	$$
 	avec $F: \RR^n \rightarrow \RR^m$.
 	
 	\mbox{}
 	
-	En partant d'un point $\bx_0$, la méthode de Newton construit une suite d'itérés à partir de la récurrence
+	En partant d'un point $\bsx_0$, la méthode de Newton construit une suite d'itérés à partir de la récurrence
 	$$
-	\bx_{k+1} = \bx_k - J^{-1}(\bx_k) F(\bx_k)
+	\bsx_{k+1} = \bsx_k - J^{-1}(\bsx_k) F(\bsx_k)
 	$$
-	où $J(\bx_k)$ est la matrice jacobienne de $F$:
+	où $J(\bsx_k)$ est la matrice jacobienne de $F$:
 	\[
-	J(\bx) =
+	J(\bsx) =
 	\begin{pmatrix}
 		\nabla^T_x f_1(x) \\
 		\nabla^T_x f_2(x) \\
@@ -977,21 +953,21 @@ $$
 $$
 Dans ce cas, la matrice jacobienne de $f$ n'est rien d'autre que la matrice hessienne:
 \begin{align*}
-J(\bx) &=
+J(\bsx) &=
 \begin{pmatrix}
-	\nabla^T_x \frac{d}{dx_1} f(\bx) \\
-	\nabla^T_x \frac{d}{dx_2} f(\bx) \\
+	\nabla^T_x \frac{d}{dx_1} f(\bsx) \\
+	\nabla^T_x \frac{d}{dx_2} f(\bsx) \\
 	\vdots \\
-	\nabla^T_x \frac{d}{dx_n} f(\bx)
+	\nabla^T_x \frac{d}{dx_n} f(\bsx)
 \end{pmatrix}
 =
 \begin{pmatrix}
-	\frac{d^2}{dx_1^2} f(\bx) & \frac{d^2}{dx_1x_2} f(\bx) & \cdots & \frac{d^2}{dx_1x_n} f(\bx) \\
-	\frac{d^2}{dx_1x_2} f(\bx) & \frac{d^2}{dx_2^2} f(\bx) & \cdots & \frac{d^2}{dx_2x_n} f(\bx) \\
+	\frac{d^2}{dx_1^2} f(\bsx) & \frac{d^2}{dx_1x_2} f(\bsx) & \cdots & \frac{d^2}{dx_1x_n} f(\bsx) \\
+	\frac{d^2}{dx_1x_2} f(\bsx) & \frac{d^2}{dx_2^2} f(\bsx) & \cdots & \frac{d^2}{dx_2x_n} f(\bsx) \\
 	\vdots & \vdots & \ddots & \vdots \\
-	\frac{d^2}{dx_1x_n} f(\bx) & \frac{d^2}{dx_2x_n} f(\bx) & \cdots & \frac{d^2}{dx_n^2} f(\bx)
+	\frac{d^2}{dx_1x_n} f(\bsx) & \frac{d^2}{dx_2x_n} f(\bsx) & \cdots & \frac{d^2}{dx_n^2} f(\bsx)
 \end{pmatrix} \\
-&= H(\bx)
+&= H(\bsx)
 \end{align*}
 	
 \end{frame}
@@ -1001,19 +977,19 @@ J(\bx) &=
 
 La récurrence de Newton devient dès lors
 $$
-\bx_{k+1} = \bx_k - H^{-1}(\bx_k) \nabla f(\bx_k).
+\bsx_{k+1} = \bsx_k - H^{-1}(\bsx_k) \nabla f(\bsx_k).
 $$
-On suppose ici que $H(\bx_k)$ est définie positive.
+On suppose ici que $H(\bsx_k)$ est définie positive.
 
 \mbox{}
 
-Note: nous ne calculons pas $H^{-1}(\bx_k)$ pour des questions de précision numériques, mais nous obtenons le pas $\bd_k$ en résolvant le système linéaire
+Note: nous ne calculons pas $H^{-1}(\bsx_k)$ pour des questions de précision numériques, mais nous obtenons le pas $\bsd_k$ en résolvant le système linéaire
 $$
-H(\bx_k) \bd_k = -\nabla f(\bx_k).
+H(\bsx_k) \bsd_k = -\nabla f(\bsx_k).
 $$
 La récurrence de Newton se réécrit
 $$
-\bx_{k+1} = \bx_k + \bd_k.
+\bsx_{k+1} = \bsx_k + \bsd_k.
 $$
 
 \end{frame}
@@ -1027,7 +1003,7 @@ La convergence n'est assurée que si le point de départ est suffisamment proche
 
 On peut obtenir la convergence globale en utilisant la direction de Newton comme direction de descente avec une méthode de recherche linéaire: on cherche une longueur de pas appropriée $\alpha_k$ pour produire le nouvel itéré
 $$
-\bx_{k+1} := \bx_k+\alpha_k \bd_k, 
+\bsx_{k+1} := \bsx_k+\alpha_k \bsd_k, 
 $$
 en s'assurant que $\alpha_k$ puisse prendre la valeur 1 afin d'assurer une convergence quadratique au cours des dernières itérations.
 
@@ -1038,21 +1014,21 @@ en s'assurant que $\alpha_k$ puisse prendre la valeur 1 afin d'assurer une conve
 
 Dès lors, la méthode de Newton pour la méthode primale barrière conduit à calculer
 $$
-\bd_x = - H^{-1}\nabla L(x)
+\bsd_x = - H^{-1}\nabla L(x)
 $$
 ou encore
 \begin{align*}
-& -H\bd_x =  c-\mu X^{-1}\bone - A^Ty \\
-\Leftrightarrow\  &  H(-\bd_x) + A^Ty =  c-\mu X^{-1}\bone
+& -H\bsd_x =  c-\mu X^{-1}\bsone - A^Ty \\
+\Leftrightarrow\  &  H(-\bsd_x) + A^Ty =  c-\mu X^{-1}\bsone
 \end{align*}
 
 \mbox{}
 
-Nous devons cependant aussi nous assurer que le nouvel itéré $\bx + \bd_x$ est réalisable, i.e.
+Nous devons cependant aussi nous assurer que le nouvel itéré $\bsx + \bsd_x$ est réalisable, i.e.
 $$
-A(\bx + \bd_x) =b
+A(\bsx + \bsd_x) =b
 $$
-Ceci nous mène à imposer $A\bd_x = 0$.
+Ceci nous mène à imposer $A\bsd_x = 0$.
 
 \end{frame}
 
@@ -1066,11 +1042,11 @@ H & A^T \\
 A & 0
 \end{pmatrix}
 \begin{pmatrix}
--\bd_x \\ \by
+-\bsd_x \\ \bsy
 \end{pmatrix}
 =
 \begin{pmatrix}
-c - \mu X^{-1}\bone \\ 0
+c - \mu X^{-1}\bsone \\ 0
 \end{pmatrix}.
 $$
 
@@ -1078,23 +1054,23 @@ $$
 
 Reprenons la première ligne du système
 $$
--H\bd_x + A^T\by = c - \mu X^{-1}\bone
+-H\bsd_x + A^T\bsy = c - \mu X^{-1}\bsone
 $$
 et multiplions de part et d'autre part $AX^2$. Comme $H = \mu X^{-2}$, nous obtenons
 $$
--\mu A\bd_x + AX^2A^T\by = AX^2c - \mu AX \bone.
+-\mu A\bsd_x + AX^2A^T\bsy = AX^2c - \mu AX \bsone.
 $$
 
-%Etant donné un point $x \in \mathring{\mathcal{F}}_P$, la méthode de Newton consistera à chercher des direction $\bd_x$, $\bd_y$ et $\bd_s$ à partir du système
+%Etant donné un point $x \in \mathring{\mathcal{F}}_P$, la méthode de Newton consistera à chercher des direction $\bsd_x$, $\bsd_y$ et $\bsd_s$ à partir du système
 %\begin{align*}
-%\mu \bX^{-2} \bd_x + \bd_s &= \mu \bX^{-1}\bone - \bc \\
-%\bA\bd_x &= \bzero %\\
-%-\bA^T\bd_y + \bd_s & = 0
+%\mu \bX^{-2} \bsd_x + \bsd_s &= \mu \bX^{-1}\bsone - \bsc \\
+%\bsA\bsd_x &= \bszero %\\
+%-\bsA^T\bsd_y + \bsd_s & = 0
 %\end{align*}
 
-Comme $A\bd_x = 0$, nous obtenons un système linéaire permettant de trouver $\by$:
+Comme $A\bsd_x = 0$, nous obtenons un système linéaire permettant de trouver $\bsy$:
 $$
-AX^2A^T\by = AX^2c - \mu AX \bone.
+AX^2A^T\bsy = AX^2c - \mu AX \bsone.
 $$
 
 \end{frame}
@@ -1104,32 +1080,32 @@ $$
 
 Repartons de
 $$
--H\bd_x + A^T\by = c - \mu X^{-1}\bone
+-H\bsd_x + A^T\bsy = c - \mu X^{-1}\bsone
 $$
-avec $\by$ connu. Nous avons dès lors
+avec $\bsy$ connu. Nous avons dès lors
 \begin{align*}
-\bd_x &= \mu H^{-1}X^{-1}\bone - H^{-1}c + H^{-1}A^T\by \\
-&= x + \frac{1}{\mu}X^2(A^T\by-c).
+\bsd_x &= \mu H^{-1}X^{-1}\bsone - H^{-1}c + H^{-1}A^T\bsy \\
+&= x + \frac{1}{\mu}X^2(A^T\bsy-c).
 \end{align*}
 
 \mbox{}
 
-Nous avons dès lors obtenu la direction $\bd_x$.
-Nous nous déplacerons le long de cette direction d'une longueur de pas $\alpha$, obtenue en minimisant le problème barrière le long de $\bd_x$:
+Nous avons dès lors obtenu la direction $\bsd_x$.
+Nous nous déplacerons le long de cette direction d'une longueur de pas $\alpha$, obtenue en minimisant le problème barrière le long de $\bsd_x$:
 $$
-\min_{\alpha} c^T\bx^+ - \mu \sum_{j = 1}^n \log \bx^+_j
+\min_{\alpha} c^T\bsx^+ - \mu \sum_{j = 1}^n \log \bsx^+_j
 $$
-avec $\bx^+ = \bx+\alpha \bd_x$
+avec $\bsx^+ = \bsx+\alpha \bsd_x$
 
 %On construit le nouveau point comme
 %\[
-%\bx^+ = \bx + \bd_x.
+%\bsx^+ = \bsx + \bsd_x.
 %\]
 
 %\mbox{}
 
-%Si $\bx \circ \bs = \mu \bone$ pour un certain $\bs = \bc - \bA^T\by$, alors $\bd \equiv (\bd_x, \bd_y, \bd_s) = 0$.\\
-%Si une composante de $\bx \circ \bs$ est plus petite que $\mu$, l'approche tendera à augmenter cette composante, et inversément si la composante est plus grande que $\mu$.
+%Si $\bsx \circ \bss = \mu \bsone$ pour un certain $\bss = \bsc - \bsA^T\bsy$, alors $\bsd \equiv (\bsd_x, \bsd_y, \bsd_s) = 0$.\\
+%Si une composante de $\bsx \circ \bs$ est plus petite que $\mu$, l'approche tendera à augmenter cette composante, et inversément si la composante est plus grande que $\mu$.
 
 \end{frame}
 
@@ -1140,19 +1116,19 @@ La méthode marche relativement bien si $\mu$ est modérément grand, ou si l'al
 
 %\mbox{}
 
-%Pour trouver $(\bd_x, \bd_y, \bd_s)$, prémultiplions les deux côtés de la première égalité du système de Newton par $\bX^2$:
+%Pour trouver $(\bsd_x, \bsd_y, \bsd_s)$, prémultiplions les deux côtés de la première égalité du système de Newton par $\bX^2$:
 %\[
-%\mu \bd_x + \bX^2 \bd_s = \mu \bX \bone - \bX^2 \bc.
+%\mu \bsd_x + \bX^2 \bsd_s = \mu \bX \bsone - \bX^2 \bsc.
 %\]
-%En prémultipliant par $\bA$ et en utilisant $\bA d_x = \bzero$, nous avons
+%En prémultipliant par $\bsA$ et en utilisant $\bsA d_x = \bszero$, nous avons
 %\[
-%\bA \bX^2 \bd_s = \mu \bA \bX \bone - \bA \bX^2 \bc.
+%\bsA \bX^2 \bsd_s = \mu \bsA \bX \bsone - \bsA \bX^2 \bsc.
 %\]
-%Comme $\bd_s = \bA^T \bd_y$, nous avons
+%Comme $\bsd_s = \bsA^T \bsd_y$, nous avons
 %\[
-%\bA \bX^2 \bA^T \bd_y = \mu \bA \bX \bone - \bA \bX^2 \bc.
+%\bsA \bX^2 \bsA^T \bsd_y = \mu \bsA \bX \bsone - \bsA \bX^2 \bsc.
 %\]
-%On en tire $\bd_y$, et de là, $\bd_s$ puis $\bd_x$.
+%On en tire $\bsd_y$, et de là, $\bsd_s$ puis $\bsd_x$.
 
 \end{frame}
 
@@ -1192,7 +1168,7 @@ Nous supposons que $\mathring{\mathcal{F}} \ne \emptyset$, ou de manière équiv
 \begin{align*}
 A^T y + s &= c \\
 Ax &= b \\
-XS\bone &= 0 \\
+XS\bsone &= 0 \\
 x \geq 0,&\ s \geq 0
 \end{align*}
 
@@ -1209,7 +1185,7 @@ Nous perturbons les conditions de complémentarité pour obtenir
 \begin{align*}
 A^T y + s &= c \\
 Ax &= b \\
-XS\bone &= \mu\bone \\
+XS\bsone &= \mu\bsone \\
 x \geq 0,&\ s > 0
 \end{align*}
 
@@ -1219,7 +1195,7 @@ F(x,y,s) =
 \begin{pmatrix}
 A^T y + s - c \\
 Ax - b \\
-XS\bone - \mu\bone
+XS\bsone - \mu\bsone
 \end{pmatrix}
 $$
 avec $x, s > 0$.
@@ -1274,12 +1250,12 @@ $$
 	S & 0 & X
 \end{pmatrix}
 \begin{pmatrix}
-	\bd_x \\ \bd_y \\ \bd_s
+	\bsd_x \\ \bsd_y \\ \bsd_s
 \end{pmatrix}
 =
 -
 \begin{pmatrix}
-	A^Ty+s-c \\ Ax-b \\ XS\bone - \mu\bone
+	A^Ty+s-c \\ Ax-b \\ XS\bsone - \mu\bsone
 \end{pmatrix}
 $$
 
@@ -1296,17 +1272,17 @@ A & 0 & 0 \\
 S & 0 & X
 \end{pmatrix}
 \begin{pmatrix}
-\bd_x \\ \bd_y \\ \bd_s
+\bsd_x \\ \bsd_y \\ \bsd_s
 \end{pmatrix}
 =
 \begin{pmatrix}
-0 \\ 0 \\ \mu\bone - XS\bone
+0 \\ 0 \\ \mu\bsone - XS\bsone
 \end{pmatrix}
 $$
 
-Le nouveau point $(x^+, y^+, s^+)$ est obtenu en se déplaçant le long de $(\bd_x, \bd_y, \bd_s)$ d'une longueur de pas $\alpha$:
+Le nouveau point $(x^+, y^+, s^+)$ est obtenu en se déplaçant le long de $(\bsd_x, \bsd_y, \bsd_s)$ d'une longueur de pas $\alpha$:
 $$
-(x^+, y^+, s^+) = (x, y, s) + \alpha (\bd_x, \bd_y, \bd_s).
+(x^+, y^+, s^+) = (x, y, s) + \alpha (\bsd_x, \bsd_y, \bsd_s).
 $$
 
 \end{frame}
@@ -1325,17 +1301,17 @@ $$
 	S_k & 0 & X_k
 \end{pmatrix}
 \begin{pmatrix}
-	\bd_x \\ \bd_y \\ \bd_s
+	\bsd_x \\ \bsd_y \\ \bsd_s
 \end{pmatrix}
 =
 \begin{pmatrix}
-	0 \\ 0 \\ \mu\bone - X_kS_k\bone
+	0 \\ 0 \\ \mu\bsone - X_kS_k\bsone
 \end{pmatrix}
 $$
-\item[Étape 3] Calculer $\alpha_k$ tel que $x_k + \alpha_k\bd_x > 0$, $s_k + \alpha_k\bs_x > 0$ et permettant une réduction suffisante de l'objectif. Poser
+\item[Étape 3] Calculer $\alpha_k$ tel que $x_k + \alpha_k\bsd_x > 0$, $s_k + \alpha_k\bsd_s > 0$ et permettant de s'approcher de la solution du système d'équations. Poser
 \begin{align*}
-& \mu_{k+1} = \gamma \mu_k,\quad x_{k+1} = x_k + \alpha_k\bd_x, \\
-& y_{k+1} = y_k + \alpha_k\bd_y,\quad s_{k+1} = x_k + \alpha_k\bd_s.
+& \mu_{k+1} = \gamma \mu_k,\quad x_{k+1} = x_k + \alpha_k\bsd_x, \\
+& y_{k+1} = y_k + \alpha_k\bsd_y,\quad s_{k+1} = s_k + \alpha_k\bsd_s.
 \end{align*}
 Incrémenter $k$ de 1, et retourner à l'étape 1.
 \end{description}
@@ -1370,9 +1346,9 @@ Nous avons besoin d'un point de départ réalisable!
 	
 	Rappelons que le centre analytique peut se calculer en considérons les conditions
 	\begin{align*}
-		\bx \circ \bs &= \bone \\
-		\bA\bx &= \bzero \\
-		\bA^T\by + \bs & = \bc.
+		\bsx \circ \bss &= \bsone \\
+		\bsA\bsx &= \bszero \\
+		\bsA^T\bsy + \bss & = \bsc.
 	\end{align*}
 
 \mbox{}
@@ -1390,7 +1366,7 @@ $$
 =
 -
 \begin{pmatrix}
-	A^Ty+s-c \\ Ax \\ XS\bone - \bone
+	A^Ty+s-c \\ Ax \\ XS\bsone - \bsone
 \end{pmatrix}
 $$
 	
@@ -1412,15 +1388,15 @@ $$
 =
 -
 \begin{pmatrix}
-	Ax \\ XS\bone - \bone \\ A^Ty+s-c
+	Ax \\ XS\bsone - \bsone \\ A^Ty+s-c
 \end{pmatrix}
 $$
 
 \mbox {}
 
-La contrainte $\bx \circ \bs = \bone$ peut se réécrire comme
+La contrainte $\bsx \circ \bss = \bsone$ peut se réécrire comme
 $$
-x-S^{-1}\bone = 0
+x-S^{-1}\bsone = 0
 $$
 Utilisant cette nouvelle expression, similairement à ce qui précède, nous pouvons construire le système de Newton
 $$
@@ -1435,7 +1411,7 @@ $$
 =
 -
 \begin{pmatrix}
-	Ax \\ x-S^{-1}\bone \\ A^Ty+s-c
+	Ax \\ x-S^{-1}\bsone \\ A^Ty+s-c
 \end{pmatrix}
 $$
 
@@ -1446,7 +1422,7 @@ $$
 
 En notant	
 $$
-r_d = s + A^Ty - c,\quad r_p = \begin{pmatrix} Ax \\ x-S^{-1}\bone \end{pmatrix},\quad H = S^{-2}
+r_d = s + A^Ty - c,\quad r_p = \begin{pmatrix} Ax \\ x-S^{-1}\bsone \end{pmatrix},\quad H = S^{-2}
 $$
 le système devient
 	$$
@@ -1469,7 +1445,7 @@ Après réorganisation des équations, nous pouvons obtenir
 \begin{align*}
 	\Delta y &= (AHA^T)^{-1} (Ax - AHr_d )\\
 	\Delta s &= -A^T\Delta y - r_d \\
-	\Delta x &= -H\Delta s - x + S^{-1}\bone
+	\Delta x &= -H\Delta s - x + S^{-1}\bsone
 \end{align*}
 	
 \end{frame}
@@ -1491,7 +1467,7 @@ Après réorganisation des équations, nous pouvons obtenir
 	
 	$s_0$ peut être défini comme précédemment, et on prendra $\alpha = 0.01$, $\beta = 0.5$, $k_{\max} = 50$.
 	
-	Posons $x_0 = 0$, et calculons $r_p$, $r_d$.
+	Posons $x_0 = 0$, et calculons $r = (r_p, r_d)$.
 	
 	Répéter
 	\begin{enumerate}
@@ -1513,7 +1489,7 @@ Après réorganisation des équations, nous pouvons obtenir
 		$$
 		\item Poser $k :=  k+1$.
 	\end{enumerate}
-	Jusqu'à $s = c - A^Ty$ et $\| r(y,s,\lambda)\|_2 \leq \epsilon$, ou $k > k_{\max}$.
+	Jusqu'à $s = c - A^Ty$ et $\| r(x,y,s) \|_2 \leq \epsilon$, ou $k > k_{\max}$.
 	
 \end{frame}
 
@@ -1534,7 +1510,7 @@ Après réorganisation des équations, nous pouvons obtenir
 	
 	Tant que
 	$$
-	\|r(y + t\Delta y, s + t\Delta s, \lambda + t\Delta \lambda) \|_2 > (1 - \alpha t) \| r(y,s,\lambda) \|_2
+	\|r(x + t\Delta x, y + t\Delta y, s + t\Delta s) \|_2 > (1 - \alpha t) \| r(x,y,s) \|_2
 	$$
 	faire $t := \beta t$.
 	
@@ -1561,8 +1537,8 @@ La méthode nécessite un point de départ satisfaisant les contraintes de non-n
 Nous commençons par calculer
 \begin{align*}
 \overline{x} &= A^{T}(AA^{T})^{-1}b \\
-\overline{\lambda} &= (AA^{T})^{-1}Ac \\
-\overline{s} &= c - A^T\overline{\lambda}
+\overline{y} &= (AA^{T})^{-1}Ac \\
+\overline{s} &= c - A^T\overline{y}
 \end{align*}
 
 Ainsi,
@@ -1588,14 +1564,14 @@ Calculons
 
 Dès lors,
 $$
-	\overline{x} + \delta_x \bone \geq 0, \quad \overline{s} + \delta_s \bone \geq 0
+	\overline{x} + \delta_x \bsone \geq 0, \quad \overline{s} + \delta_s \bsone \geq 0
 $$
 et le point est réalisable, mais pas à l'intérieur de $\mathcal{F}_P$ et $\mathcal{F}_D$.
 
 Prenons
 \begin{align*}
-\overline{\delta_x} &= \delta_x + 0.5 \frac{(\overline{x}+\delta_x\bone)^T(\overline{s}+\delta_s\bone)}{\sum_{i=1}^n(\overline{s}_i+\delta_s)} \\
-\overline{\delta_s} &= \delta_s + 0.5 \frac{(\overline{x}+\delta_x\bone)^T(\overline{s}+\delta_s\bone)}{\sum_{i=1}^n(\overline{x}_i+\delta_x)}
+\overline{\delta_x} &= \delta_x + 0.5 \frac{(\overline{x}+\delta_x\bsone)^T(\overline{s}+\delta_s\bsone)}{\sum_{i=1}^n(\overline{s}_i+\delta_s)} \\
+\overline{\delta_s} &= \delta_s + 0.5 \frac{(\overline{x}+\delta_x\bsone)^T(\overline{s}+\delta_s\bsone)}{\sum_{i=1}^n(\overline{x}_i+\delta_x)}
 \end{align*}
 
 \end{frame}
@@ -1605,14 +1581,14 @@ Prenons
 
 Le point de départ de l'algorithme est alors calculé come
 \begin{align*}
-x_0 &= \overline{x} + \overline{\delta_x} \bone \\
-\lambda_0 &= \overline{\lambda} \\
-s_0 &= \overline{s} + \overline{\delta_s} \bone
+x_0 &= \overline{x} + \overline{\delta_x} \bsone \\
+y_0 &= \overline{y} \\
+s_0 &= \overline{s} + \overline{\delta_s} \bsone
 \end{align*}
 
 \mbox{}
 
-Si $(\overline{x} + \delta_x \bone)^T(\overline{s} + \delta_s \bone) = 0$, la solution est optimale.
+Si $(\overline{x} + \delta_x \bsone)^T(\overline{s} + \delta_s \bsone) = 0$, la solution est optimale.
 Sinon, $\overline{\delta_x} > 0$, $\overline{\delta_s} > 0$, et on part d'une solution intérieure.
 
 \mbox{}
@@ -1632,7 +1608,7 @@ En effet, le \textit{théorème du rang} nous dit que si $B \in \RR^{m \times n}
 $$
 rang(B) + \dim \left( \calN(B) \right) = n,
 $$
-où $\calN(A) = \{ x \,|\, Ax = 0 \}$ est le \textit{noyau} de $A$. Or $rang(A) = rang(A^T)$ et $\calN(AA^T) = \calN(A^T)$. En effet, nous avons tout d'abord
+où $\calN(A) = \{ x \,|\, Ax = 0 \}$ est le \textit{noyau} de $A$. Or $rang(A) = rang(A^T)$ et $\calN(AA^T) = \calN(A^T)$. Nous avons tout d'abord
 $$
 A^Tx = 0 \Rightarrow AA^Tx = 0,
 $$
@@ -1667,20 +1643,20 @@ rang(AA^T) &= m - \dim\calN(AA^T) \\ &= m - \dim\calN(A^T) \\ &= m - (m - rang(A
 Conditions d'optimalité du chemin primal-dual central:
 \begin{align*}
 Ax &= b \\
-A^T\lambda + s &= c \\
-XS\bone &= \mu\bone \\
+A^Ty + s &= c \\
+XS\bsone &= \mu\bsone \\
 x \geq 0,\ s & \geq 0
 \end{align*}
 où $X = diag(x)$, $S= diag(s)$.
 
 \mbox{}
 
-Soit $u = (x,\lambda, s)$. Si $u$ n'est pas optimal, nous appliquons la méthode de Newton au système
+Soit $u = (x, y, s)$. Si $u$ n'est pas optimal, nous appliquons la méthode de Newton au système
 $$
 F_{\mu}(u) = \begin{pmatrix}
-	A^T\lambda+s-c  \\
+	A^Ty+s-c  \\
 	Ax-b  \\
-	XS\bone - \mu\bone 
+	XS\bsone - \mu\bsone 
 \end{pmatrix} = 0, \ (x,s) \geq 0
 $$
 où $\mu > 0$ est le paramètre de barrière.
@@ -1703,14 +1679,22 @@ $$
 \end{pmatrix}
 \begin{pmatrix}
 	\Delta x  \\
-	\Delta \lambda \\
+	\Delta y \\
 	\Delta s
 \end{pmatrix} = \begin{pmatrix}
-	A^T\lambda+s-c  \\
+	A^Ty+s-c  \\
 	Ax-b  \\
-	XS-\mu \bone
-\end{pmatrix}$$
-Multipliant la dernière ligne par la gauche par $S^{-1}$,
+	XS-\mu \bsone
+\end{pmatrix}
+=:
+\begin{pmatrix}
+	r_p  \\
+	r_d \\
+	r_c
+\end{pmatrix},
+$$
+où $r_d$, $r_p$ et $r_c$ sont respectivement les résidus du dual, de primal et de complémentarité.
+Multipliant la dernière ligne par la gauche par $S^{-1}$, nous avons
 $$
 \begin{pmatrix}
 	0 & A^T & I  \\
@@ -1719,14 +1703,14 @@ $$
 \end{pmatrix}
 \begin{pmatrix}
 	\Delta x  \\
-	\Delta \lambda \\
+	\Delta y \\
 	\Delta s
 \end{pmatrix} = \begin{pmatrix}
 	r_d  \\
 	r_p  \\
 	S^{-1}r_c 
-\end{pmatrix}$$
-où $r_d$, $r_p$ et $r_c$ sont respectivement les résidus du dual, de primal et de complémentarité.
+\end{pmatrix}.
+$$
 
 \end{frame}
 
@@ -1735,27 +1719,27 @@ où $r_d$, $r_p$ et $r_c$ sont respectivement les résidus du dual, de primal et
 
 Notant $M = AXS^{-1}A^T$ et $t_d = r_p-AS^{-1}(r_c-Xr_d)$, nous pouvons montrer que le pas est
 \begin{align*}
-\Delta \lambda &= M^{-1}t_d \\
-\Delta s &= r_d - A^{T}\Delta \lambda \\
+\Delta y &= M^{-1}t_d \\
+\Delta s &= r_d - A^{T}\Delta y \\
 \Delta x &= S^{-1}(r_c-X \Delta s)
 \end{align*}
 La solution est mise à jour avec
 $$
 \begin{pmatrix}
-\lambda^+ \\
+y^+ \\
 s^+ \\
 x^+
 \end{pmatrix}
 =
 \begin{pmatrix}
-	\lambda \\
+	y \\
 	s \\
 	x
 \end{pmatrix}
 -
 \alpha
 \begin{pmatrix}
-	\Delta \lambda \\
+	\Delta y \\
 	\Delta s \\
 	\Delta x
 \end{pmatrix}
@@ -1801,7 +1785,7 @@ $$\begin{pmatrix}
 	I & 0 & S^{-1}X
 \end{pmatrix}\begin{pmatrix}
 	\Delta x_p  \\
-	\Delta \lambda_p \\
+	\Delta y_p \\
 	\Delta s_p
 \end{pmatrix} = \begin{pmatrix}
 	r_d  \\
@@ -1839,12 +1823,12 @@ $$\begin{pmatrix}
 	I & 0 & S^{-1}X
 \end{pmatrix}\begin{pmatrix}
 	\Delta x  \\
-	\Delta \lambda \\
+	\Delta y \\
 	\Delta s
 \end{pmatrix} = \begin{pmatrix}
 	r_d  \\
 	r_p  \\
-	S^{-1}(Xs - \sigma \mu \bone + \Delta x_p \Delta s_p) 
+	S^{-1}(Xs - \sigma \mu \bsone + \Delta x_p \Delta s_p) 
 \end{pmatrix}$$
 
 \end{frame}
@@ -1860,7 +1844,7 @@ Nous calculons finalement le pas primal et dual. Soit
 où $\eta = \max\{0.995, 1 - \mu\}$, le nouveau point est
 \begin{align*}
 x^+ &= x - \alpha_p \Delta x \\
-\lambda^+ &= \lambda - \alpha_d \Delta \lambda \\
+y^+ &= y - \alpha_d \Delta y \\
 s^+ &= s - \alpha_d \Delta s
 \end{align*}
 
