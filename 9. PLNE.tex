@@ -227,8 +227,11 @@ qui a pour solution optimale $(2, 1.9)$. En arrondissant à $(2,1)$ afin de gara
 \foreach \y in {0,1,2,3}
 \draw (1pt,\y) -- (-1pt,\y) node[anchor=east] {$\y$};
 
-\filldraw[fill=yellow]
-(0,0) -- (0,2.1) -- (2,1.9) -- (2,0) -- (0,0);
+%\filldraw[fill=yellow]
+\fill[fill=yellow]
+(0,0) -- (0,2) -- (1, 2) -- (3.5,1.75) -- (3.5,0) -- (0,0);
+\draw (0, 2) -- (1,2);
+\draw (1, 2) -- (3.5,1.75);
 
 \draw (-1,2.4) -- (4,1.4) node[above,right,sloped] {$z^* = 11 = x_1+5x_2$};
 
@@ -322,7 +325,7 @@ Dès lors, le branch-and-bound est un algorithme de séparation et d'évaluation
 
 Rappelons le problème
 \begin{align*}
-\max\ & z = 9x_1 + 5x_2 + 6x_3 + 4x_4 \\
+\min\ & z = -9x_1 -5x_2 -6x_3 -4x_4 \\
 \st & 6x_1 + 3x_2 + 5x_3 + 2x_4 \leq 10; \\
 & x_3 + x_4 \leq 1; \\
 & -x_1 + x_3 \leq 0; \\
@@ -335,8 +338,8 @@ La relaxation linéaire permet aux variables de prendre les valeurs fractionnair
 \[
 \left( \frac{5}{6}, 1, 0, 1 \right),
 \]
-avec comme valeur $z = 16,5$.
-Branchons sur la variable $x_1$.
+avec comme valeur $z = -16,5$.
+Branchons sur $x_1$.
 
 \end{frame}
 
@@ -345,14 +348,14 @@ Branchons sur la variable $x_1$.
 
 Dénotons sous-problème 1 celui obtenu avec $x_1 = 0$:
 \begin{align*}
-\max\ & z = 5x_2 + 6x_3 + 4x_4 \\
+\min\ & z = -5x_2 -6x_3 -4x_4 \\
 \st & 3x_2 + 5x_3 + 2x_4 \leq 10; \\
 & x_3 + x_4 \leq 1; \\
 & x_3 \leq 0; \\
 & -x_2 + x_4 \leq 0; \\
 & x_2, x_3, x_4 \mbox{ binaires}.
 \end{align*}
-La solution de la relaxation linéaire est $(x_1, x_2, x_3, x_4) = (0,1,0,1)$, avec $z = 9$.
+La solution de la relaxation linéaire est $(x_1, x_2, x_3, x_4) = (0,1,0,1)$, avec $z = -9$.
 
 \end{frame}
 
@@ -361,7 +364,7 @@ La solution de la relaxation linéaire est $(x_1, x_2, x_3, x_4) = (0,1,0,1)$, a
 
 Le sous-problème 2 est celui obtenu avec $x_1 = 1$:
 \begin{align*}
-\max\ & z = 5x_2 + 6x_3 + 4x_4 + 9 \\
+\min\ & z = -5x_2 -6x_3 -4x_4 + 9 \\
 \st & 3x_2 + 5x_3 + 2x_4 \leq 4; \\
 & x_3 + x_4 \leq 1; \\
 & x_3 \leq 1; \\
@@ -372,7 +375,7 @@ La solution de la relaxation linéaire est alors
 \[
 (x_1, x_2, x_3, x_4) = \left( 1, \frac{4}{5},0, \frac{4}{5} \right),
 \]
-avec $z = 16+\frac{1}{5}$.
+avec $z = -16-\frac{1}{5}$.
 
 \end{frame}
 
@@ -382,18 +385,19 @@ avec $z = 16+\frac{1}{5}$.
 Nous obtenons dès lors les bornes suivantes:
 \begin{itemize}
 \item
-sous-problème 1: $Z_1 \leq 9$;
+sous-problème 1: $Z_1 \geq -9$;
 \item
-sous-problème 2: $Z_2 \leq 16+\frac{1}{5}$.
+sous-problème 2: $Z_2 \geq -16-\frac{1}{5}$.
 \end{itemize}
 
 \mbox{}
 
-Toutes les variables sont binaires et tous les paramètres dans l'objectif sont des valeurs entières. Dès lors, la borne supérieure pour le sous-problème 2 est 16.
-
-\mbox{}
-
-Pour le sous-problème 1, la solution obtenue est entière: c'est la meilleure solution courante, notée $Z^*$, et la valeur optimale cherchée, $Z$, satisfait $Z \geq Z^* = 9$.
+\begin{itemize}
+	\item 
+Toutes les variables sont binaires et tous les paramètres dans l'objectif sont des valeurs entières. Dès lors, $Z_2 \geq -16$.
+\item 
+Pour le sous-problème 1, la solution obtenue est entière: c'est la meilleure solution courante, de valeur objectif notée $Z^*$, et la valeur optimale cherchée, $Z$, satisfait $Z \leq Z^* = -9$.
+\end{itemize}
 
 \mbox{}
 
@@ -404,22 +408,22 @@ Quels sous-problèmes pouvons-nous à présent considérer afin de nous approche
 \begin{frame}
 \frametitle{Exemple: California Mfg}
 
-Si un sous-problème ne donne lieu à aucun autre problème, nous parlerons d'élagage, en référence avec l'idée de couper la branche correspondante dans l'arbre d'exploration.
+Si un sous-problème ne donne lieu à aucun autre problème, nous parlerons d'\textcolor{red}{élagage}, en référence avec l'idée de couper la branche correspondante dans l'arbre d'exploration.
 
 \mbox{}
 
 Considérons le sous-problème 1: la solution optimale de la relaxation PL est entière.
-Il ne sert à rien de brancher sur les autres variables, puisque toutes les autres solutions entières (avec $x_1 = 0$) sont nécessairement de valeur inférieures ou égales à 9.
+Il ne sert à rien de brancher sur les autres variables, puisque toutes les autres solutions entières (avec $x_1 = 0$) sont nécessairement de valeurs supérieures ou égales à -9.
 Nous pouvons donc élaguer ce sommet.
 
 \mbox{}
 
 Pour le sous-problème 2, la solution optimale de la relaxation PL n'est pas entière:
-\[
-Z^* = 9 \leq Z \leq 16.
-\]
+$$
+Z^* = -9 \geq Z \geq -16.
+$$
 La branche ($x_1 = 1$) peut encore contenir une solution optimale.
-Mais si nous avions eu $Z_2 \leq Z^*$, nous aurions pu conclure que la
+Mais si nous avions eu $Z_2 \geq Z^*$, nous aurions pu conclure que la
 branche ne pouvait améliorer la meilleure solution courante.
 
 \end{frame}
@@ -430,14 +434,14 @@ branche ne pouvait améliorer la meilleure solution courante.
 Un sous-problème est elagué si une des trois conditions suivantes est satisfaite :
 \begin{itemize}
 \item
-\textcolor{blue}{test 1}: sa borne supérieure (valeur optimale de la relaxation PL) est inférieure ou égale à $Z^*$ (valeur de la meilleure solution courante);
+\textcolor{blue}{test 1}: sa borne inférieure (valeur optimale de la relaxation PL) est supérieure ou égale à $Z^*$ (valeur de la meilleure solution courante);
 \item
 \textcolor{blue}{test 2}: sa relaxation PL n'a pas de solution réalisable;
 \item
 \textcolor{blue}{test 3}: la solution optimale de sa relaxation PL est entière.
 \end{itemize}
-Lorsque le test 3 est verifié, nous testons si la valeur optimale de la relaxation PL du sous-problème, $Z_i$, est supérieure à $Z^*$.
-Si $Z_i > Z^*$, alors $Z^* := Z_i$, et nous conservons la solution, qui
+Lorsque le test 3 est verifié, nous testons si la valeur optimale de la relaxation PL du sous-problème, $Z_i$, est inférieure à $Z^*$.
+Si $Z_i < Z^*$, alors $Z^* := Z_i$, et nous conservons la solution, qui
 devient la meilleure solution courante.
 %En résumé, nous obtenons l'algorithme ci-dessous.
 
@@ -451,7 +455,7 @@ devient la meilleure solution courante.
 Initialisation:
 \begin{enumerate}[(a)]
 \item
-$Z^* := -\infty$;
+$Z^* := +\infty$;
 \item
 appliquer le calcul de borne et les critères d'élagage à la racine (aucune variable fixée).
 \end{enumerate}
@@ -461,7 +465,7 @@ Arrêt si aucun sous-probleme non élagué.
 Branchement:
 \begin{enumerate}[(a)]
 \item
-parmi les sous-problèmes non encore élagués, choisir celui qui a été crée le plus récemment (s'il y a égalité, choisir celui de plus grande borne supérieure);
+parmi les sous-problèmes non encore élagués, choisir celui qui a été crée le plus récemment (s'il y a égalité, choisir celui de plus petite borne inférieure);
 \item
 appliquer le Test 1: si le sous-problème est élagué,
 retourner en 2.
@@ -483,10 +487,10 @@ Calcul de borne:
 	\item
 	résoudre la relaxation PL de chaque sous-problème;
 	\item
-	arrondir la valeur optimale si tous les paramètres de l'objectif sont entiers.
+	arrondir (vers le haut) la valeur optimale si tous les paramètres de l'objectif sont entiers.
 \end{enumerate}
 \item
-Élaguer un sous-problème si le test 1, 2 ou 3 est satisfait. Si le test 3 est vérifié (solution optimale de la relaxation PL est entière) ET la borne supérieure est strictement supérieure à $Z^*$, $Z^*$ est mise à jour et la solution de la relaxation PL devient la meilleure solution courante.
+Élaguer un sous-problème si le test 1, 2 ou 3 est satisfait. Si le test 3 est vérifié (solution optimale de la relaxation PL est entière) ET la borne inférieure est strictement inférieure à $Z^*$, $Z^*$ est mise à jour et la solution de la relaxation PL devient la meilleure solution courante.
 
 Retour en 2.
 \end{enumerate}
@@ -502,11 +506,12 @@ Plusieurs choix possibles du noeud duquel brancher.
 
 \begin{enumerate}
 	\item 
-Choix du sous-problème le plus récemment créé.
-L'avantage est que cette approche facilite la réoptimisation lors du calcul de borne, car il n'y a que peu de changements apportés par rapport au dernier sous-problème traité.
+\textcolor{blue}{Sous-problème le plus récemment créé}: facilite la réoptimisation lors du calcul de borne, car il n'y a que peu de changements apportés par rapport au dernier sous-problème traité.
 Le désavantage est que cela peut créer un grand nombre de sous-problèmes.
 	\item 
-Règle de la meilleure borne: choisir le sous-problème ayant la plus grande borne supérieure.
+\textcolor{blue}{Règle de la meilleure borne}: choisir le sous-problème ayant la plus petite borne inférieure.
+	\item 
+\textcolor{blue}{Prochaine variable non fixée}.
 \end{enumerate}
 
 \end{frame}
@@ -514,7 +519,7 @@ Règle de la meilleure borne: choisir le sous-problème ayant la plus grande bor
 \begin{frame}
 \frametitle{Branchement}
 
-Dans cette version, la règle de branchement consiste à choisir la prochaine variable non fixée. Il est souvent plus intéressant de choisir une variable à valeur fractionnaire.
+Dans la version retenue ici, la règle de branchement consiste à choisir la prochaine variable non fixée. Il est souvent plus intéressant de choisir une variable à valeur fractionnaire.
 En branchant sur une telle variable, il est certain que les deux sous-problèmes créés mènent à des solutions différentes de la solution courante.
 De nombreux autres critères existent de facon à orienter la recherche vers un élagage rapide.
 
@@ -529,9 +534,9 @@ Jusqu'à maintenant, voici l'arbre obtenu, en branchant sur la variable $x_1$.
 \node (root) [circle,draw] {} [grow'=right]
 child {node (A) [circle,draw] {0}}
 child {node (B) [circle,draw] {1}};
-\draw (root) node[below, text width=5mm, text ragged]{\hspace{5mm} 16}; 
-\draw (B) node[below, text width=5mm, text ragged]{\hspace{5mm} 16}; 
-\draw (A) node[below, text width=12mm, text ragged]{\hspace{12mm} $9 = Z^*$}; 
+\draw (root) node[below, text width=7mm, text ragged]{\hspace{5mm} -16}; 
+\draw (B) node[below, text width=7mm, text ragged]{\hspace{5mm} -16}; 
+\draw (A) node[below, text width=16mm, text ragged]{\hspace{12mm} $-9 = Z^*$}; 
 \draw (A) node[right] {\qquad $F(3)$};
 \end{tikzpicture}
 \end{center}
@@ -556,7 +561,7 @@ sous-problème 4: $x_1 = 1$, $x_2 = 1$.
 
 $x_1 = 1$, $x_2 = 0$. Sous-problème:
 \begin{align*}
-\max z_3 =\ & 6x_3 + 4x_4 + 9 \\
+\min z_3 =\ & -6x_3 -4x_4 -9 \\
 \st{} & 5 x_3 + 2x_4 \leq 4 \\
 & x_3 + x_4 \leq 1 \\
 & x_3 \leq 1 \\
@@ -569,7 +574,7 @@ La solution de la relaxation PL est
 \]
 et
 \[
-Z = 13+\frac{4}{5};\ Z_3 \leq 13.
+Z = -13-\frac{4}{5};\ Z_3 \geq -13.
 \]
 
 \end{frame}
@@ -579,7 +584,7 @@ Z = 13+\frac{4}{5};\ Z_3 \leq 13.
 
 $x_1 = 1$, $x_2 = 1$. Sous-problème:
 \begin{align*}
-\max z_4 =\ & 6x_3 + 4x_4 + 14 \\
+\min z_4 =\ & -6x_3 -4x_4 -14 \\
 \st{} & 5 x_3 + 2x_4 \leq 1 \\
 & x_3 + x_4 \leq 1 \\
 & x_3 \leq 1 \\
@@ -592,7 +597,7 @@ La solution de la relaxation PL est
 \]
 et
 \[
-Z = 16;\ Z_4 \leq 16.
+Z = -16;\ Z_4 \geq -16.
 \]
 
 \end{frame}
@@ -602,11 +607,15 @@ Z = 16;\ Z_4 \leq 16.
 
 Aucun des tests d'élagage ne s'applique sur ces deux sous-problèmes.
 Nous en choisissons un pour effectuer un branchement, puisque ce sont ceux créés le plus récemment.
-Nous prenons celui de plus grande borne supérieure, soit le sous-problème 4.
+Nous prenons celui de plus petite borne inférieure, soit le sous-problème 4.
 
 \mbox{}
 
-Deux possibilités existent: brancher sur la variable fractionnaire, $x_4$, ou choisir la prochaine variable non fixée, $x_3$.
+Deux possibilités existent:
+\begin{itemize}
+	\item brancher sur la variable fractionnaire, $x_4$,
+	\item ou choisir la prochaine variable non fixée, $x_3$.
+\end{itemize}
 Nous explorons la deuxième approche: nous branchons sur $x_3$.
 
 \end{frame}
@@ -616,7 +625,7 @@ Nous explorons la deuxième approche: nous branchons sur $x_3$.
 
 $x_1 = 1$, $x_2 = 1$, $x_3 = 0$. Sous-problème:
 \begin{align*}
-\max z_5 =\ & 4x_4 + 14 \\
+\min z_5 =\ & -4x_4 - 14 \\
 \st{} & 2x_4 \leq 1 \\
 & x_4 \leq 1 \\
 & x_4 \leq 1 \\
@@ -629,7 +638,7 @@ La solution de la relaxation PL est
 \]
 et
 \[
-Z = 16:\ Z_5 \leq 16.
+Z = -16:\ Z_5 \geq -16.
 \]
 
 \end{frame}
@@ -639,13 +648,13 @@ Z = 16:\ Z_5 \leq 16.
 
 $x_1 = 1$, $x_2 = 1$, $x_3 = 1$. Sous-problème:
 \begin{align*}
-\max z_5 =\ & 4x_4 + 20 \\
+\min z_5 =\ & -4x_4 - 20 \\
 \st{} & 2x_4 \leq -1 \\
 & x_4 \leq 0 \\
 & x_4 \leq 1 \\
 & x_4 \mbox{ binaire}.
 \end{align*}
-La relaxation PL n'a pas de solution réalisable: ce sous-problème est élagué.
+Pas de solution réalisable: ce sous-problème est élagué.
 
 \end{frame}
 
@@ -667,9 +676,9 @@ sous-problème 8: $x_1 = 1$, $x_2 = 1$, $x_3 = 0$, $x_4 = 1$.
 Toutes les variables sont fixées.
 \begin{itemize}
 	\item 
-Le sous-problème 7 a pour solution $(x_1, x_2, x_3, x_4) = (1, 1, 0, 0)$, pour $Z_7 = 14$.
+Le sous-problème 7 a pour solution $(x_1, x_2, x_3, x_4) = (1, 1, 0, 0)$, pour $Z_7 = -14$.
 Élagage en vertu du Test 3 (solution entière).
-Puisque $Z_7 > Z^*$, $Z^* = 14$ et $(1, 1, 0, 0)$ devient la meilleure solution courante.
+Puisque $Z_7 < Z^*$, $Z^* := -14$ et $(1, 1, 0, 0)$ devient la meilleure solution courante.
 	\item 
 La solution du sous-problème 8 est $(1, 1, 0, 1)$, non-réalisable réalisable, car la première contrainte $(2x_4 \leq 1)$ est violée. Élagage en vertu du Test 2.
 \end{itemize} 
@@ -683,13 +692,13 @@ Le sous-problème 3 est le seul non encore élagué.
 
 \mbox{}
 
-Nous l'élaguons suite à l'application du Test 1: $Z_3 = 13 \leq 14 = Z*$.
+Nous l'élaguons suite à l'application du Test 1: $Z_3 = -13 \geq -14 = Z*$.
 
 \mbox{}
 
 Arrêt: il n'y a plus de sous-problèmes non élagués.
 $$
-x^* = (1,1,0,0),\qquad Z^* = 14.
+x^* = (1,1,0,0),\qquad Z^* = -14.
 $$
 
 \end{frame}
@@ -712,13 +721,13 @@ child {node (G) [circle,draw] {1}}
 child {node (H) [circle,draw] {1}}
 }
 };
-\draw (root) node[below, text width=5mm, text ragged]{\hspace{5mm} 16}; 
-\draw (B) node[below, text width=5mm, text ragged]{\hspace{5mm} 16}; 
-\draw (A) node[below, text width=5mm, text ragged]{\hspace{5mm} 9}; 
-\draw (D) node[below, text width=5mm, text ragged]{\hspace{5mm} 16}; 
-\draw (C) node[below, text width=5mm, text ragged]{\hspace{5mm} 13}; 
-\draw (E) node[below, text width=5mm, text ragged]{\hspace{5mm} 16}; 
-\draw (F) node[below, text width=5mm, text ragged]{\hspace{5mm} 14}; 
+\draw (root) node[below, text width=7mm, text ragged]{\hspace{5mm} -16}; 
+\draw (B) node[below, text width=7mm, text ragged]{\hspace{5mm} -16}; 
+\draw (A) node[below, text width=7mm, text ragged]{\hspace{5mm} -9}; 
+\draw (D) node[below, text width=7mm, text ragged]{\hspace{5mm} -16}; 
+\draw (C) node[below, text width=7mm, text ragged]{\hspace{5mm} -13}; 
+\draw (E) node[below, text width=7mm, text ragged]{\hspace{5mm} -16}; 
+\draw (F) node[below, text width=7mm, text ragged]{\hspace{5mm} -14}; 
 \draw (A) node[right] {\quad $F(3)$};
 \draw (F) node[right] {\quad $F(3)$};
 \draw (C) node[right] {\quad $F(1)$};
@@ -741,9 +750,9 @@ $F(j)$: le sous-problème est élagué par le Test j
 	\item 
 \textcolor{red}{Programmation (mixte) en nombres entiers}: variables entières générales et variables continues.
 	\item 
-Nous ignorons dans un premier temps les contraintes d'intégralité (les valeurs des variables entières sont traitées comme variables continues), et résolvons le programme linéaire résultant.
+\textcolor{blue}{Relaxation linéaire}: ignorons les contraintes d'intégralité (les valeurs des variables entières sont traitées comme variables continues), et résolvons le PL résultant.
 	\item 
-Si la solution optimale de ce programme satisfait aux contraintes d'intégralité, alors cette solution est aussi solution optimale du programme avec variables entières.
+Si la solution optimale du PL satisfait aux contraintes d'intégralité, alors cette solution est aussi solution optimale du programme avec variables entières.
 Sinon, il doit exister au moins une variable $x_j$ dont la valeur $\alpha$ est fractionnaire.
 \end{itemize}
 
@@ -782,7 +791,7 @@ Il s'agit alors de parcourir cet arbre d'énumération afin d'y trouver la solut
 L'exploration d'un chemin de l'arbre peut prendre fin pour trois raisons:
 \begin{enumerate}
 \item
-la valeur de l'objectif correspondant à la solution optimale du problème relaxé est inférieure (moins bonne) à celle d'une solution admissible connue, possiblement obtenue à un autre sommet de l'arbre.
+la valeur de l'objectif correspondant à la solution optimale du problème relaxé est supérieure (moins bonne) à celle d'une solution admissible connue, possiblement obtenue à un autre sommet de l'arbre.
 \item
 le domaine admissible d'un sous-problème devient vide;
 \item
