@@ -1,4 +1,4 @@
-\documentclass[usepdftitle=false]{beamer}
+\documentclass[usepdftitle=false, aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
 
 \usetheme{Singapore}
@@ -6,23 +6,16 @@
 
 \setbeamertemplate{footline}[frame number]
 
-% \setbeamercovered{transparent}
-%\usecolortheme{crane}
 \title[PLNE]{Programmation linéaire en nombres entiers}
 \author[Fabian Bastin]{Fabian Bastin\\DIRO\\Université de Montréal\\\mbox{}}
 \date{}
 
-\usepackage[utf8]{inputenc}
-\usepackage[french]{babel}
+%\usepackage[french]{babel}  % not compatible with forest
 \usepackage{amsmath,amssymb, amsthm}
-%\usepackage{colortbl}
-%\usepackage[english]{babel}
-%\usepackage{pstricks}
-%\usepackage{pictex}
 
 \usepackage[french]{mathlist}
-\uselanguage{French}
-\languagepath{French}
+%\uselanguage{French}
+%\languagepath{French}
 
 \usepackage{times}
 
@@ -31,8 +24,6 @@
 \usepackage{ulem}
 
 \usepackage{tikz}
-%\usetikzlibrary{shapes,arrows}
-\usepackage{pgfplots}
 
 %\usepackage{slashbox}
 
@@ -40,7 +31,6 @@
 
 \def\bx{\boldsymbol x}
 \def\bxi{\boldsymbol\xi}
-\def\bomega{\boldsymbol\omega}
 
 \def\cF{\mathcal{F}}
 \def\cR{\mathcal{R}}
@@ -49,6 +39,86 @@
 \def\si{\mbox{ si }}
 
 \input{macros}
+
+\usepackage{forest}
+\tikzset{
+	tree node/.style = {align=center, inner sep=0pt, font = \scriptsize},
+	S/.style = {draw, circle, minimum size = 8mm, top color=white, bottom color=blue!20},
+	tree node label/.style={font=\scriptsize},
+}
+\forestset{
+	declare toks={left branch prefix}{},
+	declare toks={right branch prefix}{},
+	declare toks={left branch suffix}{},
+	declare toks={right branch suffix}{},
+	tree node left label/.style={
+		label=170:#1,
+	},
+	tree node right label/.style={
+		label=10:#1,
+	},
+	maths branch labels/.style={
+		branch label/.style={
+			if n=1{
+				edge label={node [left, midway] {$\forestoption{left branch prefix}##1\forestoption{left branch suffix}$}},
+			}{
+				edge label={node [right, midway] {$\forestoption{right branch prefix}##1\forestoption{right branch suffix}$}},
+			}
+		},
+	},
+	text branch labels/.style={
+		branch label/.style={
+			if n=1{
+				edge label={node [left, midway] {\foresteoption{left branch prefix}##1\forestoption{left branch suffix}}},
+			}{
+				edge label={node [right, midway] {\forestoption{right branch prefix}##1\forestoption{right branch suffix}}},
+			}
+		},
+	},
+	text branch labels,
+	set branch labels/.style n args=4{%
+		left branch prefix={#1},
+		left branch suffix={#2},
+		right branch prefix={#3},
+		right branch suffix={#4},
+	},
+	set maths branch labels/.style n args=4{
+		maths branch labels,
+		set branch labels={#1}{#2}{#3}{#4},
+	},
+	set text branch labels/.style n args=4{
+		text branch labels,
+		set branch labels={#1}{#2}{#3}{#4},
+	},
+	branch and bound/.style={
+		/tikz/every label/.append style=tree node label,
+		maths branch labels,
+		for tree={
+			tree node,
+			S,
+			math content,
+			s sep'+=20mm,
+			l sep'+=5mm,
+			thick,
+			edge+={thick},
+		},
+		before typesetting nodes={
+			for tree={
+				split option={content}{:}{tree node left label,content,tree node right label,branch label},
+			},
+		},
+		where n children=0{
+			tikz+={
+				\draw [thick]  ([yshift=-10pt, xshift=-2.5pt].south west) -- ([yshift=-10pt, xshift=2.5pt].south east);
+			}
+		}{},
+	},
+}
+
+\robustify{\underset}
+
+\newcommand{\extraprotect}[1]{\unexpanded{\unexpanded{#1}}}
+\newcommand{\payoff}[1]{\begin{pmatrix}#1\end{pmatrix}}
 
 \begin{document}
 
@@ -364,7 +434,7 @@ La solution de la relaxation linéaire est $(x_1, x_2, x_3, x_4) = (0,1,0,1)$, a
 
 Le sous-problème 2 est celui obtenu avec $x_1 = 1$:
 \begin{align*}
-\min\ & z = -5x_2 -6x_3 -4x_4 + 9 \\
+\min\ & z = -5x_2 -6x_3 -4x_4 -.. 9 \\
 \st & 3x_2 + 5x_3 + 2x_4 \leq 4; \\
 & x_3 + x_4 \leq 1; \\
 & x_3 \leq 1; \\
@@ -814,7 +884,7 @@ La meilleure solution obtenue au cours du déroulement de l'algorithme est alors
 Initialisation:
 \begin{enumerate}[(a)]
 \item
-Poser $Z^* = -\infty$.
+Poser $Z^* = +\infty$.
 \item
 Appliquer le calcul de borne et les critères d'élagage à la racine (aucune variable fixée).
 \item
@@ -824,7 +894,7 @@ Si tous les sous-problèmes ont été élagués, arrêt.
 Branchement:
 \begin{enumerate}[(a)]
 \item
-Choisir le sous-problème non encore élagué créé le plus récemment. Si égalité, choisir celui de plus grande borne supérieure.
+Choisir le sous-problème non encore élagué créé le plus récemment. Si égalité, choisir celui de plus petite borne inférieure.
 \item
 Appliquer le Test 1: si le sous-problème est élagué, retourner en 2.
 \item
@@ -845,16 +915,258 @@ Calcul de borne: résoudre la relaxation PL de chaque sous-problème.
 Élagage: élaguer un sous-problème si
 \begin{enumerate}[(a)]
 \item
-La borne superieure est inférieure ou égale à $Z^*$.
+La borne inférieure est supérieure ou égale à $Z^*$.
 \item
 La relaxation PL n'a pas de solution réalisable.
 \item
 Dans la solution optimale de la relaxation PL, toutes les variables entières sont à valeurs entières: si la borne
-supérieure est strictement supérieure à $Z^*$, $Z^*$ est mise à jour et la solution de la relaxation PL devient la meilleure solution courante.
+inférieure est strictement inférieure à $Z^*$, $Z^*$ est mise à jour et la solution de la relaxation PL devient la meilleure solution courante.
 \end{enumerate}
 \item
 Retourner en 2.
 \end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Considérons le problème
+\begin{align*}
+		\min_{x_1,x_2} \ & z = -4x_1+x_2 \\
+		\mbox{s.à. } & 3x_1 - 2x_2 \leq 14 \\ 
+		& x_2 \leq 3 \\
+		& 2x_1 - 2x_2 \leq 3 \\
+		& x_1 \in \NN, x_2 \in \NN,
+\end{align*}
+
+La relaxation linéaire donne
+\begin{align*}
+	\min_{x_1,x_2} \ & z = -4x_1+x_2 \\
+	\mbox{s.à. } & 3x_1 - 2x_2 \leq 14 \\ 
+	& x_2 \leq 3 \\
+	& 2x_1 - 2x_2 \leq 3 \\
+	& x_1 \geq 0, x_2 \geq 0,
+\end{align*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+La solution optimale de la RL est $(9/2, 3)$, avec la valeur optimale -15, qui devient la borne inférieure pour le problème de départ.
+
+Nous créons 2 problèmes en ajoutant une des contraintes
+\begin{align*}
+x_1 &\leq 4 \\
+x_1 &\geq 5
+\end{align*}
+
+	\begin{center}
+	\begin{forest}
+		branch and bound,
+		where level=1{
+			set branch labels={x_1 \leq 4}{}{x_1 \geq 5}{},
+		}{
+		}
+		[\extraprotect{\big($\frac{9}{2}$,3\big)}:S_0:\extraprotect{$-15 \leq z^* \leq +\infty$}
+		[:S_1::
+		]
+		[:S_2::
+		]
+		]
+	\end{forest}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Considérons tout d'abord le problème $S_1$:
+	\begin{align*}
+		\min_{x_1,x_2} \ & z = -4x_1+x_2 \\
+		\mbox{s.à. } & 3x_1 - 2x_2 \leq 14 \\ 
+		& x_2 \leq 3 \\
+		& 2x_1 - 2x_2 \leq 3 \\
+		& x_1 \leq 4 \\
+		& x_1 \geq 0, x_2 \geq 0
+	\end{align*}
+
+La solution optimale est $(4, 5/2)$ et la valeur optimale est -13,5. Tous les problèmes issus de $S_1$ devront satisfaire $-13 \leq z^*$ en considérant les conditions de variables entières.
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exemple}
+
+
+	\begin{center}
+	\begin{forest}
+		branch and bound,
+		where level=1{
+			set branch labels={x_1 \leq 4}{}{x_1 \geq 5}{},
+		}{
+		}
+		[\extraprotect{\big($\frac{9}{2}$,3\big)}:S_0:\extraprotect{$-15 \leq z^* \leq +\infty$}
+		[\extraprotect{\big(4,$\frac{5}{2}$\big)}:S_1:\extraprotect{$-13 \leq z^* \leq +\infty$}:
+		]
+		[:S_2::
+		]
+		]
+	\end{forest}
+\end{center}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exemple}
+	
+	Considérons ensuite le problème $S_2$:
+	\begin{align*}
+		\min_{x_1,x_2} \ & z = -4x_1+x_2 \\
+		\mbox{s.à. } & 3x_1 - 2x_2 \leq 14 \\ 
+		& x_2 \leq 3 \\
+		& 2x_1 - 2x_2 \leq 3 \\
+		& x_1 \geq 5 \\
+		& x_1 \geq 0, x_2 \geq 0
+	\end{align*}
+	
+Le problème est alors non réalisable et nous élaguons le n\oe{}ud.
+	
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+	\begin{center}
+		\begin{forest}
+			branch and bound,
+			where level=1{
+				set branch labels={x_1 \leq 4}{}{x_1 \geq 5}{},
+			}{
+			}
+			[\extraprotect{\big($\frac{9}{2}$,2\big)}:S_0:\extraprotect{$-15 \leq z^* \leq +\infty$}
+			[\extraprotect{\big(4,$\frac{5}{2}$\big)}:S_1:\extraprotect{\tiny{$-13 \leq z^* \leq +\infty$}}:
+			]
+			[:S_2:\extraprotect{non réalisable}:
+			]
+			]
+		\end{forest}
+	\end{center}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exemple}
+
+$S_2$ est élagué, mais pas $S_1$. Seule la variable $x_2$ est non entière, aussi nous branchons sur celle-ci, en considérant les contraintes
+	\begin{align*}
+		x_2 &\leq 2 \\
+		x_2 &\geq 3
+	\end{align*}
+	
+	\begin{center}
+		\begin{forest}
+			branch and bound,
+			where level=1{
+				set branch labels={x_1 \leq 4}{}{x_1 \geq 5}{},
+			}{
+				if level=2{
+					set branch labels={x_2 \leq 2}{}{x_2 \geq 3}{},
+				}{},
+			}
+			[\extraprotect{\big($\frac{9}{2}$,3\big)}:S_0:\extraprotect{$-15 \leq z^* \leq +\infty$}
+			[\extraprotect{\big(4,$\frac{5}{2}$\big)}:S_1:\extraprotect{$-13 \leq z^* \leq +\infty$}:
+			[:S_3::]
+			[:S_4::]
+			]
+			[:S_2:\extraprotect{non réalisable}:
+			]
+			]
+		\end{forest}
+	\end{center}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exemple}
+	
+	Considérons ensuite le problème $S_3$:
+	\begin{align*}
+		\min_{x_1,x_2} \ & z = -4x_1+x_2 \\
+		\mbox{s.à. } & 3x_1 - 2x_2 \leq 14 \\ 
+		& x_2 \leq 2 \\
+		& 2x_1 - 2x_2 \leq 3 \\
+		& x_1 \leq 4 \\
+		& x_1 \geq 0, x_2 \geq 0
+	\end{align*}
+	
+	La solution est $(-7/2, 2)$, associée à la valeur de l'objecitf $-12$, qui devient la borne inférieure pour les problèmes issus de $S_3$.
+	
+\end{frame}
+
+
+\begin{frame}
+	\frametitle{Exemple}
+	
+	Prenons le problème $S_4$:
+	\begin{align*}
+		\min_{x_1,x_2} \ & z = -4x_1+x_2 \\
+		\mbox{s.à. } & 3x_1 - 2x_2 \leq 14 \\ 
+		& x_2 \leq 3,\ x_2 \geq 3 \\
+		& 2x_1 - 2x_2 \leq 3 \\
+		& x_1 \leq 4 \\
+		& x_1 \geq 0, x_2 \geq 0
+	\end{align*}
+
+Nous en déduisons immédiatement que $x_2^* = 3$, et de là,
+$$
+x_1^* = \min \{ 14/3, 9/2, 4 \} = 4.
+$$
+La solution est entière et donc réalisable pour le problème de départ, associée à la valeur de l'objectif -13, borne supérieure sur la valeur optimale. Nous élaguons.
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Exemple}
+	
+Nous pouvons résumer nos progrès dans l'arbre ci-dessous.
+	\begin{center}
+		\begin{forest}
+			branch and bound,
+			where level=1{
+				set branch labels={x_1 \leq 4}{}{x_1 \geq 5}{},
+			}{
+				if level=2{
+					set branch labels={x_2 \leq 2}{}{x_2 \geq 3}{},
+				}{},
+			}
+			[\extraprotect{\big($\frac{9}{2}$,3\big)}:S_0:\extraprotect{$-15 \leq z^* \leq +\infty$}
+			[\extraprotect{\big(4,$\frac{5}{2}$\big)}:S_1:\extraprotect{$-13 \leq z^* \leq +\infty$}:
+			[\extraprotect{\big($\frac{7}{2}$,2\big)}:S_3:\extraprotect{\tiny{$-12 \leq z^* \leq +\infty$}}:]
+			[\extraprotect{(4,3)}:S_4:\extraprotect{$-15 \leq z^* \leq -13$}:]
+			]
+			[:S_2:\extraprotect{non réalisable}:
+			]
+			]
+		\end{forest}
+	\end{center}
+
+La borne inférieure sur $S_3$ est supérieure à la borne supérieure sur la valeur optimale. Nous élaguons $S_3$.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple}
+
+Il n'y a plus de n\oe{}non élagués. Nous avons donc terminer.
+
+\mbox{}
+
+Solution optimale: $x_1^* = 4$, $x_2^* = 3$.
+
+Valeur optimale: $z^* = -13$.
 
 \end{frame}
 
@@ -884,7 +1196,7 @@ But: si suffisamment de coupes sont ajoutées, en résolvant le problème relax�
 \begin{frame}
 \frametitle{Exemple}
 
-Considérons à nouveau le programme
+Considérons le programme
 \begin{align*}
 	\max\ & z = x_1+5x_2\\
 	\st & x_1+4x_2 \leq 8,4, \\
@@ -1114,15 +1426,20 @@ Il suffit de poursuivre la résolution avec l'algorithme dual du simplexe.
 
 Reprenons à présent l'exemple
 \begin{align*}
-	\max\ & z = x_2\\
+	\min\ & z = -x_2\\
 	\st & -x_1+x_2 \leq \frac{1}{2}, \\
 	& x_1 + x_2 \leq \frac{7}{2}, \\
 	& x_1, x_2 \geq 0 \mbox{ et entiers}.
 \end{align*}
 
+\end{frame}
+
+\begin{frame}
+\frametitle{Exemple 2}
+
 Si nous ajoutons l'inégalité $x_2 \leq 1$, nous obtenons le problème
 \begin{align*}
-	\max\ & z = x_2\\
+	\min\ & z = -x_2\\
 	\st & -x_1+x_2 \leq \frac{1}{2}, \\
 	& x_1 + x_2 \leq \frac{7}{2}, \\
 	& x_2 \leq 1, \\
