@@ -1,4 +1,4 @@
-\documentclass[usepdftitle=false]{beamer}
+\documentclass[usepdftitle=false, aspectratio=169]{beamer}
 
 \usepackage[utf8]{inputenc}
 
@@ -23,32 +23,7 @@
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
     \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
 
-\def\ba{\boldsymbol{a}}
-\def\bb{\boldsymbol{b}}
-\def\bc{\boldsymbol{c}}
-\def\bd{\boldsymbol{d}}
-\def\be{\boldsymbol{e}}
-\def\br{\boldsymbol{r}}
-\def\bs{\boldsymbol{s}}
-\def\bu{\boldsymbol{u}}
-\def\bx{\boldsymbol{x}}
-\def\by{\boldsymbol{y}}
-\def\bz{\boldsymbol{z}}
-\def\bA{\boldsymbol{A}}
-\def\bB{\boldsymbol{B}}
-\def\bC{\boldsymbol{C}}
-\def\bD{\boldsymbol{D}}
-\def\bH{\boldsymbol{H}}
-\def\bI{\boldsymbol{I}}
-\def\bL{\boldsymbol{L}}
-\def\bM{\boldsymbol{M}}
-\def\bX{\boldsymbol{X}}
-\def\bU{\boldsymbol{U}}
-\def\bzero{\boldsymbol{0}}
-\def\bone{\boldsymbol{1}}
-\def\blambda{\boldsymbol{\lambda}}
-
-\def\cR{\mathcal{R}}
+\include{macros}
 
 \makeatletter
 \renewcommand*\env@matrix[1][c]{\hskip -\arraycolsep
@@ -85,6 +60,49 @@ Nous supposons le problème équilibré, i.e. l'offre totale est égale à la de
 \sum_{i = 1}^m a_i = \sum_{j = 1}^n b_j.
 \]
 
+\end{frame}
+
+\begin{frame}
+	\frametitle{Illustration}
+	
+	\begin{center}
+		\begin{tikzpicture}[scale=0.75,->]
+			\node[circle,draw] (A1) at (1,8) {$a_1$};
+			\node[circle,draw] (A2) at (1,6) {$a_2$};
+			\node[circle,draw] (A3) at (1,4) {$a_3$};
+			\node[circle,draw] (A4) at (1,2) {$a_4$};
+			\node[circle,draw] (A5) at (1,0) {$a_5$};
+			\node[circle,draw] (B1) at (12,7) {$b_1$};
+			\node[circle,draw] (B2) at (12,5) {$b_2$};
+			\node[circle,draw] (B3) at (12,3) {$b_3$};
+			\node[circle,draw] (B4) at (12,1) {$b_4$};
+			\path
+			(A1) edge node [above,near start] {{\tiny $c_{11}$}} (B1)
+			(A1) edge node [above,near start] {{\tiny $c_{12}$}} (B2)
+			(A1) edge node [above,near start] {{\tiny $c_{13}$}} (B3)
+			(A1) edge node [above,near start] {{\tiny $c_{14}$}} (B4)
+			(A2) edge node [above,near end] {{\tiny $c_{21}$}} (B1)
+			(A2) edge node [above,near start] {{\tiny $c_{22}$}} (B2)
+			(A2) edge node [above,near start] {{\tiny $c_{23}$}} (B3)
+			(A2) edge node [above,near start] {{\tiny $c_{24}$}} (B4)
+			(A3) edge node [above,near end] {{\tiny $c_{31}$}} (B1)
+			(A3) edge node [above,near start] {{\tiny $c_{32}$}} (B2)
+			(A3) edge node [above,near start] {{\tiny $c_{33}$}} (B3)
+			(A3) edge node [above,near end] {{\tiny $c_{34}$}} (B4)
+			(A4) edge node [above,near start] {{\tiny $c_{41}$}} (B1)
+			(A4) edge node [above,near start] {{\tiny $c_{42}$}} (B2)
+			(A4) edge node [above,near start] {{\tiny $c_{43}$}} (B3)
+			(A4) edge node [above,near end] {{\tiny $c_{44}$}} (B4)
+			(A5) edge node [above,near start] {{\tiny $c_{51}$}} (B1)
+			(A5) edge node [above,near start] {{\tiny $c_{52}$}} (B2)
+			(A5) edge node [above,near start] {{\tiny $c_{53}$}} (B3)
+			(A5) edge node [above,near start] {{\tiny $c_{54}$}} (B4)
+			;
+%			\draw [->] (D) to [bend right=25] (E);
+%			\draw [->] (E) to [bend right=25] (D);
+		\end{tikzpicture}
+	\end{center}
+	
 \end{frame}
 
 \begin{frame}
@@ -231,52 +249,89 @@ Nous pouvons considérons un excédent de production au travers de variables d'�
 \end{frame}
 
 \begin{frame}
-\frametitle{Réalisabilité et optimalité}
+\frametitle{Réalisabilité}
 
-Première étape: montrer que le problème est réalisable.
-
-\mbox{}
-
-Soit $S$ la demande totale (et donc, l'offre totale): $S = \sum_{i = 1}^m a_i = \sum_{j = 1}^n b_j$.
-\[
+Soit $S = \sum_{i = 1}^m a_i = \sum_{j = 1}^n b_j$ la demande totale (et donc, l'offre totale).
+La solution
+$$
 x^0_{ij} = \frac{a_ib_j}{S},\ i=1,2,\ldots,m,\ j = 1,2,\ldots,n,
-\]
-est réalisable:
+$$
+est réalisable. En effet,
 \begin{align*}
-\sum_{j = 1}^n x^0_{ij} = \sum_{j = 1}^n \frac{a_ib_j}{S} = a_i \\
-\sum_{i = 1}^m x^0_{ij} = \sum_{i = 1}^m \frac{a_ib_j}{S} = b_j
+\forall i,\ & \sum_{j = 1}^n x^0_{ij} = \sum_{j = 1}^n \frac{a_ib_j}{S} = a_i, \\
+\forall j,\ & \sum_{i = 1}^m x^0_{ij} = \sum_{i = 1}^m \frac{a_ib_j}{S} = b_j, \\
+\forall i,j,\ & x^0_{ij} \geq 0.
 \end{align*}
 
+\end{frame}
+
+\begin{frame}
+\frametitle{0ptimalité}
+
+De plus, $\forall i, j$,
+\begin{align*}
+0 \leq x_{ij} \leq a_i, \\
+0 \leq x_{ij} \leq a_j.
+\end{align*}
+Un programme avec un ensemble réalisable non vide fermé et borné (i.e. compact) a toujours une solution optimale.
+
 \mbox{}
 
-De plus, $x_{ij}$ est bornée par $a_i$ (et $b_j$).
-Un programme avec un ensemble réalisable et borné a toujours une solution optimale. Dès lors, un problème de transport a toujours une solution optimale.
+Plus généralement, une fonction continue sur un compact atteint son maximum et son minimum sur cet ensemble compact.
+
+\mbox{}
+
+Dès lors, un problème de transport a toujours une solution optimale.
 
 \end{frame}
 
 \begin{frame}
 \frametitle{Redondance}
 
-Nous avons un ensemble de $m+n$ contraintes linéaires. Toutefois,
-\begin{align*}
-\sum_{i = 1}^m \sum_{j = 1}^n x_{ij} = \sum_{i = 1}^m a_i,
-\sum_{i = 1}^m \sum_{j = 1}^n x_{ij} = \sum_{j = 1}^n b_j.
-\end{align*}
+Nous avons un ensemble de $m+n$ contraintes linéaires.
+\begin{itemize}
+	\item Considérons les contraintes
+	$$
+	\sum_{j = 1}^n x_{ij} = a_i,\ \forall i.
+	$$
+	En les sommant, nous avons
+	$$
+	\sum_{i = 1}^m \sum_{j = 1}^n x_{ij} = \sum_{i = 1}^m a_i.
+	$$
+	\item Considérons à présent les contraintes
+	$$
+	\sum_{i = 1}^m x_{ij} = b_j,\ \forall j.
+	$$
+	Leur somme donne
+	$$
+	\sum_{i = 1}^m \sum_{j = 1}^n x_{ij} = \sum_{j = 1}^n b_j.
+	$$
+\end{itemize}
 
-\mbox{}
+\end{frame}
+
+\begin{frame}
+\frametitle{Redondance}
 
 On a formé deux combinaisons linéaires distinctes des contraintes, pour former des termes de gauche identiques (et les termes de droite sont également identiques en vertu de l'hypothèse de départ).
 
-\mbox{}
-
-Considérons la première contrainte:
-\[
-\sum_{j = 1}^n x_{1j} = a_1
-\Leftrightarrow
+Prenons les $n+m-1$ dernières contraintes:
+$$
+\begin{cases}
+\sum_{j = 1}^m x_{ij} = a_i,\ i = 2,\ldots,m,\\
+\sum_{i = 1}^n x_{ij} = b_j,\ j = 1,\ldots,n.
+\end{cases}
+$$
+La combinaison linéaire obtenue en sommant les $n$ dernières contraintes et en soustrayant les $m-1$ premières contraintes ainsi sélectionnées donne
+$$
 \sum_{i = 1}^m \sum_{j = 1}^n x_{ij} - 
-\sum_{2 = 1}^m \sum_{j = 1}^n x_{ij}
+\sum_{i = 2}^m \sum_{j = 1}^n x_{ij}
 = \sum_{j =1}^n b_j - \sum_{i = 2}^m a_i
-\]
+$$
+ce qui est équivalent à
+$$
+\sum_{j = 1}^n x_{1j} = a_1.
+$$
 
 \end{frame}
 
@@ -372,7 +427,7 @@ Dès lors, l'ensemble d'équations est linéairement indépendant.
 \begin{frame}
 \frametitle{Découverte d'une solution réalisable de base}
 
-Du théorème précédent, on voit qu'une base pour le problème de transport consiste de $m+n-1$ vecteurs, et qu'un solution réalisable de base-non dégénérée consiste de $m+n-1$ variables.
+Du théorème précédent, on voit qu'une base pour le problème de transport consiste de $m+n-1$ vecteurs, et qu'une solution réalisable de base-non dégénérée consiste de $m+n-1$ variables.
 
 \mbox{}
 
@@ -403,13 +458,13 @@ Les éléments individuels du tableau apparaissent dans des cellules et représe
 \frametitle{Règle du coin Nord-Ouest}
 
 \begin{description}
-\item[Etape 0.]
+\item[Étape 0.]
 Le tableau est créé, avec toutes les cellules vides.
-\item[Etape 1.]
+\item[Étape 1.]
 On sélectionne la cellule dans le coin supérieur gauche (d'où le nom de la méthode).
-\item[Etape 2.]
+\item[Étape 2.]
 On alloue le montant maximum réalisable compatible avec les exigences de sommes sur la ligne et la colonne impliquant cette colonne (au moins une de ces exigences sera remplie).
-\item[Etape 3.]
+\item[Étape 3.]
 On se déplace d'une cellule vers la droite s'il reste des exigences de ligne à satisfaire (offre). Autrement, on se déplace d'une cellule vers le bas. Si toutes les exigences sont remplies, arrêt. Sinon, retour à l'étape 2.
 \end{description}
 
@@ -1088,7 +1143,7 @@ $u_i$ est associé à la $i^e$ contrainte de ligne, et $v_j$ à la $j^e$ contrai
 
 \mbox{}
 
-Etant donnée une base $B$, nous allons développer l'équation
+Étant donnée une base $B$, nous allons développer l'équation
 \[
 \lambda^T B = c_B^T.
 \]
@@ -1153,11 +1208,11 @@ $v_1$ & $v_2$ & $v_3$ & \ldots & $v_n$ & \\
 \frametitle{Multiplicateurs du simplexe}
 
 \begin{description}
-\item[\'Etape 1]
+\item[Étape 1]
 Affecter une valeur arbitraire à un des multiplicateurs.
-\item[\'Etape 2]
+\item[Étape 2]
 Sélectionner un $c_{ij}$ associé à une variable de base $x_{ij}$ pour lequel soit $u_i$, soit $v_j$ n'a pas encore été determiné, mais l'un des deux multiplicateurs a une valeur connue.
-\item[\'Etape 3]
+\item[Étape 3]
 Calculer le multiplicateur inconnu à partir de l'équation
 \[
 c_{ij} = u_i + v_j.
@@ -1266,14 +1321,14 @@ La plus petite variable avec le signe moins est $x_{51} = 10$, aussi $\theta = 1
 Nous sommes à présent en mesure de décrire l'algorithme complet.
 
 \begin{description}
-\item[\'Etape 1]
+\item[Étape 1]
 Calculer une solution réalisable de base initiale à l'aide de la règle du coin nord-ouest ou une autre méthode.
-\item[\'Etape 2]
+\item[Étape 2]
 Calculer les multiplicateurs du simplexe et les coefficients de coût relatifs.
 Si les coefficients de coût relatifs sont non négatifs, arrêt: la solution est optimale. Autrement,
 passer à l'étape 3.
-\item[\'Etape 3]
-Sélectionner une variable hors base de coût réduit négatif pour entre la base.
+\item[Étape 3]
+Sélectionner une variable hors base de coût réduit négatif pour entrer dans la base.
 Calculer le cycle de changement et poser la valeur de la variable à la plus petite variable de base avec un moins qui lui est attribuée.
 Mettre à jour la solution. Retour à l'étape 2.
 \end{description}
